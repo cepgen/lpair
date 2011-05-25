@@ -1,0 +1,14 @@
+<use   name="FWCore/Framework"/>
+<use   name="FWCore/PluginManager"/>
+<use   name="FWCore/ParameterSet"/>
+<use   name="DataFormats/TrackingRecHit"/>
+<use   name="TrackingTools/Records"/>
+<use   name="TrackingTools/TransientTrack"/>
+<use   name="RecoVertex/KalmanVertexFit"/>
+<use   name="HLTrigger/HLTcore"/>
+<use   name="DataFormats/MuonReco"/>
+<use   name="CommonTools/CandUtils"/>
+<flags   EDM_PLUGIN="1"/>
+<export>
+  <lib   name="1"/>
+</export>
