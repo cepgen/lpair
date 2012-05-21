@@ -1,0 +1,48 @@
+#!/bin/bash
+# 2004-03-17 B. Caron
+
+# INPUT choices
+
+# Parameter 1
+#   el-el   ->     elastic-elastic collision
+# inel-el   ->   elastic-inelastic collision
+# inel-inel -> inelastic-inelastic collision
+
+# Parameter 2
+# cs        -> calculate cross-section only
+# mc        -> produce MC events
+
+export PTYPE=$1
+export JTYPE=$2
+
+rm -f a.log1 a.log2 histo.out mygenz.output \
+      dl2.lattice.1 dl2.lattice.2 dl2.vegas.grid \
+      histo.out mygenz.output lpair.dat
+
+ln -sf lpair.dat.${PTYPE}_${JTYPE} lpair.dat
+
+./mylpair.exe 1>a.log1 2>a.log2
+
+export OUTPUT_DIR="output_dir/Run_2/${PTYPE}_${JTYPE}"
+mkdir -p $OUTPUT_DIR
+
+mv a.log* $OUTPUT_DIR/.
+mv dl2.*  $OUTPUT_DIR/.
+#cp -f ineemm.data $OUTPUT_DIR/.
+cp -f lpair.dat.${PTYPE}_${JTYPE} $OUTPUT_DIR/.
+
+if [ $JTYPE = mc ] ; then
+  source ~cdfsoft/cdf2.shrc
+  setup cdfsoft2
+  h2root histo.out histo.root
+  ./lpairAsciiReformat.exe > events.ascii.reformat
+  mv histo.out               $OUTPUT_DIR/.
+  mv histo.root              $OUTPUT_DIR/.
+  mv mygenz.output           $OUTPUT_DIR/.
+  mv events.ascii            $OUTPUT_DIR/.
+  mv events.ascii.reformat   $OUTPUT_DIR/.
+fi
+
+rm -f lpair.dat ineemm.data
+
+# END
