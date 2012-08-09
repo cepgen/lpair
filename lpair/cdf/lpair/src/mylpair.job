@@ -1,0 +1,5 @@
+rm -f events.ascii histo.out
+rm -f a.log1 a.log2 histo.out mygenz.output
+rm -f dl2.lattice.1 dl2.lattice.2 dl2.vegas.grid
+#./mylpair.exe 1>a.log1 2>a.log2
+./mylpair.exe
