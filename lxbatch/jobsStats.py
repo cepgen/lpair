@@ -12,7 +12,6 @@ warnings.filterwarnings( action='ignore', category=RuntimeWarning, message='crea
 
 runTimesBinsSize = 60
 
-#path = sys.argv[1]+"/logs/"
 res = list()
 
 def GetRunTimes(dir):
@@ -96,36 +95,3 @@ print ",".join([str(fj) for fj in failedJobs])
 e = PlotExitCodes(p, r)
 t = GetRunTimes(p)
 PlotRunTimes(p, t)
-
-
-"""paths = ["ElEl", "InelEl", "InelInel"]
-for p in paths:
-    p = "/afs/cern.ch/work/l/lforthom/private/LPAIRgen/GEN-SIM-DIGI/"+p
-    r = GetJobsStatus(p)
-    e = PlotExitCodes(p, r)
-    t = GetRunTimes(p)
-    PlotRunTimes(p, t)"""
-    
-
-
-
-
-
-
-
-
-
-
-"""
-#import matplotlib.pyplot as plt
-#from mpl_toolkits.axes_grid.axislines import Subplot
-#from pylab import pie
-fig = plt.figure()
-ax = Subplot(fig, 1, 1, 1)
-ax = fig.add_subplot(ax)
-#ax.pie([r[0] for r in res])
-ax.pie(ls)
-fig.savefig("test.png")
-"""
-
-
