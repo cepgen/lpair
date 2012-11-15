@@ -82,7 +82,7 @@ def PlotExitCodes(dir, res):
     if 0 in codes:
         pie.SetEntryFillColor(codes.index(0), 8)
     #pie.SetLabelFormat("%txt (%frac)")
-    pie.SetLabelsOffset(-.05)
+    pie.SetLabelsOffset(-.1)
     pie.Draw("r")
     canv.SaveAs('exitcodes_'+name+".png")
     return out
@@ -94,7 +94,9 @@ numCompleted = len(r)
 failedJobs = sorted([res[0] for res in r if res[1]!=0])
 numFailed = len(failedJobs)
 numSuccess = numCompleted-numFailed
-print str(numFailed)+" failed jobs ("+str(numFailed*100/numCompleted)+"%) out of "+str(numCompleted)+" completed jobs :"
+print "Completed jobs : "+str(numCompleted)
+print "  "+str(numFailed)+" ("+str(numFailed*100/numCompleted)+"%) failed"
+#print str(numFailed)+" failed jobs ("+str(numFailed*100/numCompleted)+"%) out of "+str(numCompleted)+" completed jobs :"
 print ",".join([str(fj) for fj in failedJobs])
 e = PlotExitCodes(p, r)
 t = GetRunTimes(p)

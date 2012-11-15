@@ -1,6 +1,7 @@
 #!/usr/bin/python
 from sys import argv, exit
 from subprocess import call
+from os import listdir
 
 if len(argv)==3:
     workDir = argv[1]
@@ -18,9 +19,18 @@ for j in jobsList:
     try:
         firstResubmit = call(["ls "+workDir+"/logs/"+str(j).zfill(4)+"_*.log > /dev/null 2>&1"], shell=True)!=0
         if firstResubmit:
+            print "First resubmit for job "+str(j)+" !"
             resubNum = 0
+        else:
+            listOfResubmits = []
+            for f in listdir(workDir+"/logs/"):
+                if str(j).zfill(4)+"_" in f:
+                    num = f.split('_')[-1].split('.')[-2]
+                    listOfResubmits.append(int(num))
+            resubNum = max(listOfResubmits)+1
     except:
         print "[ERROR] Failed to determine whether the job "+str(j)+" has already been resubmited"
+        exit(3)
     for line in log.readlines():
         if "Successfully completed" in line:
             print "[ERROR] job "+str(j)+" seems to be successful"
