@@ -14,6 +14,17 @@ runTimesBinsSize = 60
 
 res = list()
 
+
+def Colourize(string, status='g', bold=True):
+    attr = []
+    if status=='g':
+        attr.append('32')
+    elif status=='r':
+        attr.append('31')
+    if bold:
+        attr.append('1')
+    return '\x1b[%sm%s\x1b[0m' % (';'.join(attr), string)
+
 def GetRunTimes(dir):
     count = []
     for file in glob(path.join(dir, 'logs', '*.out')):
@@ -95,7 +106,8 @@ failedJobs = sorted([res[0] for res in r if res[1]!=0])
 numFailed = len(failedJobs)
 numSuccess = numCompleted-numFailed
 print "Completed jobs : "+str(numCompleted)
-print "  "+str(numFailed)+" ("+str(numFailed*100/numCompleted)+"%) failed"
+print "  "+Colourize(str(numFailed), 'r')+" ("+str(numFailed*100/numCompleted)+"%) failed"
+print "  "+Colourize(str(numSuccess), 'g')+" ("+str(numSuccess*100/numCompleted)+"%) successful !"
 #print str(numFailed)+" failed jobs ("+str(numFailed*100/numCompleted)+"%) out of "+str(numCompleted)+" completed jobs :"
 print ",".join([str(fj) for fj in failedJobs])
 e = PlotExitCodes(p, r)
