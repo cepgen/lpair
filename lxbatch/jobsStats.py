@@ -27,6 +27,8 @@ def PlotRunTimes(dir, res):
     if res==[]:
         return False
     name = dir.split('/')[-1]
+    if name=='':
+        name = dir.split('/')[-2]
     maxVal = max(res)*1.1
     #gStyle.SetOptStat(111111)
     gStyle.SetOptStat(111)
@@ -56,6 +58,8 @@ def PlotExitCodes(dir, res):
     if res==[]:
         return False
     name = dir.split('/')[-1]
+    if name=='':
+        name = dir.split('/')[-2]
     ls = array("d")
     out = []
     codes = []
@@ -87,7 +91,7 @@ def PlotExitCodes(dir, res):
 p = argv[1]
 r = GetJobsStatus(p)
 numCompleted = len(r)
-failedJobs = [res[0] for res in r if res[1]!=0]
+failedJobs = sorted([res[0] for res in r if res[1]!=0])
 numFailed = len(failedJobs)
 numSuccess = numCompleted-numFailed
 print str(numFailed)+" failed jobs ("+str(numFailed*100/numCompleted)+"%) out of "+str(numCompleted)+" completed jobs :"
