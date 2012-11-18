@@ -99,27 +99,36 @@ def PlotExitCodes(dir, res):
     return out
 
 
-if len(argv)>2:
-    lightMode = (argv[2]=='1')
-else:
-    lightMode = False
-p = argv[1]
-r = GetJobsStatus(p)
+def main(argv):
+    if len(argv)<2:
+        print "Usage : "+argv[0]+" <work directory> [<light mode>]"
+        exit(1)
+    if len(argv)>2:
+        lightMode = (argv[2]=='1')
+    else:
+        lightMode = False
 
-failedJobs = sorted([res[0] for res in r if res[1]!=0])
+    p = argv[1]
+    r = GetJobsStatus(p)
 
-if not lightMode:
-    t = GetRunTimes(p)
-    e = PlotExitCodes(p, r)
-    PlotRunTimes(p, t)
+    failedJobs = sorted([res[0] for res in r if res[1]!=0])
 
-    numCompleted = len(r)
-    numFailed = len(failedJobs)
-    numSuccess = numCompleted-numFailed
-    print "Completed jobs : "+str(numCompleted)
-    print "  "+Colourize(str(numFailed), 'r')+" ("+str(numFailed*100/numCompleted)+"%) failed"
-    print "  "+Colourize(str(numSuccess), 'g')+" ("+str(numSuccess*100/numCompleted)+"%) successful !"
-    #print str(numFailed)+" failed jobs ("+str(numFailed*100/numCompleted)+"%) out of "+str(numCompleted)+" completed jobs :"
-    print ",".join([str(fj) for fj in failedJobs])
-else:
-    print ",".join([str(fj) for fj in failedJobs])
+    if not lightMode:
+        t = GetRunTimes(p)
+        e = PlotExitCodes(p, r)
+        PlotRunTimes(p, t)
+        
+        numCompleted = len(r)
+        numFailed = len(failedJobs)
+        numSuccess = numCompleted-numFailed
+        print "Completed jobs : "+str(numCompleted)
+        print "  "+Colourize(str(numFailed), 'r')+" ("+str(numFailed*100/numCompleted)+"%) failed"
+        print "  "+Colourize(str(numSuccess), 'g')+" ("+str(numSuccess*100/numCompleted)+"%) successful !"
+        #print str(numFailed)+" failed jobs ("+str(numFailed*100/numCompleted)+"%) out of "+str(numCompleted)+" completed jobs :"
+        print ",".join([str(fj) for fj in failedJobs])
+    else:
+        print ",".join([str(fj) for fj in failedJobs])
+
+
+if __name__ == "__main__":
+        main(argv)
