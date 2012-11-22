@@ -3,10 +3,10 @@ from sys import argv, exit
 from subprocess import call
 from os import listdir
 
-forceResubmit = False
-quietMode = False
 
 def main(argv):
+    forceResubmit = False
+    quietMode = False
     if len(argv)>2:
         workDir = argv[1]
         jobsList = argv[2].split(',')
@@ -33,7 +33,8 @@ def main(argv):
             elif not quietMode:
                 print "[INFO] Log file not found for job "+str(j)+". Forced resubmit"
         try:
-            firstResubmit = call(["ls "+workDir+"/logs/"+str(j).zfill(4)+"_*.log > /dev/null 2>&1"], shell=True)!=0
+            #firstResubmit = call(["ls "+workDir+"/logs/"+str(j).zfill(4)+"_*.log > /dev/null 2>&1"], shell=True)!=0
+            firstResubmit = call(["ls "+workDir+"/logs/"+str(j).zfill(4)+"_*.err > /dev/null 2>&1"], shell=True)!=0
             if firstResubmit:
                 print "First resubmit for job "+str(j)+" !"
                 resubNum = 0
@@ -59,15 +60,18 @@ def main(argv):
                 if not quietMode:
                     print "[INFO] Job "+str(j)+" failed with exit code "+str(exitCode)
 
-        command = "rm "+workDir+"/logs/"+str(j).zfill(4)+".err"
+        #command = "rm "+workDir+"/logs/"+str(j).zfill(4)+".err"
+        command = "mv "+workDir+"/logs/"+str(j).zfill(4)+".err "+workDir+"/logs/"+str(j).zfill(4)+"_"+str(resubNum)+".err"
         call(command, shell=True)
-        command = "mv "+workDir+"/logs/"+str(j).zfill(4)+".out "+workDir+"/logs/"+str(j).zfill(4)+"_"+str(resubNum)+".log"
+        #command = "mv "+workDir+"/logs/"+str(j).zfill(4)+".out "+workDir+"/logs/"+str(j).zfill(4)+"_"+str(resubNum)+".log"
+        command = "rm "+workDir+"/logs/"+str(j).zfill(4)+".out"
         call(command, shell=True)
-        queue = "8nh"
+        queue = "1nw"
         if "inelinel" in workDir:
-            queue = "1nd"
-        command = "bsub -q "+queue+" -R \"tmp>50&&mem>200&&swp>400&&pool>1000\" -o "+workDir+"/logs/"+str(j).zfill(4)+".out -e "+workDir+"/logs/"+str(j).zfill(4)+".err `echo sh "+workDir+"/inputs/*_"+str(j).zfill(4)+".sh`"
-        call(command, shell=True)
+            queue = "2nw"
+        command = "bsub -q "+queue+" -R \"tmp>100&&mem>500&&swp>400&&pool>1000\" -o "+workDir+"/logs/"+str(j).zfill(4)+".out -e "+workDir+"/logs/"+str(j).zfill(4)+".err `echo sh "+workDir+"/inputs/*_"+str(j).zfill(4)+".sh` > /dev/null 2>&1"
+        sub = call(command, shell=True)
+        print sub
         if not quietMode:
             print "[INFO] Job "+str(j)+" successfully submitted !"
 
