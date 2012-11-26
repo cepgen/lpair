@@ -22,7 +22,9 @@
 
 #define NUM_CUTS 13
 // CUT_INVM_LOW < M_{ll} < CUT_INVM_UP
-#define CUT_INVM_MIN 20.
+//#define CUT_INVM_MIN 20.
+#define CUT_INVM_MIN 160. // FIXME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//#define CUT_INVM_MAX 70.
 
 // pT^{+,-} > CUT_PT_LOW
 #define CUT_PT_TRAILING 20.
@@ -45,7 +47,7 @@
 #define CUT_ZDC_EM_MAX 9999918
 #define CUT_ZDC_HAD_MAX 9999120
 
-#define INV_MASS_SPLIT 35
+#define INV_MASS_SPLIT 20
 #define INV_MASS_ZPEAK_LOW 70.
 #define INV_MASS_ZPEAK_UP 106.
 
@@ -78,6 +80,7 @@ void Processing() {
 
   TH1D *extTrk[masses];
   TH1D *invm[masses];
+  /*TH1D *invm_10GeV[masses], *invm_20GeV[masses], *invm_30GeV[masses];*/
   TH1D *invm_over160GeV[masses];
   TH1D *ptpair[masses], *ptpairZoom1[masses], *ptpairZoom2[masses], *ptpairZoom3[masses], *ptpairZoom4[masses];
   TH1D *pTSingleM[masses], *pTSingleP[masses];
@@ -100,29 +103,52 @@ void Processing() {
   //        Parameters for plotting        //
   cut_pTPair_min = 0.0;                    // in GeV/c
   cut_pTPair_max = 0.0;                    // in GeV/c
-  cut_acop       = 0.1;                    // between 0.0 and 1.0 (0. = no cut)
-  cut_dpt        = 1.0;                    // in GeV/c
+  cut_acop       = 0.0;                    // between 0.0 and 1.0 (0. = no cut)
+  cut_dpt        = 0.0;                    // in GeV/c
   antisel        = false;                  // anti-selection for (acop,dpt) ?
+  //antisel        = true;                   //
   cut_nExtTrk    = "0";                    // 0, 1, 1-6, 0-6, 0-10, all (no cut)
   ///////////////////////////////////////////
 
   inclusiveTriggers = true;
   drawAfterwards = false;
 
-  output_file = "XXX_EDITME_XXX.root";
+  //output_file = "1022-lumiSelection-0exttrk.root";
+  //output_file = "1022-lumiSelection-1exttrk.root";
+  //output_file = "1022-lumiSelection-1-6exttrk.root";
+  //output_file = "1022-antilumiSelection-0exttrk.root";
+  //output_file = "1022-antilumiSelection-0exttrk-m160.root";
+  //output_file = "1022-antilumiSelection-1-6exttrk.root";
+  //output_file = "1022-noSelection-0exttrk.root";
+  output_file = "1022-noSelection-0exttrk-m_gt_160.root";
+  //output_file = "1022-noSelection-allexttrk.root";
+  //output_file = "1022-noSelection-1-6exttrk.root";
+  //output_file = "1022-signalSelection-0exttrk.root";
+  //output_file = "1022-signalSelection-1-6exttrk.root";
+  //output_file = "test.root";
+  //output_file = "test2.root";
 
   ofstream eventslist("eventsList.txt");
 
   // Adding paths to files (usage: AddFile((TString)name, (TString)path, (bool)is_monte_carlo, (Double_t)normalization_factor))
 
+  /*AddFile("signal", "CalcHEP-Signal-5kEvents.root", true, 1.);
+    AddFile("dymumu", "DYtoMuMu-powheg-Max15ExtTrk-1810_JJHrecomm.root", true, 1.);*/
+  //AddFile("data", "Data-1011.root", false, 1.);
   AddFile("dymumu", "DYtoMuMu-1110-uncompleted.root", true, 1.);
   AddFile("dytautau", "DYtoTauTau-Max10ExtTrk-1105.root", true, 1.);
   AddFile("data", "Data-1105.root", false, 1.);
+  //AddFile("data","Data-OnlyReco-1011.root", false, 1.);
+  //AddFile("ww-jets", "WW_Jets-Max15ExtTrk-2606.root", true, 1.);
   AddFile("ww-jets", "WW_Jets-Max15ExtTrk-1105.root", true, 1.);
   AddFile("ww", "WW_Z2-Max15ExtTrk-2606.root", true, 1.);
+  //AddFile("elel", "ElEl-15GeV-MuMu-Max15ExtTrk-1024.root", true, 1.);
   AddFile("elel", "ElEl-15GeV-MuMu-Max15ExtTrk-1121.root", true, 1.);
+  //AddFile("inelel", "InelEl-15GeV-MuMu-Max15ExtTrk-1024.root", true, 1.);
   AddFile("inelel", "InelEl-15GeV-MuMu-Max15ExtTrk-1121.root", true, 1.);
+  //AddFile("inelinel", "InelInel-15GeV-MuMu-Max15ExtTrk-1024.root", true, 1.);
   AddFile("inelinel", "InelInel-15GeV-MuMu-Max15ExtTrk-1121.root", true, 1.);
+  //AddFile("tt", "TT-Max10ExtTrk-2606.root", true, 1.);
   AddFile("tt", "TT-1105.root", true, 1.);
   AddFile("qcd", "QCD-MuEnrichedPt10-Max15ExtTrk-2806.root", true , 1.);
   const Int_t numFiles = filename.size();
@@ -159,7 +185,16 @@ void Processing() {
       invm_over160GeV[j] = new TH1D(ss.str().c_str(),ss.str().c_str(),70,150.,500.); hList->Add(invm_over160GeV[j]);
       ss.str(""); ss << "invariantMass_" << mass_range[j] << "_" << datasetName.at(i);
       invm[j] = new TH1D(ss.str().c_str(),ss.str().c_str(),53,35.,300.); hList->Add(invm[j]);
+      /*ss.str(""); ss << "invariantMass_10GeV_" << mass_range[j] << "_" << datasetName.at(i);
+      invm_10GeV[j] = new TH1D(ss.str().c_str(),ss.str().c_str(),30,0.,300.); hList->Add(invm_10GeV[j]);
+      ss.str(""); ss << "invariantMass_20GeV_" << mass_range[j] << "_" << datasetName.at(i);
+      invm_20GeV[j] = new TH1D(ss.str().c_str(),ss.str().c_str(),15,0.,300.); hList->Add(invm_20GeV[j]);
+      ss.str(""); ss << "invariantMass_30GeV_" << mass_range[j] << "_" << datasetName.at(i);
+      invm_30GeV[j] = new TH1D(ss.str().c_str(),ss.str().c_str(),10,0.,300.); hList->Add(invm_30GeV[j]);*/
       ss.str(""); ss << "pTpair_" << mass_range[j] << "_" << datasetName.at(i);
+      //ptpair[j] = new TH1D(ss.str().c_str(),ss.str().c_str(),135,0.,10.125); hList->Add(ptpair[j]);
+      //ptpair[j] = new TH1D(ss.str().c_str(),ss.str().c_str(),100,0.,50.); hList->Add(ptpair[j]);
+      //ptpair[j] = new TH1D(ss.str().c_str(),ss.str().c_str(),50,0.,20.); hList->Add(ptpair[j]);
       ptpair[j] = new TH1D(ss.str().c_str(),ss.str().c_str(),120,0.,300.); hList->Add(ptpair[j]);
       ss.str(""); ss << "pTpairZoom1_" << mass_range[j] << "_" << datasetName.at(i);
       ptpairZoom1[j] = new TH1D(ss.str().c_str(),ss.str().c_str(),25,0.,50.); hList->Add(ptpairZoom1[j]);
@@ -275,6 +310,8 @@ void Processing() {
 	etaTrail = fabs(var_eta[i][trailing]);
 	ptLead = var_pt[i][leading];
 	ptTrail = var_pt[i][trailing];
+	//if (evt<0.360415872*numEvents.at(i)) { // Run2011A
+	//if (evt<0.350046704*numEvents.at(i)) { // Run2011A
 	if (evt<0.453435115*numEvents.at(i)) { // Run2011A
 	  // Muon efficiency
 	  for (Int_t l=0; l<(Int_t)(etaLowA.size()); l++) {
@@ -313,6 +350,7 @@ void Processing() {
 	
 	weight_nopu = weight*mu_eff;
 	weight = weight_nopu*pu_weight;
+	//cout << weight_nopu << "\t" << weight << "\t" << pu_weight << endl;
       }
       else { // Data
 	weight = 1.;
@@ -325,14 +363,15 @@ void Processing() {
 
       Int_t numTriggersMatched(0);
       if (inclusiveTriggers) {
-	if (PassesTrigger(hlt_d4[i][0],var_run[i][0])) numTriggersMatched++;
-	if (PassesTrigger(hlt_d5[i][0],var_run[i][0])) numTriggersMatched++;
+	if (PassesTrigger(hlt_d[4][i][0],var_run[i][0])) numTriggersMatched++;
+	if (PassesTrigger(hlt_d[5][i][0],var_run[i][0])) numTriggersMatched++;
+	if (PassesTrigger(hlt_d[6][i][0],var_run[i][0])) numTriggersMatched++;
       }
       else {
-	if (PassesTrigger(hlt_d0[i][0],var_run[i][0])) numTriggersMatched++;
-	if (PassesTrigger(hlt_d1[i][0],var_run[i][0])) numTriggersMatched++;
-	if (PassesTrigger(hlt_d2[i][0],var_run[i][0])) numTriggersMatched++;
-	if (PassesTrigger(hlt_d3[i][0],var_run[i][0])) numTriggersMatched++;
+	if (PassesTrigger(hlt_d[0][i][0],var_run[i][0])) numTriggersMatched++;
+	if (PassesTrigger(hlt_d[1][i][0],var_run[i][0])) numTriggersMatched++;
+	if (PassesTrigger(hlt_d[2][i][0],var_run[i][0])) numTriggersMatched++;
+	if (PassesTrigger(hlt_d[3][i][0],var_run[i][0])) numTriggersMatched++;
       }
 
       if (numTriggersMatched==0) { // No trigger was matched
@@ -359,6 +398,7 @@ void Processing() {
 	cout << "*** ERROR *** Ambiguosity in event " << evt 
 	     << ":\n   multiple (" << num_vtx_with_dimuon 
 	     << ") vertices with two muons arising" << endl;
+	//continue;
 	hCuts->Fill(1., weight);
 	break;
       }
@@ -370,6 +410,15 @@ void Processing() {
       
       if (num_tracks-2<0) continue;
 
+      //cout << evt << "\t" << pair_p << "\t" << pair_m << endl;
+      /*int muID_p = var_idA[i][pair_p];
+	int muID_m = var_idA[i][pair_m];
+	int muAng_p = var_idB[i][pair_p];
+	int muAng_m = var_idB[i][pair_m];*/
+      
+      /*int nTrack = var_nTrack[i][0];
+	int nTrackQual = var_nTrackQual[i][0];*/
+      
       //////////////////////////////////////////////////////////////////////////
       //                           Kinematics cuts                            //
       //////////////////////////////////////////////////////////////////////////
@@ -386,7 +435,7 @@ void Processing() {
       }
       hCuts_numAfter->Fill(3., weight);
 
-      if (var_nhitsTrack[i][pair_p]<8 || var_nhitsTrack[i][pair_m]<8) {
+      if (var_nhitsTrack[i][pair_p]<8 || var_nhitsTrack[i][pair_m]<8) { // FIXME 5?!? JH @ Preapproval
 	hCuts->Fill(4., weight);
 	continue;
       }

@@ -2,11 +2,13 @@
 #include <iostream>
 using namespace std;
 #define MAXNUM 12 // the maximum of sources for TTrees
+#define NUMTRIG 7
 
 // Bunch crossing
 Int_t var_bx[MAXNUM][1], var_run[MAXNUM][1], var_ls[MAXNUM][1], var_event[MAXNUM][1];
 //FIXME -> Double_t? BUG?
-Int_t hlt_d0[MAXNUM][1], hlt_d1[MAXNUM][1], hlt_d2[MAXNUM][1], hlt_d3[MAXNUM][1], hlt_d4[MAXNUM][1], hlt_d5[MAXNUM][1];
+Int_t hlt_d[NUMTRIG][MAXNUM][1];
+//Int_t hlt_d0[MAXNUM][1], hlt_d1[MAXNUM][1], hlt_d2[MAXNUM][1], hlt_d3[MAXNUM][1], hlt_d4[MAXNUM][1], hlt_d5[MAXNUM][1];
 Int_t techBit[MAXNUM][128];
 //Int_t var_idA[MAXNUM][100],var_idB[MAXNUM][100], var_idC[MAXNUM][100], var_idD[MAXNUM][100], var_idE[MAXNUM][100];
 // RecoTrack
@@ -98,19 +100,13 @@ int OpenTree(TTree *tree, int index, bool isMC) {
   //                       High Level Trigger Decisions                       //
   //////////////////////////////////////////////////////////////////////////////
   
-  TString hlttrigger01 = "HLT_DoubleMu4Acoplanarity";
-  TString hlttrigger02 = "HLT_DoubleMu5Acoplanarity";
-  TString hlttrigger03 = "HLT_DoubleMu6Acoplanarity";
-  TString hlttrigger04 = "HLT_DoubleMu7Acoplanarity";
-  TString hlttrigger05 = "HLT_Mu13Mu8";
-  TString hlttrigger06 = "HLT_Mu17Mu8";
-
-  tree->SetBranchAddress(hlttrigger01,hlt_d0[index]);
-  tree->SetBranchAddress(hlttrigger02,hlt_d1[index]);
-  tree->SetBranchAddress(hlttrigger03,hlt_d2[index]);
-  tree->SetBranchAddress(hlttrigger04,hlt_d3[index]);
-  tree->SetBranchAddress(hlttrigger05,hlt_d4[index]);
-  tree->SetBranchAddress(hlttrigger06,hlt_d5[index]);
+  tree->SetBranchAddress("HLT_DoubleMu4Acoplanarity",hlt_d[0][index]);
+  tree->SetBranchAddress("HLT_DoubleMu5Acoplanarity",hlt_d[1][index]);
+  tree->SetBranchAddress("HLT_DoubleMu6Acoplanarity",hlt_d[2][index]);
+  tree->SetBranchAddress("HLT_DoubleMu7Acoplanarity",hlt_d[3][index]);
+  tree->SetBranchAddress("HLT_Mu13Mu8",hlt_d[4][index]);
+  tree->SetBranchAddress("HLT_Mu17Mu8",hlt_d[5][index]);
+  tree->SetBranchAddress("HLT_DoubleMu7",hlt_d[6][index]);
   
   //////////////////////////////////////////////////////////////////////////////
   //                           L1 Trigger Decisions                           //
