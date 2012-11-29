@@ -1,1 +1,0 @@
-g77 -fno-automatic -c *.f ; /usr/bin/ar -rcf lib.a *.o ; mv lib.a .. ; 
