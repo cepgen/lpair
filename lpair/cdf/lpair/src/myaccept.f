@@ -6,8 +6,8 @@ C
 *
       integer n
 *
-      call pawfil1 ! fill PAW ntuple/histograms
-      call genzfil ! fill GENZ output
+*      call pawfil1 ! fill PAW ntuple/histograms
+*      call genzfil ! fill GENZ output
 *
       return
 
