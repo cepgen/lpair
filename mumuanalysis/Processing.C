@@ -61,9 +61,13 @@ void Processing() {
 
   stringstream ss;
   Double_t cut_pTPair_min, cut_pTPair_max, cut_acop, cut_dpt;
+  TString inRun, onlyRange;
   TString cut_nExtTrk;
   TString output_file;
   Bool_t drawAfterwards, antisel;
+  Bool_t mu13_mu8, mu17_mu8, doublemu7, passesTrigger;
+  Double_t fracEvts,  splittingAB;
+  Int_t dc;
   Int_t pair_p, pair_m, trailing, leading, num_pvc;
   Double_t etap, etam, ptp, ptm, etaLead, etaTrail, ptLead, ptTrail;
   Double_t mup_eff, mum_eff, mu17_eff, mu8_eff, mu_eff;
@@ -71,6 +75,8 @@ void Processing() {
   Double_t pu_weight, weight, weight_nopu;
   Double_t et_sumPt, rap_pair, acop, num_tracks;
   TLorentzVector Pm, Pp;
+
+  splittingAB = 263214./(263214.+494242.);
 
   TH1D *extTrk[masses];
   TH1D *invm[masses];
@@ -86,28 +92,17 @@ void Processing() {
   TH2D *acoplVsdpt[masses], *ntrkVsnvtx[masses], *acoplVsptpair[masses];
   TH2D *nvtxVspuw[masses];
   TH1D *vtxT[masses], *vtxZ[masses];
-  TH1D *hCuts, *hCuts_numAfter, *hTrig;
+  TH1D *hTrig[masses];
+  TH1D *hCuts, *hCuts_numAfter;
 
   gSystem->Load("includes/OpenTree_C.so");
   gSystem->Load("includes/TDRStyle_C.so");
   gSystem->Load("includes/GlobalFunctions_C.so");
 
-  //output_file = "1022-lumiSelection-0exttrk.root";
-  //output_file = "1022-lumiSelection-1exttrk.root";
-  //output_file = "1022-lumiSelection-1-6exttrk.root";
-  //output_file = "1022-antilumiSelection-0exttrk.root";
-  //output_file = "1022-antilumiSelection-0exttrk-m160.root";
-  //output_file = "1022-antilumiSelection-1-6exttrk.root";
-  //output_file = "1022-noSelection-0exttrk.root";
-  //output_file = "1022-noSelection-0exttrk-m_gt_160.root";
-  //output_file = "1022-noSelection-allexttrk.root";
-  //output_file = "1022-noSelection-1-6exttrk.root";
-  //output_file = "1022-signalSelection-0exttrk.root";
-  //output_file = "1022-signalSelection-1-6exttrk.root";
-  output_file = "test.root";
 
   ///////////////////////////////////////////
   //        Parameters for plotting        //
+  onlyRange      = "";                     // "A"/"B"/"" (for A+B)
   cut_pTPair_min = 0.0;                    // in GeV/c
   cut_pTPair_max = 0.0;                    // in GeV/c
   cut_acop       = 0.1;                    // between 0.0 and 1.0 (0. = no cut)
@@ -117,24 +112,42 @@ void Processing() {
   cut_nExtTrk    = "0";                    // 0, 1, 1-6, 0-6, 0-10, all (no cut)
   ///////////////////////////////////////////
 
+  ss.str(""); ss << "1219-";
+  if (cut_acop==.1 && cut_dpt==1.) {
+    if (!antisel)
+      ss << "ElasticSelection";
+    else ss << "AntiElasticSelection";
+  }
+  else {
+    ss << "NoSelection";
+    if (CUT_INVM_MIN!=20.)
+      ss << "-Mgt" << CUT_INVM_MIN;
+  }
+  ss << "-" << cut_nExtTrk << "exttrk";
+  if (onlyRange=="")
+    ss << "-RunAB";
+  else ss << "-Run" << onlyRange;
+  ss << ".root";
+  output_file = ss.str();
+  cout << "Output file : " << output_file << endl;
+
   drawAfterwards = false;
 
   ofstream eventslist("eventsList.txt");
 
   // Adding paths to files (usage: AddFile((TString)name, (TString)path, (bool)is_monte_carlo, (Double_t)normalization_factor))
 
+  AddFile("data", "Data-1122.root", false);
   //AddFile("signal", "CalcHEP-Signal-5kEvents.root", true, 1.);
   //AddFile("qcd", "QCD-MuEnrichedPt10-Max15ExtTrk-2806.root", true , 1.);
-
-  AddFile("dymumu", "DYtoMuMu-powheg-1122.root", true);
   AddFile("dytautau", "DYtoTauTau-1122.root", true);
-  AddFile("data", "Data-1122.root", false);
+  AddFile("dymumu", "DYtoMuMu-powheg-1218-netbugfix.root", true);
   AddFile("tt", "TT-uncomplete-1122.root", true);
   AddFile("ww-nlo", "WW-CT10-mcatnlo-1122.root", true);
   AddFile("ww-z2", "WW-TuneZ2-pythia6-1122.root", true);
-  AddFile("elel", "ElEl-15GeV-MuMu-Max15ExtTrk-1121.root", true, 1.);
-  AddFile("inelel", "InelEl-15GeV-MuMu-Max15ExtTrk-1121.root", true, 1.);
-  AddFile("inelinel", "InelInel-15GeV-MuMu-Max15ExtTrk-1121.root", true, 1.);
+  AddFile("elel", "ElEl-1218-netbugfix.root", true);
+  AddFile("inelel", "InelEl-1218-netbugfix.root", true);
+  AddFile("inelinel", "InelInel-1218-netbugfix.root", true);
 
   const Int_t numFiles = filename.size();
 
@@ -143,18 +156,56 @@ void Processing() {
 
   for (Int_t i=0; i<numFiles; ++i) {
     
+    Bool_t MC = isMC.at(i);
+
     cerr << "=== " << filename.at(i) << " (" << numEvents.at(i) << " events) ===" << endl;
     cout << "================================================================================" << endl;
     cout << "Opening file \n"
          << "\t" << filename.at(i) << "\n"
          << "\t" << setprecision(7) << numEvents.at(i) << " events\n"
-         << "\tMC ? " << isMC.at(i)
+         << "\tMC ? " << MC
          << endl;
     cout << "================================================================================" << endl;
     TFile *file = new TFile(filename.at(i));
     TTree *tree = (TTree*)(file->Get("ntp1"));
+    tree->SetBranchStatus("*", 0);
+    tree->SetBranchStatus("Run", 1);
+    tree->SetBranchStatus("HLT_Mu13Mu8", 1);
+    tree->SetBranchStatus("HLT_Mu13Mu8_Prescl", 1);
+    tree->SetBranchStatus("HLT_Mu17Mu8", 1);
+    tree->SetBranchStatus("HLT_Mu17Mu8_Prescl", 1);
+    tree->SetBranchStatus("HLT_DoubleMu7", 1);
+    tree->SetBranchStatus("HLT_DoubleMu7_Prescl", 1);
+    tree->SetBranchStatus("MuonPairCand", 1);
+    tree->SetBranchStatus("nPrimVertexCand", 1);
+    tree->SetBranchStatus("PrimVertexCand_mumuTwoTracks", 1);
+    tree->SetBranchStatus("PrimVertexCand_x", 1);
+    tree->SetBranchStatus("PrimVertexCand_y", 1);
+    tree->SetBranchStatus("PrimVertexCand_z", 1);
+    tree->SetBranchStatus("PrimVertexCand_tracks", 1);
+    tree->SetBranchStatus("MuonCand_charge", 1);
+    tree->SetBranchStatus("MuonCand_pt", 1);
+    tree->SetBranchStatus("MuonCand_eta", 1);
+    tree->SetBranchStatus("MuonCand_phi", 1);
+    tree->SetBranchStatus("MuonCand_validtrackhits", 1);
+    tree->SetBranchStatus("MuonCand_tightID", 1);
+    tree->SetBranchStatus("MuonCand_istracker", 1);
+    tree->SetBranchStatus("MuonCand_isglobal", 1);
+    tree->SetBranchStatus("MuMu_mass", 1);
+    tree->SetBranchStatus("MuMu_dpt", 1);
+    tree->SetBranchStatus("MuMu_pt", 1);
+    tree->SetBranchStatus("nTrackCand", 1);
+    tree->SetBranchStatus("TrackCand_vtxdxyz", 1);
+    tree->SetBranchStatus("TrackCand_purity", 1);
+    tree->SetBranchStatus("TrackCand_pt", 1);
+    tree->SetBranchStatus("TrackCand_eta", 1);
+    tree->SetBranchStatus("TrackCand_phi", 1);
+    tree->SetBranchStatus("Weight3D", 1);
+    tree->SetBranchStatus("Weight3D_2011A", 1);
+    tree->SetBranchStatus("Weight3D_2011B", 1);
+    //tree->SetBranchStatus("", 1);
 
-    OpenTree(tree, i, isMC.at(i));
+    OpenTree(tree, i, MC);
 
     pair_p = -1;
     pair_m = -1;
@@ -167,13 +218,10 @@ void Processing() {
       ss.str(""); ss << "numExtraTracks_" << mass_range[j] << "_" << datasetName.at(i);
       extTrk[j] = new TH1D(ss.str().c_str(),ss.str().c_str(),6,-0.5,5.5); hList->Add(extTrk[j]);
       ss.str(""); ss << "invariantMass_ov160_" << mass_range[j] << "_" << datasetName.at(i);
-      invm_over160GeV[j] = new TH1D(ss.str().c_str(),ss.str().c_str(),70,150.,500.); hList->Add(invm_over160GeV[j]);
+      invm_over160GeV[j] = new TH1D(ss.str().c_str(),ss.str().c_str(),35,150.,500.); hList->Add(invm_over160GeV[j]);
       ss.str(""); ss << "invariantMass_" << mass_range[j] << "_" << datasetName.at(i);
       invm[j] = new TH1D(ss.str().c_str(),ss.str().c_str(),53,35.,300.); hList->Add(invm[j]);
       ss.str(""); ss << "pTpair_" << mass_range[j] << "_" << datasetName.at(i);
-      //ptpair[j] = new TH1D(ss.str().c_str(),ss.str().c_str(),135,0.,10.125); hList->Add(ptpair[j]);
-      //ptpair[j] = new TH1D(ss.str().c_str(),ss.str().c_str(),100,0.,50.); hList->Add(ptpair[j]);
-      //ptpair[j] = new TH1D(ss.str().c_str(),ss.str().c_str(),50,0.,20.); hList->Add(ptpair[j]);
       ptpair[j] = new TH1D(ss.str().c_str(),ss.str().c_str(),120,0.,300.); hList->Add(ptpair[j]);
       ss.str(""); ss << "pTpairZoom1_" << mass_range[j] << "_" << datasetName.at(i);
       ptpairZoom1[j] = new TH1D(ss.str().c_str(),ss.str().c_str(),25,0.,50.); hList->Add(ptpairZoom1[j]);
@@ -202,7 +250,7 @@ void Processing() {
       ss.str(""); ss << "pTSingleP_" << mass_range[j] << "_" << datasetName.at(i);
       pTSingleP[j] = new TH1D(ss.str().c_str(),ss.str().c_str(),75,20.,95.); hList->Add(pTSingleP[j]);
       ss.str(""); ss << "etaPair_" << mass_range[j] << "_" << datasetName.at(i);
-      etaPair[j] = new TH1D(ss.str().c_str(),ss.str().c_str(),40,-4.0,4.0); hList->Add(etaPair[j]);
+      etaPair[j] = new TH1D(ss.str().c_str(),ss.str().c_str(),20,-4.0,4.0); hList->Add(etaPair[j]);
       ss.str(""); ss << "acoplVsdpt_" << mass_range[j] << "_" << datasetName.at(i);
       acoplVsdpt[j] = new TH2D(ss.str().c_str(),ss.str().c_str(),100,0.,1.,100,0.,5.); hList->Add(acoplVsdpt[j]);
       ss.str(""); ss << "acoplVsptpair_" << mass_range[j] << "_" << datasetName.at(i);
@@ -238,25 +286,40 @@ void Processing() {
       ss.str(""); ss << "etEtaAfter_" << mass_range[j] << "_" << datasetName.at(i);
       etEtaAfter[j] = new TH1D(ss.str().c_str(),ss.str().c_str(),60,-3.,3.); hList->Add(etEtaAfter[j]);
     }
-    ss.str(""); ss << "triggersMatched_" << datasetName.at(i);
-    hTrig = new TH1D(ss.str().c_str(),ss.str().c_str(),4,-0.5,3.5); hList->Add(hTrig);
     ss.str(""); ss << "Cuts_" << datasetName.at(i);
     hCuts = new TH1D(ss.str().c_str(),ss.str().c_str(),NUM_CUTS,0.,NUM_CUTS); hList->Add(hCuts);
     ss.str(""); ss << "Cuts_NumAfter_" << datasetName.at(i);
     hCuts_numAfter = new TH1D(ss.str().c_str(),ss.str().c_str(),NUM_CUTS,0.,NUM_CUTS); hList->Add(hCuts_numAfter);
 
 
-    for (Double_t evt=0; evt<numEvents.at(i); ++evt) {
 
-      if (fmod(evt,5000)==0) {
+    for (Int_t evt=0; evt<numEvents.at(i); ++evt) {
+      tree->GetEntry(evt);
+
+      //####### Computation progress display ########
+      if (fmod(evt,10000)==0) {
 	cerr << "[";
 	cerr << setprecision(4) << setw(5)
 	     << evt/numEvents.at(i)*100 << "%";
 	cerr << "] Processing event " 
 	     << setprecision(7) << evt << " / " << numEvents.at(i) << endl;
       }
+      //#############################################
 
-      tree->GetEntry(evt);
+      if (!MC) {
+	if (var_run[i][0]<175832) inRun = "A";
+	else inRun = "B";
+      }
+      else {
+	if (evt/numEvents.at(i)<splittingAB) inRun = "A";
+	else inRun = "B";
+      }
+
+      if (onlyRange!="") {
+	if (onlyRange=="A" && inRun=="B") continue;
+	if (onlyRange=="B" && inRun=="A") continue;
+      }
+
 
       if(var_charge[i][var_Pair[i][0]]>0){
 	pair_p = var_Pair[i][0]; pair_m = var_Pair[i][1];
@@ -274,7 +337,7 @@ void Processing() {
       pu_weight = 1.;
       weight = 1.;
 
-      if (isMC.at(i)) { // Muon efficiency correction only for MC
+      if (MC) { // Muon efficiency correction only for MC
 	mup_eff = 1.;
 	mum_eff = 1.;
 	mu17_eff = 1.;
@@ -291,7 +354,7 @@ void Processing() {
 	etaTrail = fabs(var_eta[i][trailing]);
 	ptLead = var_pt[i][leading];
 	ptTrail = var_pt[i][trailing];
-	if (evt<0.453435115*numEvents.at(i)) {
+	if (inRun=="A") {
 	  // Muon efficiency for Run2011A
 	  for (Int_t l=0; l<(Int_t)(etaLowA.size()); l++) {
 	    if (etap>etaLowA.at(l) && etap<etaHighA.at(l) &&
@@ -301,8 +364,9 @@ void Processing() {
 		ptm>pTLowA.at(l) && ptm<pTHighA.at(l))
 	      mum_eff = MuEffA.at(l);
 	  }
+	  pu_weight = var_PUweightA[i][0];
 	}
-	else {
+	else if (inRun=="B") {
 	  // Muon efficiency for Run2011B
 	  for (Int_t l=0; l<(Int_t)(etaLowB.size()); l++) {
 	    if (etap>etaLowB.at(l) && etap<etaHighB.at(l) &&
@@ -312,7 +376,11 @@ void Processing() {
 		ptm>pTLowB.at(l) && ptm<pTHighB.at(l))
 	      mum_eff = MuEffB.at(l);
 	  }
+	  pu_weight = var_PUweightB[i][0];
 	}
+	else continue;
+	
+	// Trigger efficiency (Run2011A + Run2011B)
 	for (Int_t l=0; l<(Int_t)(TEetaLow17.size()); l++) {
 	  if (etaLead>TEetaLow17.at(l) && etaLead<TEetaHigh17.at(l) &&
 	      ptLead>TEpTLow17.at(l) && ptLead<TEpTHigh17.at(l))
@@ -323,13 +391,11 @@ void Processing() {
 	      ptTrail>TEpTLow8.at(l) && ptTrail<TEpTHigh8.at(l))
 	    mu8_eff = TEff8.at(l);
 	}
-	pu_weight = var_PUweight[i][0];
 	mu_eff = mup_eff*mum_eff;
 	mu_eff = mu_eff*mu17_eff*mu8_eff;
 	
 	weight_nopu = weight*mu_eff;
 	weight = weight_nopu*pu_weight;
-	//cout << weight_nopu << "\t" << weight << "\t" << pu_weight << endl;
       }
       else { // Data
 	weight = 1.;
@@ -341,19 +407,48 @@ void Processing() {
       //////////////////////////////////////////////////////////////////////////
 
       Int_t numTriggersMatched(0);
-      if (PassesTrigger(hlt_d[4][i][0],var_run[i][0]))
-	numTriggersMatched += 1;
-      if (PassesTrigger(hlt_d[5][i][0],var_run[i][0]))
-	numTriggersMatched += 2;
-      if (PassesTrigger(hlt_d[6][i][0],var_run[i][0]))
-	numTriggersMatched += 4;
-
-      if (numTriggersMatched==0) { // No trigger was matched
+      mu13_mu8 = false;
+      mu17_mu8 = false;
+      doublemu7 = false;
+      passesTrigger = false;
+      
+      if (hlt_d[4][i][0] && (!MC || hlt_prescl[4][i][0]==1)) // Mu13_Mu8
+	mu13_mu8 = true;
+      if (hlt_d[5][i][0] && (!MC || hlt_prescl[5][i][0]==1)) // Mu17_Mu8
+	mu17_mu8 = true;
+      if (hlt_d[6][i][0] && (!MC || hlt_prescl[6][i][0]==1)) // DoubleMu7
+	doublemu7 = true;
+      
+      if (!MC) {
+	if (var_run[i][0]<=165208) {
+	  if (doublemu7) passesTrigger = true;
+	}
+	else if (var_run[i][0]>=165364 && var_run[i][0]<=178419) {
+	  if (mu13_mu8) passesTrigger = true;
+	}
+	else if (var_run[i][0]>=178420) {
+	  if (mu17_mu8) passesTrigger = true;
+	}
+      }
+      else {
+	fracEvts = evt/numEvents.at(i);
+	if (inRun=="A") {
+	  if (fracEvts<0.098229377*splittingAB) {
+	    if (doublemu7) passesTrigger = true;
+	  }
+	  else if (fracEvts>=0.098229377*splittingAB) {
+	    if (mu13_mu8) passesTrigger = true;
+	  }
+	}
+	else if (inRun=="B") {
+	  if (mu13_mu8 || mu17_mu8) passesTrigger = true;
+	}
+      }
+      if (!passesTrigger) {
 	hCuts->Fill(0., weight);
 	continue;
       }
-      hCuts_numAfter->Fill(0.,weight);
-
+      hCuts_numAfter->Fill(0., weight);
 
       ///////////////////////////////////////////////////////////////////////////
       //               Loop on all the primary vertex candidates               //
@@ -363,7 +458,7 @@ void Processing() {
       Int_t vtx = -999;
       
       Int_t num_vtx_with_dimuon(0);
-      for (Int_t primvtx=0; primvtx<var_nvtx[i]; primvtx++) {
+      for (Int_t primvtx=0; primvtx<var_nvtx[i][0]; primvtx++) {
 	if (var_vtxhasmumu[i][primvtx] != 1) continue;
 	num_vtx_with_dimuon++;
 	vtx = primvtx;
@@ -427,7 +522,7 @@ void Processing() {
       }
       hCuts_numAfter->Fill(7., weight);
       
-      /*if (!(bool)(isMC.at(i))) {
+      /*if (!(bool)(MC)) {
 	cout << "candidate " << setw(6) << filterEvents << "\n"
 	<< "\tRun " << var_run[i][0] << "  LS " << var_ls[i][0] << "\tEvt " << var_event[i][0] << "\n"
 	<< "\tmass=" << var_mass[i][0] << " GeV" << "\n"
@@ -473,7 +568,7 @@ void Processing() {
 	// ensure the pT of the pair is compatible with the selection
 	// without cutting on it at this step
 
-	num_pvc = var_nvtx[i];
+	num_pvc = var_nvtx[i][0];
 
 	if (var_mass[i][0]>=INV_MASS_SPLIT) {
 	  if (var_mass[i][0]>INV_MASS_ZPEAK_LOW && var_mass[i][0]<INV_MASS_ZPEAK_UP) {
@@ -662,19 +757,6 @@ void Processing() {
 	etEtaAfter[FULLM]->Fill(var_et_eta[i][et], weight);
       }
       numVtxAfterCuts[FULLM]->Fill(num_pvc-0.5, weight);
-
-      if ((numTriggersMatched&&4)/4==1) {
-	hTrig->Fill(2-0.5, weight);
-	numTriggersMatched -= numTriggersMatched&&4;
-      }
-      if ((numTriggersMatched&&2)/2==1) {
-	hTrig->Fill(1-0.5, weight);
-	numTriggersMatched -= numTriggersMatched&&2;
-      }
-      if ((numTriggersMatched&&1)/1==1) {
-	hTrig->Fill(0-0.5, weight);
-	numTriggersMatched -= numTriggersMatched&&1;
-      }
     } // end of events loop
   } // end of files loop
   TFile *out_file = new TFile(output_file, "RECREATE");

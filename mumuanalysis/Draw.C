@@ -28,9 +28,9 @@ void Draw() {
   Style_t mainFont = 43;
   Float_t legendSize = 16.;
   Float_t labelSize = 22.;
-  Float_t axisTitleSize = 26;
+  Float_t axisTitleSize = 28;
   Float_t axisTitleOffset = 1.1;
-  Float_t infoSize = 18.;
+  Float_t infoSize = 21.;
 
   drawInvm = false;
 
@@ -39,8 +39,8 @@ void Draw() {
 
   //massrange = "lowm";
   //massrange = "Zpeak";
-  massrange = "highm";
-  //massrange = "full";
+  //massrange = "highm";
+  massrange = "full";
 
   filename_prepend = "ElasticSelection_";
   //filename_prepend = "ElasticSelection_runA_";
@@ -66,7 +66,7 @@ void Draw() {
   Double_t weight_inelel = integrated_lumi/1e5*0.41048574*2; // August 2012 generation with pT>15
   Double_t weight_inelinel = integrated_lumi/1e5*0.61697446; // August 2012 generation with 0<M<500 and pT>15
   //Double_t weight_dymumu = integrated_lumi/27452498*1626.0; // FIXME no k factor
-  Double_t weight_dymumu = integrated_lumi/26242225*1626.0;
+  Double_t weight_dymumu = integrated_lumi/25477423*1626.0;
   Double_t weight_dytautau = integrated_lumi/19937479*1627;
   Double_t weight_tt = integrated_lumi/10263328*149.6;
   Double_t weight_qcd_pt20to30 = integrated_lumi/10076800*2.363e8*0.00568;
@@ -102,7 +102,6 @@ void Draw() {
   AddQuantity("Cuts", "", "", "");
   AddQuantity("numVtxAfterCuts", "numVtx_2", "Number of vertices in the event", "");
   AddQuantity("numVtx", "numVtx", "Number of vertices in the event", "");
-  AddQuantity("numVtx_noPURW", "numVtx", "Number of vertices in the event", "");
   AddQuantity("vtxT", "vtxT", "", "");
   AddQuantity("vtxZ", "vtxZ", "", "");
   AddQuantity("pTpairZoom3", "pTpair-0to5", "p_{T}(#mu#mu)", "GeV");
@@ -146,7 +145,7 @@ void Draw() {
   AddDistribution("inelinel", "LPAIR #gamma#gamma#rightarrow#mu^{+}#mu^{-} (double-diss.)", weight_inelinel, 419);
   AddDistribution("inelel", "LPAIR #gamma#gamma#rightarrow#mu^{+}#mu^{-} (single-diss.)", weight_inelel, 30);
   AddDistribution("elel", "LPAIR #gamma#gamma#rightarrow#mu^{+}#mu^{-} (elastic)", weight_elel, 800);
-  AddDistribution("ww", "Inclusive WW (TuneZ2)", weight_ww_z2, 3);
+  AddDistribution("ww-z2", "Inclusive WW (TuneZ2)", weight_ww_z2, 3);
   AddDistribution("tt", "t#bar{t}", weight_tt, 4);
   //AddDistribution("qcd", "QCD (#mu enriched)", weight_qcd_muenriched, 7);
   //AddDistribution("qcd-pt20to30", "QCD (#mu enriched, 30 GeV/c<p_{T}<50 GeV/c)", weight_qcd_pt20to30, 5);
@@ -156,7 +155,7 @@ void Draw() {
 
   for (int q=0; q<quantities.size(); q++) {
 
-    TLegend *leg = new TLegend(0.45,0.35,0.8,0.7);
+    TLegend *leg = new TLegend(0.45,0.55,0.8,0.85);
     leg->SetTextFont(mainFont);
     leg->SetTextSize(legendSize);
     THStack *hs_q = new THStack(quantities.at(q), quantities.at(q));
@@ -318,18 +317,20 @@ void Draw() {
     if (dualPlot) {
       c1->Divide(1,2);
       TPad *c1_1 = (TPad*)(c1->GetPad(1));
-      c1_1->SetPad(0.,.270,1.,1.);
+      c1_1->SetPad(0.,.250,1.,1.);
       c1_1->SetRightMargin(0.03);
+      c1_1->SetBottomMargin(0.);
       TPad *c1_2 = (TPad*)(c1->GetPad(2));
-      c1_2->SetPad(0.,0.,1.,.270);
-      c1_2->SetBottomMargin(0.12);
+      c1_2->SetPad(0.,0.,1.,.250);
+      c1_2->SetBottomMargin(0.3);
       c1_2->SetRightMargin(0.03);
-      c1_2->SetTopMargin(0.08);
+      c1_2->SetTopMargin(0.);
       c1->cd(1);
     }
 
     hist_mc->Draw("E2");
 
+    hist_mc->SetTitle("");
     hist_mc->SetTitle("");
     xlabel = quantitiesNames.at(q);
     if (quantitiesUnits.at(q) != "")
@@ -352,7 +353,7 @@ void Draw() {
     }
 
     hist_mc->GetYaxis()->SetTitle(ylabel);
-    hist_mc->GetXaxis()->SetTitleOffset(axisTitleOffset*1.04);
+    hist_mc->GetXaxis()->SetTitleOffset(axisTitleOffset*1.03);
     hist_mc->GetYaxis()->SetTitleOffset(axisTitleOffset);
     hist_mc->GetXaxis()->SetLabelFont(mainFont);
     hist_mc->GetXaxis()->SetLabelSize(labelSize);
@@ -415,8 +416,9 @@ void Draw() {
     maximum = TMath::Max(max_data, max_mc);
     hist_mc->GetYaxis()->SetRangeUser(0.01,maximum*1.25);
 
+
     ss.str(""); ss << "CMS Preliminary 2011, #sqrt{s}=7 TeV, L="<< integrated_lumi/1000 << " fb^{-1}";
-    TPaveText *plotlabel = new TPaveText(0.5,0.91,0.99,0.95,"NDC");
+    TPaveText *plotlabel = new TPaveText(0.45,0.91,0.99,0.97,"NDC");
     plotlabel->SetTextColor(kBlack);
     plotlabel->SetFillColor(kWhite);
     plotlabel->SetBorderSize(0);
@@ -455,17 +457,17 @@ void Draw() {
       line->SetLineStyle(2);
       
       rap->Draw();
-      rap->GetXaxis()->SetTitle("");
+      rap->GetXaxis()->SetTitle(xlabel);
       rap->GetYaxis()->SetTitle("Data/MC");
       rap->GetYaxis()->SetRangeUser(-2.,4.);
       rap->GetYaxis()->SetTickLength(.04);
-      max = rap->GetBinContent(rap->GetMaximumBin())*1.1-1.;
-      min = rap->GetBinContent(rap->GetMinimumBin())*1.1-1.;
+      max = rap->GetBinContent(rap->GetMaximumBin())*1.15-1.;
+      min = rap->GetBinContent(rap->GetMinimumBin())*1.15-1.;
       dist = TMath::Max(fabs(min),fabs(max));
       dist = TMath::Min(dist, 8.);
       rap->GetYaxis()->SetRangeUser(1.-dist,1.+dist);
       
-      rap->GetXaxis()->SetTitleOffset(axisTitleOffset);
+      rap->GetXaxis()->SetTitleOffset(3.);
       rap->GetYaxis()->SetTitleOffset(axisTitleOffset);
       rap->GetXaxis()->SetLabelFont(mainFont);
       rap->GetXaxis()->SetLabelSize(labelSize);
@@ -488,7 +490,7 @@ void Draw() {
     //canv->SetGrayscale();
     out_file = filename_prepend+quantitiesTitles.at(q)+"_"+massrange+"_1009";
     out_file = "tmp/"+out_file;
-    c1->SaveAs(out_file+".png");
+    c1->SaveAs(out_file+".pdf");
   }
 
 }
