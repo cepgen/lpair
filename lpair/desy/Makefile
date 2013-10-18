@@ -18,22 +18,24 @@ RM = /bin/rm
 RMFLAGS = -rf
 
 # Make the executable
+.PHONY: all
+all: lib $(INTER1)
 
 clean: 
-	$(RM) $(RMFLAGS) ${INTER1}.exe last.kumac* paw.metafile *.log
+	$(RM) $(RMFLAGS) ${INTER1} last.kumac* paw.metafile *.log
 Clean:
-	$(RM) $(RMFLAGS) ${INTER1}.exe last.kumac* paw.metafile *.log *ps *.out ${INTER1}*.hbook OUT/*.* source/*.o
+	$(RM) $(RMFLAGS) ${INTER1} last.kumac* paw.metafile *.log *ps *.out ${INTER1}*.hbook OUT/*.* source/*.o
 #
 run:
-	./lpair.exe < lpair-cms-mumu-pp.card > lpair-pp.out
+	./$(INTER1) < lpair-cms-mumu-pp.card > lpair-pp.out
 #
 # library
 #
 lib:
-	cd ./source;pwd;g77  -fno-automatic -c *.f;/usr/bin/ar r libilpairg.a *.o;pwd;mv libilpairg.a ..;cd ..
+	cd ./source;pwd; g77 -fno-automatic -c *.f; /usr/bin/ar r libilpairg.a *.o; mv libilpairg.a ..; cd ..
 #
 # Make the executable
 #
 $(INTER1):
-	$(FC) $(CFLAGS) $@.exe $(S1) $(LIBINT) $(OBJ) $(LIBRARY)
+	$(FC) $(CFLAGS) $@ $(S1) $(LIBINT) $(OBJ) $(LIBRARY)
 

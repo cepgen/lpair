@@ -1,5 +1,5 @@
 
-       PROGRAM test6
+       PROGRAM eemumu
        IMPLICIT DOUBLE PRECISION (a-h,o-z)
        DOUBLE PRECISION me,mu,f
        COMMON/inpu/me,mu,ebeam,const,sq
