@@ -1,41 +1,35 @@
-INTER1  = lpair
-S1   = ilpair-cms-pp.f
-#
-LIBRARY = -L/afs/cern.ch/sw/lcg/external/cernlib/2005/x86_64-slc5-gcc43-opt/lib -lpdflib804 -lmathlib -lgeant -ljetset74  -lpacklib -lkernlib \
+F_FILES = $(wildcard source/*.f)
+LIB_FILES = $(patsubst source/%.f,obj/%.o,$(F_FILES))
+LIBRARY = -L/afs/cern.ch/sw/lcg/external/cernlib/2005/x86_64-slc5-gcc43-opt/lib \
+          -lpdflib804 -lmathlib -lgeant -ljetset74 -lpacklib -lkernlib \
           -lpawlib -lgraflib -lgrafX11 -lphtools
-LIBINT	= libilpairg.a
-OBJ	= evertex.o
-#
+OBJ_FILES = ilpair-cms-pp.o evertex.o $(LIB_FILES)
+VPATH = source/
+
 ###############################################################################
-#
-# Rule for objects:
 
 FC = g77
+FFLAGS = -g -fno-automatic -w
 
-CFLAGS = -g -fno-automatic -w -o
-
-RM = /bin/rm  
+RM = /bin/rm
 RMFLAGS = -rf
 
-# Make the executable
 .PHONY: all
-all: lib $(INTER1)
+all: lpair
 
-clean: 
-	$(RM) $(RMFLAGS) ${INTER1} last.kumac* paw.metafile *.log
-Clean:
-	$(RM) $(RMFLAGS) ${INTER1} last.kumac* paw.metafile *.log *ps *.out ${INTER1}*.hbook OUT/*.* source/*.o
-#
-run:
-	./$(INTER1) < lpair-cms-mumu-pp.card > lpair-pp.out
-#
-# library
-#
-lib:
-	cd ./source;pwd; g77 -fno-automatic -c *.f; /usr/bin/ar r libilpairg.a *.o; mv libilpairg.a ..; cd ..
 #
 # Make the executable
 #
-$(INTER1):
-	$(FC) $(CFLAGS) $@ $(S1) $(LIBINT) $(OBJ) $(LIBRARY)
+lpair: $(OBJ_FILES)
+	$(FC) $(FFLAGS) -o $@ $^ $(LIBRARY)
 
+nice:
+	$(RM) $(RMFLAGS) obj/*.o
+
+clean: nice
+	$(RM) $(RMFLAGS) lpair
+#
+# Make the objects
+#
+obj/%.o: %.f
+	$(FC) -c $(FFLAGS) $< -o $@
