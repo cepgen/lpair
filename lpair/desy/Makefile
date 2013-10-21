@@ -24,7 +24,7 @@ lpair: $(OBJ_FILES)
 	$(FC) $(FFLAGS) -o $@ $^ $(LIBRARY)
 
 nice:
-	$(RM) $(RMFLAGS) obj/*.o
+	$(RM) $(RMFLAGS) *.o obj/*.o
 
 clean: nice
 	$(RM) $(RMFLAGS) lpair
