@@ -8,6 +8,8 @@ C----
 *KEEP,INPU.
       REAL*8       ME,MU,MP,MX,S,SQ,PE,PP,EE,EP,CONST,PI
       COMMON /INPU/ME,MU,MP,MX,S,SQ,PE,PP,EE,EP,CONST,PI
+      REAL*8 TMX
+      COMMON /MYKIN/ TMX
 
 *KEEP,BEAM.
       INTEGER          INTGE,INTGP,GPDF,SPDF,PMOD,EMOD,IPAIR,NQUARK
@@ -67,56 +69,57 @@ C
       NCALL=NCALL+1
 C
       IF (PMOD .GE. 100) THEN
-       IF (NQUARK.EQ.12) THEN
-         MQ=DBLE(ULMASS(2))
-       ELSE
-         MQ=DBLE(ULMASS(NQUARK))
-       ENDIF
-       XQMIN =      4.0 * MU * MU / (S - MP * MP)
-       XQMAX = (S - 2. * SQ * MP) / (S - MP * MP)
-       CALL MAPXQ(XQ,X(8),XQMIN,XQMAX,DXQ)
-       PQ  = XQ * PP
-       EQ = DSQRT(PQ*PQ + MQ*MQ)
-       ETOT  = EQ + EE
-       PTOT  = PQ - PE
+         IF (NQUARK.EQ.12) THEN
+            MQ=DBLE(ULMASS(2))
+         ELSE
+            MQ=DBLE(ULMASS(NQUARK))
+         ENDIF
+         XQMIN =      4.0 * MU * MU / (S - MP * MP)
+         XQMAX = (S - 2. * SQ * MP) / (S - MP * MP)
+         CALL MAPXQ(XQ,X(8),XQMIN,XQMAX,DXQ)
+         PQ  = XQ * PP
+         EQ = DSQRT(PQ*PQ + MQ*MQ)
+         ETOT  = EQ + EE
+         PTOT  = PQ - PE
 C
-       SSQ = DSQRT(MQ * MQ + ME * ME + 2. * (EE * EQ + PE * PQ))
+         SSQ = DSQRT(MQ * MQ + ME * ME + 2. * (EE * EQ + PE * PQ))
 C
 C  COMPUTING MAT.EL. FOR Q E -> Q E MU MU   <=========================
-       CALL GAMGAM(SSQ,MQ,ME,MQ,ME,MU,MU,0.D+00,SQ,DJ,0,X,1)
+         CALL GAMGAM(SSQ,MQ,ME,MQ,ME,MU,MU,0.D+00,SQ,DJ,0,X,1)
 C
       ELSEIF (PMOD .LE. 2) THEN
-       ETOT  = EP + EE
-       PTOT  = PP - PE
-       SSQ = DSQRT(MP * MP + ME * ME + 2. * (EE * EP + PE * PP))
+         ETOT  = EP + EE
+         PTOT  = PP - PE
+         SSQ = DSQRT(MP * MP + ME * ME + 2. * (EE * EP + PE * PP))
 C
 C  COMPUTING MAT.EL. FOR P E -> P E MU MU   <=========================
-       CALL GAMGAM(SSQ,MP,ME,MP,ME,MU,MU,0.D+00,SQ,DJ,0,X,1)
+         CALL GAMGAM(SSQ,MP,ME,MP,ME,MU,MU,0.D+00,SQ,DJ,0,X,1)
 C
       ELSEIF (PMOD .EQ. 11 .OR. PMOD .EQ. 12) THEN
-       ETOT  = EP + EE
-       PTOT  = PP - PE
-       SSQ = DSQRT(MP * MP + ME * ME + 2. * (EE * EP + PE * PP))
-       WXMIN = DMAX1((MP + MPI)**2,MXMIN2)
-       WXMAX = DMIN1((SSQ - ME - 2*MU)**2,MXMAX2)
-       CALL MAPWX(WX,X(8),WXMIN,WXMAX,DWX)
-       MX=DSQRT(WX)
+         ETOT  = EP + EE
+         PTOT  = PP - PE
+         SSQ = DSQRT(MP * MP + ME * ME + 2. * (EE * EP + PE * PP))
+         WXMIN = DMAX1((MP + MPI)**2,MXMIN2)
+         WXMAX = DMIN1((SSQ - ME - 2*MU)**2,MXMAX2)
+         CALL MAPWX(WX,X(8),WXMIN,WXMAX,DWX)
+         MX=DSQRT(WX)
+         TMX=MX
 C
 C  COMPUTING MAT.EL. FOR P E -> X E MU MU   <=========================
-       CALL GAMGAM(SSQ,MP,ME,MX,ME,MU,MU,0.D+00,SQ,DJ,0,X,1)
+         CALL GAMGAM(SSQ,MP,ME,MX,ME,MU,MU,0.D+00,SQ,DJ,0,X,1)
 C
       ELSE
-       WRITE(6,*) ' F(X) : WRONG PROTON MODE PMOD =',PMOD
-       STOP
+         WRITE(6,*) ' F(X) : WRONG PROTON MODE PMOD =',PMOD
+         STOP
       ENDIF
       IF (DJ .EQ. 0D0) THEN
-        F=0D0
-        RETURN
+         F=0D0
+         RETURN
       ENDIF
 C
 C  PARAMETER FOR LORENTZ TRANSFORMATION <===========================
-       GAMMA = ETOT / SSQ
-       BETGAM = PTOT / SSQ
+      GAMMA = ETOT / SSQ
+      BETGAM = PTOT / SSQ
 C
 C  COMPUTING SOME KIN. PARAMETER ONLY FOR THE CUTS     <=========
 C
@@ -131,43 +134,43 @@ C
 C   STANDART CUT
       IF (MODCUT.EQ.2 .OR. MODCUT.EQ.3) THEN
 C  COMPUTING COT(THETA) OF MUON PAIR OR SINGLE MUON  <=============
-       COTT6= PZ6/PT6
-       COTT7= PZ7/PT7
+         COTT6= PZ6/PT6
+         COTT7= PZ7/PT7
 C
 C  CUT IN THETA, PT AND E OF THE MUON PAIR <=====================
-       IF (NCALL .EQ. 1)
+         IF (NCALL .EQ. 1)
      &  WRITE(6,*)'F : COTTH1 =',COTTH1,'  COTTH2 =',COTTH2,
-     &           '  PTCUT =',PTCUT,'  ECUT =',ECUT
-       LMU1 = (COTT6 .GE. COTTH1) .AND. (COTT6 .LE. COTTH2) .AND.
+     &            '  PTCUT =',PTCUT,'  ECUT =',ECUT
+         LMU1 = (COTT6 .GE. COTTH1) .AND. (COTT6 .LE. COTTH2) .AND.
      &        (PT6 .GE. PTCUT) .AND.
      &        (E6LAB .GE. ECUT)
-       LMU2 = (COTT7 .GE. COTTH1) .AND. (COTT7 .LE. COTTH2) .AND.
+         LMU2 = (COTT7 .GE. COTTH1) .AND. (COTT7 .LE. COTTH2) .AND.
      &        (PT7 .GE. PTCUT) .AND.
      &        (E7LAB .GE. ECUT) 
-       IF (MODCUT .EQ. 2) THEN
-         LCUT = LMU1 .AND. LMU2
-       ELSE
-         LCUT = LMU1 .OR. LMU2
-       ENDIF
+         IF (MODCUT .EQ. 2) THEN
+            LCUT = LMU1 .AND. LMU2
+         ELSE
+            LCUT = LMU1 .OR. LMU2
+         ENDIF
 C
       ELSEIF (MODCUT .EQ. 1) THEN
 C   VERMASEREN HYPOTETICAL DETECTOR CUTS
-       COST6=PZ6/DSQRT(PZ6**2+PT6**2)
-       COST7=PZ7/DSQRT(PZ7**2+PT7**2)
-       LCUT=(((ABS(COST6) .LE. 0.75D0) .AND. (PT6 .GE. 1D0))
-     &       .OR.
-     &       ((ABS(COST6) .LE. 0.95D0) .AND. (ABS(COST6) .GT. 0.75D0)
-     &                            .AND. (ABS(PZ6) .GT. 1D0)))
-     &     .AND.
-     &      (((ABS(COST7) .LE. 0.75D0) .AND. (PT7 .GE. 1D0))
-     &       .OR.
-     &       ((ABS(COST7) .LE. 0.95D0) .AND. (ABS(COST7) .GT. 0.75D0)
-     &                            .AND. (ABS(PZ7) .GT. 1D0)))
+         COST6=PZ6/DSQRT(PZ6**2+PT6**2)
+         COST7=PZ7/DSQRT(PZ7**2+PT7**2)
+         LCUT=(((ABS(COST6) .LE. 0.75D0) .AND. (PT6 .GE. 1D0))
+     &        .OR.
+     &        ((ABS(COST6) .LE. 0.95D0) .AND. (ABS(COST6) .GT. 0.75D0)
+     &        .AND. (ABS(PZ6) .GT. 1D0)))
+     &        .AND.
+     &        (((ABS(COST7) .LE. 0.75D0) .AND. (PT7 .GE. 1D0))
+     &        .OR.
+     &        ((ABS(COST7) .LE. 0.95D0) .AND. (ABS(COST7) .GT. 0.75D0)
+     &        .AND. (ABS(PZ7) .GT. 1D0)))
       ELSEIF (MODCUT .EQ. 0) THEN
-       LCUT=.TRUE.
+         LCUT=.TRUE.
       ELSE
-       WRITE(6,*) ' F(X) : ILLEGAL CUT MODE ; MODCUT =',MODCUT
-       STOP
+         WRITE(6,*) ' F(X) : ILLEGAL CUT MODE ; MODCUT =',MODCUT
+         STOP
       ENDIF
       IF (LCUT) NDETCT=NDETCT+1
 CC
@@ -183,76 +186,77 @@ C CUT ON THE PROTON Q**2 (T1)
       IF (T1.LT.QP2MAX .OR. T1.GT.QP2MIN) LCUT=.FALSE.
 C
       IF (LCUT) THEN
-       NQ2CUT=NQ2CUT+1
-       IF (PMOD .GE. 100) THEN
+         NQ2CUT=NQ2CUT+1
+         IF (PMOD .GE. 100) THEN
 C
 C   GET QUARK CONTENT OF THE PROTON AND WEIGHT THE FUNCTION <==========
 C
-        QSCALE=-T1
-        IF((QSCALE .LE. Q2MAX) .AND. (QSCALE .GE. Q2MIN).AND.
-     &     (    XQ .LE.  XMAX) .AND. (    XQ .GE.  XMIN)) THEN
+            QSCALE=-T1
+            IF((QSCALE .LE. Q2MAX) .AND. (QSCALE .GE. Q2MIN).AND.
+     &        (    XQ .LE.  XMAX) .AND. (    XQ .GE.  XMIN)) THEN
 
-         NPDFC=NPDFC+1
+               NPDFC=NPDFC+1
 C
-         CALL PDF2PDG(XQ,DSQRT(QSCALE),XDENS)
-         IF (NQUARK.EQ.2 .AND. PMOD.EQ.103) THEN
-           FORMF = (XDENS(2)+XDENS(-2)*2D0)*4D0/9D0/XQ
-           PVALD=0.0D0
-           PSEA=XDENS(-2)/(XDENS(2)*0.5D0+XDENS(-2))
-         ELSEIF (NQUARK.EQ.1 .AND. PMOD.EQ.103) THEN
-           FORMF = (XDENS(1)+XDENS(-1)*2D0)/9D0/XQ
-           PVALD=1.0D0
-           PSEA=XDENS(-1)/(XDENS(1)*0.5D0+XDENS(-1))
-         ELSEIF (NQUARK.EQ.12 .AND. PMOD.EQ.103) THEN
-           FORMF = (XDENS(1)+XDENS(2)*4D0+XDENS(-1)*10D0)/9D0/XQ
-           PVALD=XDENS(1)/(XDENS(2)*4.0D0+XDENS(1))
-           PSEA=XDENS(-1)*10.0D0
-     &            /(XDENS(2)*4.0D0+XDENS(1)+XDENS(-1)*10.0D0)
-         ELSEIF (NQUARK.EQ.2 .AND. PMOD.EQ.101) THEN
-           FORMF = XDENS(2)*4D0/9D0/XQ
-           PVALD=0.0D0
-           PSEA=0.0D0
-         ELSEIF (NQUARK.EQ.1 .AND. PMOD.EQ.101) THEN
-           FORMF = XDENS(1)/9D0/XQ
-           PVALD=1.0D0
-           PSEA=0.0D0
-         ELSEIF (NQUARK.EQ.12 .AND. PMOD.EQ.101) THEN
-           FORMF = (XDENS(1)+XDENS(2)*4D0)/9D0/XQ
-           PVALD=XDENS(1)/(XDENS(2)*4.0D0+XDENS(1))
-           PSEA=0.0D0
-         ELSEIF ((NQUARK.EQ.1 .OR. NQUARK.EQ.3 .OR. NQUARK.EQ.5)
-     &       .AND. PMOD.EQ.102) THEN
-           FORMF = (XDENS(-NQUARK)*2D0)/9D0/XQ
-           PVALD=0.0D0
-           PSEA=1.0D0
-         ELSEIF ((NQUARK.EQ.2 .OR. NQUARK.EQ.4).AND. PMOD.EQ.102) THEN
-           FORMF = (XDENS(-NQUARK)*8D0)/9D0/XQ
-           PVALD=0.0D0
-           PSEA=1.0D0
-         ELSE
-           WRITE(6,*) 'F : WRONG QUARK NUMBER ; QPDF =',NQUARK,
-     &     ' OR WRONG PROTON MODE FOR GIVEN QUARK NUMBER ; PMOD =',PMOD,
-     &     '   PROGRAM STOPS !!!!!!'
-           STOP
-         ENDIF
-        ELSE
-         F=0D0
-         RETURN
-        ENDIF
+               CALL PDF2PDG(XQ,DSQRT(QSCALE),XDENS)
+               IF (NQUARK.EQ.2 .AND. PMOD.EQ.103) THEN
+                  FORMF = (XDENS(2)+XDENS(-2)*2D0)*4D0/9D0/XQ
+                  PVALD=0.0D0
+                  PSEA=XDENS(-2)/(XDENS(2)*0.5D0+XDENS(-2))
+               ELSEIF (NQUARK.EQ.1 .AND. PMOD.EQ.103) THEN
+                  FORMF = (XDENS(1)+XDENS(-1)*2D0)/9D0/XQ
+                  PVALD=1.0D0
+                  PSEA=XDENS(-1)/(XDENS(1)*0.5D0+XDENS(-1))
+               ELSEIF (NQUARK.EQ.12 .AND. PMOD.EQ.103) THEN
+                  FORMF = (XDENS(1)+XDENS(2)*4D0+XDENS(-1)*10D0)/9D0/XQ
+                  PVALD=XDENS(1)/(XDENS(2)*4.0D0+XDENS(1))
+                  PSEA=XDENS(-1)*10.0D0
+     &                 /(XDENS(2)*4.0D0+XDENS(1)+XDENS(-1)*10.0D0)
+               ELSEIF (NQUARK.EQ.2 .AND. PMOD.EQ.101) THEN
+                  FORMF = XDENS(2)*4D0/9D0/XQ
+                  PVALD=0.0D0
+                  PSEA=0.0D0
+               ELSEIF (NQUARK.EQ.1 .AND. PMOD.EQ.101) THEN
+                  FORMF = XDENS(1)/9D0/XQ
+                  PVALD=1.0D0
+                  PSEA=0.0D0
+               ELSEIF (NQUARK.EQ.12 .AND. PMOD.EQ.101) THEN
+                  FORMF = (XDENS(1)+XDENS(2)*4D0)/9D0/XQ
+                  PVALD=XDENS(1)/(XDENS(2)*4.0D0+XDENS(1))
+                  PSEA=0.0D0
+               ELSEIF ((NQUARK.EQ.1 .OR. NQUARK.EQ.3 .OR. NQUARK.EQ.5)
+     &                 .AND. PMOD.EQ.102) THEN
+                  FORMF = (XDENS(-NQUARK)*2D0)/9D0/XQ
+                  PVALD=0.0D0
+                  PSEA=1.0D0
+               ELSEIF ((NQUARK.EQ.2 .OR. NQUARK.EQ.4).AND. PMOD.EQ.102)
+     &            THEN
+                  FORMF = (XDENS(-NQUARK)*8D0)/9D0/XQ
+                  PVALD=0.0D0
+                  PSEA=1.0D0
+               ELSE
+                  WRITE(6,*) 'F : WRONG QUARK NUMBER ; QPDF =',NQUARK,
+     &                 ' OR WRONG PROTON MODE FOR GIVEN QUARK NUMBER ;',
+     &                 ' PMOD =',PMOD,'   PROGRAM STOPS !!!!!!'
+                  STOP
+               ENDIF
+            ELSE
+               F=0D0
+               RETURN
+            ENDIF
 C
-        F = CONST * DJ * PERIPP(INTGP,INTGE) * DXQ * FORMF
+            F = CONST * DJ * PERIPP(INTGP,INTGE) * DXQ * FORMF
 C
-       ELSEIF (PMOD .LE. 2) THEN
+         ELSEIF (PMOD .LE. 2) THEN
 C   IF PMOD=2 : ONLY USE THE FORMFACTOR IN PRIPP
-        F = CONST * DJ * PERIPP(INTGP,INTGE)
-       ELSE
+            F = CONST * DJ * PERIPP(INTGP,INTGE)
+         ELSE
 C   IF PMOD=11 OR 12
 C   ONLY USE THE FORMFACTOR IN PRIPP AND DWX
-        F = CONST * DJ * PERIPP(INTGP,INTGE) * DWX
-       ENDIF
+            F = CONST * DJ * PERIPP(INTGP,INTGE) * DWX
+         ENDIF
 C
       ELSE
-       F=0D0
+         F=0D0
       ENDIF
 C
 C   END CUT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

@@ -66,51 +66,51 @@ C-----------------------------
 
 C
 C-----
-         QP2MIN=-DBLE(Q2MN)
-         QP2MAX=-DBLE(Q2MX)
+      QP2MIN=-DBLE(Q2MN)
+      QP2MAX=-DBLE(Q2MX)
 C-----
-         IF (PMOD .EQ. 1) THEN
-           NDIM=7
-           INTGP=1
-           M2PART(1)=-11
-           M2PART(5)=-11
-         ELSEIF (PMOD .EQ. 2) THEN
-           NDIM=7
-           INTGP=2
-         ELSEIF (PMOD .EQ. 11 .OR. PMOD .EQ. 12) THEN
-           NDIM=8
-           INTGP=PMOD-8
-           MXMIN2=DBLE(MXMN)**2
-           MXMAX2=DBLE(MXMX)**2
-           M2STAT(5)=21
-         ELSEIF (PMOD.GE.101 .AND. PMOD.LE.103) THEN
-           NDIM=8
-           INTGP=1
-           MXMIN2=DBLE(MXMN)**2
-           MXMAX2=DBLE(MXMX)**2
-         ELSE
-           WRITE(6,*) ' GMUBEG : WRONG PROTON MODE ; PMOD =',PMOD
-           STOP
+      IF (PMOD .EQ. 1) THEN
+         NDIM=7
+         INTGP=1
+         M2PART(1)=-11
+         M2PART(5)=-11
+      ELSEIF (PMOD .EQ. 2) THEN
+         NDIM=7
+         INTGP=2
+      ELSEIF (PMOD .EQ. 11 .OR. PMOD .EQ. 12) THEN
+         NDIM=8
+         INTGP=PMOD-8
+         MXMIN2=DBLE(MXMN)**2
+         MXMAX2=DBLE(MXMX)**2
+         M2STAT(5)=21
+      ELSEIF (PMOD.GE.101 .AND. PMOD.LE.103) THEN
+         NDIM=8
+         INTGP=1
+         MXMIN2=DBLE(MXMN)**2
+         MXMAX2=DBLE(MXMX)**2
+      ELSE
+         WRITE(6,*) ' GMUBEG : WRONG PROTON MODE ; PMOD =',PMOD
+         STOP
+      ENDIF
+C-----
+      IF (EMOD .EQ. 1) THEN
+         INTGE=1
+      ELSEIF (EMOD .EQ. 2) THEN
+         INTGE=2
+         M2PART(2)=2212
+         M2PART(9)=2212
+      ELSE
+         WRITE(6,*) ' GMUBEG : WRONG ELEKTRON MODE ; EMOD =',EMOD
+         STOP
          ENDIF
 C-----
-         IF (EMOD .EQ. 1) THEN
-           INTGE=1
-         ELSEIF (EMOD .EQ. 2) THEN
-           INTGE=2
-           M2PART(2)=2212
-           M2PART(9)=2212
-         ELSE
-           WRITE(6,*) ' GMUBEG : WRONG ELEKTRON MODE ; EMOD =',EMOD
-           STOP
-         ENDIF
-C-----
-         DO 100 I=1,9
-           I2STAT(I)=M2STAT(I)
-           I2PART(I)=M2PART(I)
-           I2MO1(I)=M2MO1(I)
-           I2DA1(I)=M2DA1(I)
-           I2DA2(I)=M2DA2(I)
- 100     CONTINUE
+      DO 100 I=1,9
+         I2STAT(I)=M2STAT(I)
+         I2PART(I)=M2PART(I)
+         I2MO1(I)=M2MO1(I)
+         I2DA1(I)=M2DA1(I)
+         I2DA2(I)=M2DA2(I)
+ 100  CONTINUE
 C
 C-----
          IF (.NOT.(IPAIR.EQ.11 .OR. IPAIR.EQ.13 .OR. IPAIR.EQ.15)) THEN

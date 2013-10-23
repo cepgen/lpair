@@ -11,6 +11,8 @@
       EXTERNAL LUDATA,PYDATA
 *--   
       COMMON /lujets/ N,K(4000,5),P(4000,5),V(4000,5)
+      DOUBLE PRECISION tmx
+      COMMON /mykin/ tmx
 *--   COMMON with invariant e+e- mass calculated with double precision in gmufil.f routine
       DOUBLE PRECISION pairm,PM
       COMMON /gmulpm/ pairm,PM(5,9)
@@ -75,7 +77,7 @@
 
       INTEGER ie,Ntot,Nch,Nn,NhitL,NhitP
       INTEGER nh,nhl,nhr
-      REAL ET
+      REAL ET,MX
       COMMON /EVENT/ ie,
      &     Ntot,                ! Ntot - total number particles in event
      &     Nch,                 ! Nch - number of charged particles in event
@@ -85,7 +87,8 @@
      &     nh,                  ! nh - total number of accepted hits in accepted events
      &     nhl,                 ! nhl- number of accepted hits in accepted events - left side
      &     nhr,                 ! nhr- number of accepted hits in accepted events - right side
-     &     ET                   ! ET - transversal energy
+     &     ET,                  ! ET - transversal energy
+     &     MX                   ! L.Forthomme MX - proton remnant mass
                                      
       INTEGER iv
       REAL vx,vy,vz,dthetax,dthetay
@@ -111,7 +114,7 @@
      &     ,Ptot(ip):R,PT(ip):R,fin(ip):R,fhit(ip):R,Rhit(ip):R
      &     ,dthit(ip):R,thB(ip):R,iz(ip):R,ihit(ip):R,Eta(ip):R')
       CALL HBNAME(NNTUP,'EVENT',ie,'ie:I,Ntot:I,Nch:I
-     &     ,Nn:I,NhitP:I,NhitL:I,nh,nhl,nhr:I,ET:R')
+     &     ,Nn:I,NhitP:I,NhitL:I,nh,nhl,nhr:I,ET:R,MX:R')
       CALL HBNAME(NNTUP,'PVERTEX',iv,'iv:I
      &     ,vx:R,vy:R,vz:R,dthetax:R,dthetay:R')
 *     
@@ -192,6 +195,8 @@ C...  Extract and fill event properties.
          flagv=0
          dtmax=0.
          ETall=0.
+C LF: Outgoing proton-like remnants invariant mass
+         MX=TMX
 *     -
          DO I=1,N
             IF(K(I,1).EQ.1) THEN ! all stable particles
@@ -201,18 +206,16 @@ C...  Extract and fill event properties.
      &              +abs(P(I,3)))/SQRT(P(I,1)**2+P(I,2)**2)),P(I,3))
                
 *     
-*     
-               if (flagv.eq.0) then ! vertex calculation
+               IF (flagv.EQ.0) THEN ! vertex calculation
                   phiv=atan2(P(I,2),P(I,1))
                   CALL EVERTEX(phiv)  
                   flagv=1
                   
-               endif
-*     
+               ENDIF
 *     
                thp=ATAN(SQRT(P(I,1)**2+P(I,2)**2)/ABS(P(I,3))) !particle production angle
                phi=atan2(P(I,2),P(I,1)) !particle azimuthal angle
-               if(phi.lt.0) phi = phi+2*pi
+               IF(phi.LT.0) phi = phi+2*pi
                Rp=0.5*l_solenoid*(SQRT(P(I,1)**2+P(I,2)**2)/ABS(P(I,3))) !particle hypothetic impact point
                Pp=SQRT(P(I,1)**2+P(I,2)**2+P(I,3)**2) !particle momentum
                PTp=SQRT(P(I,1)**2+P(I,2)**2) !particle transverse momentum
