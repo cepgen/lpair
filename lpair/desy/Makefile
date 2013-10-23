@@ -1,9 +1,10 @@
 F_FILES = $(wildcard source/*.f)
-LIB_FILES = $(patsubst source/%.f,obj/%.o,$(F_FILES))
+OBJ_DIR = obj
+OBJ_FILES = $(patsubst source/%.f,$(OBJ_DIR)/%.o,$(F_FILES))
 LIBRARY = -L/afs/cern.ch/sw/lcg/external/cernlib/2005/x86_64-slc5-gcc43-opt/lib \
           -lpdflib804 -lmathlib -lgeant -ljetset74 -lpacklib -lkernlib \
           -lpawlib -lgraflib -lgrafX11 -lphtools
-OBJ_FILES = ilpair-cms-pp.o evertex.o $(LIB_FILES)
+LIB_FILES = ilpair-cms-pp.o evertex.o $(OBJ_FILES)
 VPATH = source/
 
 ###############################################################################
@@ -20,16 +21,21 @@ all: lpair
 #
 # Make the executable
 #
-lpair: $(OBJ_FILES)
+lpair: $(LIB_FILES)
 	$(FC) $(FFLAGS) -o $@ $^ $(LIBRARY)
 
 nice:
-	$(RM) $(RMFLAGS) *.o obj/*.o
+	$(RM) $(RMFLAGS) *.o $(OBJ_DIR)
 
 clean: nice
 	$(RM) $(RMFLAGS) lpair
 #
 # Make the objects
 #
-obj/%.o: %.f
+$(OBJ_DIR)/%.o: %.f
 	$(FC) -c $(FFLAGS) $< -o $@
+
+$(OBJ_FILES): | $(OBJ_DIR)
+
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
