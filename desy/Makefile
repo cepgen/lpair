@@ -1,17 +1,18 @@
-CERNLIB_PATH = /afs/cern.ch/sw/lcg/external/cernlib/2005/x86_64-slc5-gcc43-opt/lib
+CERNLIB_PATH = /usr/lib64/cernlib/2006/lib
+
 F_FILES = $(wildcard source/*.f)
 OBJ_DIR = obj
 OBJ_FILES = $(patsubst source/%.f,$(OBJ_DIR)/%.o,$(F_FILES))
 LIBRARY = -L$(CERNLIB_PATH) \
-          -lpdflib804 -lmathlib -lgeant -ljetset74 -lpacklib -lkernlib \
+          -lpdflib804 -lmathlib -lgeant321 -lpacklib -lkernlib \
           -lpawlib -lgraflib -lgrafX11 -lphtools
 LIB_FILES = ilpair-cms-pp.o evertex.o $(OBJ_FILES)
 VPATH = source/
 
 ###############################################################################
 
-FC = g77
-FFLAGS = -g -fno-automatic -w
+FC = gfortran
+FFLAGS = -g -fno-automatic -w 
 
 RM = /bin/rm
 RMFLAGS = -rf
