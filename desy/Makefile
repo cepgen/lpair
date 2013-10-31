@@ -1,17 +1,15 @@
-CERNLIB_PATH = /afs/cern.ch/sw/lcg/external/cernlib/2005/x86_64-slc5-gcc43-opt/lib
-F_FILES = $(wildcard source/*.f)
+FF_FILES = $(wildcard source/*.f)
+EX_FILES = $(wildcard external/*.f)
 OBJ_DIR = obj
-OBJ_FILES = $(patsubst source/%.f,$(OBJ_DIR)/%.o,$(F_FILES))
-LIBRARY = -L$(CERNLIB_PATH) \
-          -lpdflib804 -lmathlib -lgeant -lpacklib -lkernlib \
-          -lpawlib -lgraflib -lgrafX11 -ljetset74 -lphtools
-LIB_FILES = ilpair-cms-pp.o evertex.o $(OBJ_FILES)
-VPATH = source/
+OBJ_FILES = $(patsubst source/%.f,$(OBJ_DIR)/%.o,$(FF_FILES))
+EXT_FILES = $(patsubst external/%.f,$(OBJ_DIR)/%.o,$(EX_FILES))
+LIB_FILES = ilpair-cms-pp.o evertex.o $(EXT_FILES) $(OBJ_FILES)
+VPATH = source/ external/
 
 ###############################################################################
 
-FC = g77
-FFLAGS = -g -fno-automatic -w 
+FC = gfortran
+FFLAGS = -g -w 
 
 RM = /bin/rm
 RMFLAGS = -rf
@@ -22,8 +20,10 @@ all: lpair
 #
 # Make the executable
 #
-lpair: $(LIB_FILES)
-	$(FC) $(FFLAGS) -o $@ $^ $(LIBRARY)
+lpair: $(LIB_FILES) $(OBJ_FILES) $(LIB_FILES)
+	@echo "Linking..."
+	@$(FC) $(FFLAGS) -o $@ $^
+	@echo "Done !"
 
 nice:
 	$(RM) $(RMFLAGS) *.o $(OBJ_DIR)
@@ -34,9 +34,11 @@ clean: nice
 # Make the objects
 #
 $(OBJ_DIR)/%.o: %.f
-	$(FC) -c $(FFLAGS) $< -o $@
+	@echo "Building "$<" -> "$@
+	@$(FC) -c $(FFLAGS) $< -o $@
 
 $(OBJ_FILES): | $(OBJ_DIR)
+$(EXT_FILES): | $(OBJ_DIR)
 
 $(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)
+	@mkdir -p $(OBJ_DIR)
