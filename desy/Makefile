@@ -9,7 +9,7 @@ VPATH = source/ external/
 
 ###############################################################################
 
-FC = gfortran
+FC = @gfortran
 FFLAGS = -g -w 
 
 RM = /bin/rm
@@ -23,7 +23,7 @@ all: lpair
 #
 lpair: $(LIB_FILES) $(OBJ_FILES) $(LIB_FILES)
 	@echo "Linking..."
-	@$(FC) $(FFLAGS) -o $@ $^ $(LIBRARY)
+	$(FC) $(FFLAGS) -o $@ $^ $(LIBRARY)
 	@echo "Done !"
 
 nice:
@@ -36,7 +36,7 @@ clean: nice
 #
 $(OBJ_DIR)/%.o: %.f
 	@echo "Building "$<" -> "$@
-	@$(FC) -c $(FFLAGS) $< -o $@
+	$(FC) -c $(FFLAGS) $< -o $@
 
 $(OBJ_FILES): | $(OBJ_DIR)
 $(EXT_FILES): | $(OBJ_DIR)
