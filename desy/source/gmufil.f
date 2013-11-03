@@ -58,7 +58,7 @@ C   LUND COMMON <===================================================
 C
       INTEGER NLINES
       REAL*8 PLAB(4,9)
-      REAL*4 H1RN,RANPHI,SINPHI,COSPHI,RANY,RANUDQ
+      REAL*4 RANPHI,SINPHI,COSPHI,RANY,RANUDQ
 C  INFORMATION FOR JETSET PACKAGE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
       PARAMETER(NJOIN=2)
       INTEGER JLPSF(NJOIN),JLVAL(NJOIN),JLSEA1(NJOIN),JLSEA2(NJOIN)
@@ -86,6 +86,9 @@ C
       DATA NTERM3/0/
       DATA NEXTW/1/
       save ncall,nfrac3,nterm3,nextw
+      real ran2
+      integer idum
+      data idum/-1/
 C
       NFRACS=0
 C
@@ -145,6 +148,7 @@ c----> Lepton pair mass
      &           ((PLAB(4,3)+PLAB(4,4))**2-(PLAB(3,3)+PLAB(3,4))**2)
      &          -((PLAB(1,3)+PLAB(1,4))**2+(PLAB(2,3)+PLAB(2,4))**2)
      &          )
+      print *,'Leptons pair mass =',pairm,'GeV'
 
 C====> SET KINEMATIC VARIABLES FOR GKI   <============
        GMUX= -T2 /(EP*PLAB(4,4)-PP*PLAB(3,4))/2.0D0
@@ -166,13 +170,13 @@ C====> SET KINEMATIC VARIABLES FOR GKI   <============
        ENDIF
        GMUNU= GMUY*2.0*ULMASS(2212)/EP/EE
 C===> RANDOM REFLECTION AT XZ-PLAIN <==================
-      IF (H1RN(DUMMY)  .GE. 0.5) THEN
+      IF (ran2(idum)  .GE. 0.5) THEN
        RANY=-1.0
       ELSE
        RANY=1.0
       ENDIF
 C===> RANDOM ROTATION AT Z-AXIS <=====================
-      RANPHI=PI2*H1RN(DUMMY)
+      RANPHI=PI2*ran2(idum)
       SINPHI=SIN(RANPHI)
       COSPHI=COS(RANPHI)
 C====> ROTATE, REFELECT AND TRANSFORM TO REAL*4 VALUES <=============
@@ -181,9 +185,10 @@ C====> ROTATE, REFELECT AND TRANSFORM TO REAL*4 VALUES <=============
         PL(2,I) = -SNGL(PLAB(1,I))*SINPHI + RANY*SNGL(PLAB(2,I))*COSPHI
         PL(3,I) = SNGL(PLAB(3,I))
         PL(4,I) = SNGL(PLAB(4,I))
+c        print *,'Particle',I,'P=',PL(1,I),PL(2,I),PL(3,I),PL(4,I)
  100  CONTINUE
 C===> RANDOM DISTRIBUTION OF LEPTON+ AND LEPTON- <===========
-      IF (H1RN(0.0) .LT. 0.5) THEN
+      IF (RAN2(idum) .LT. 0.5) THEN
        I2PART(6) = IPAIR
        I2PART(7) =-IPAIR
        I2PART(8) =-IPAIR
@@ -200,7 +205,7 @@ C===> SELECTION OF HADRON MODE IN PARTON MODEL <================
       ELSEIF (PMOD .EQ. 102) THEN
          LSEA=.TRUE.
       ELSEIF (PMOD .EQ. 103) THEN
-         IF (H1RN(DUMMY) .GT. PSEA) THEN
+         IF (ran2(idum) .GT. PSEA) THEN
             LVAL=.TRUE.
          ELSE
             LSEA=.TRUE.
@@ -223,7 +228,7 @@ C====> ADD DIQUARK  <====
        I2DA1(11)=0
        I2DA2(11)=0
 C===> RANDOM SELECTION OF U AND D QUARKS <==
-       RANUDQ=H1RN(DUMMY)
+       RANUDQ=ran2(idum)
        IF (RANUDQ .LT. PVALD) THEN
         I2PART(1)=1
         I2PART(11)=2203
@@ -275,14 +280,14 @@ C===> SET SCATTERED QUARK AND HIS ANTI QUARK <==
        IF (NQUARK .NE. 12) THEN
           I2PART(1)=NQUARK
        ELSE
-          IF (H1RN(DUMMY) .LT. 0.2) THEN
+          IF (ran2(idum) .LT. 0.2) THEN
              I2PART(1)=1
           ELSE
              I2PART(1)=2
           ENDIF
        ENDIF
        IUSEDF=I2PART(1)
-       IF (H1RN(DUMMY) .LE. 0.5) THEN
+       IF (ran2(idum) .LE. 0.5) THEN
           I2PART(12)=-I2PART(1)
        ELSE
           I2PART(12)=I2PART(1)
@@ -297,7 +302,7 @@ C===> ADD QUARK AND DIQUARK FROM P <==
          IPQ=11
          IPDQ=13
        ENDIF
-       RANUDQ=H1RN(DUMMY)
+       RANUDQ=ran2(idum)
        IF (RANUDQ .LT. 1.0/3.0) THEN
         I2PART(IPQ)=1
         I2PART(IPDQ)=2203
@@ -342,7 +347,7 @@ C
 C====> INSERT THE MASS OF THE HADRONIC SYSTEM <==================
        I2MASS(5)=SNGL(MX)
 C===> RANDOM SELECTION OF U , D AND DI QUARKS <===========
-       RANUDQ=H1RN(DUMMY)
+       RANUDQ=ran2(idum)
        IF (RANUDQ .LT. 1.0/9.0) THEN
         I2PART(10)=1
         I2PART(11)=2203
@@ -365,8 +370,8 @@ C====> SET OF LUND CODES <====================================
        I2DA2(11)=0
        I2STAT(11)=1
 C====> CHOOSE RANDOM DIRECTION IN MX FRAME <===================
-       RANMXP=PI2*H1RN(DUMMY)
-       RANMXT=ACOS(2.0*H1RN(DUMMY)-1.0)
+       RANMXP=PI2*ran2(idum)
+       RANMXT=ACOS(2.0*ran2(idum)-1.0)
 C====> COMPUTE MOMENTUM OF DECAY PARTICLE FROM MX <=============
        PMXP=DSQRT((MX**2-ULMDQ**2+ULMQ**2)**2/4.0/MX/MX - ULMQ**2 )
 C=====> BUILD 4-VECTORS AND BOOST DECAY PARTICLES <===============
@@ -374,14 +379,14 @@ C=====> BUILD 4-VECTORS AND BOOST DECAY PARTICLES <===============
        PMXDA(2)=SIN(RANMXT)*SIN(RANMXP)*PMXP
        PMXDA(3)=COS(RANMXT)*PMXP
        PMXDA(4)=SQRT(PMXP**2+ULMDQ**2)
-       CALL LORENB(I2MASS(5),PL(1,5),PMXDA(1),PL(1,11))
+CLFFIXME       CALL LORENB(I2MASS(5),PL(1,5),PMXDA(1),PL(1,11))
        PMXDA(1)=-PMXDA(1)
        PMXDA(2)=-PMXDA(2)
        PMXDA(3)=-PMXDA(3)
        PMXDA(4)=SQRT(PMXP**2+ULMQ**2)
 *       WRITE(6,*) ' GMUFIL : E OF QUARK AND DIQUARK BEFOR LB:'
 *     &   ,PMXDA(4)+EDQPR
-       CALL LORENB(I2MASS(5),PL(1,5),PMXDA(1),PL(1,10))
+CLFFIXME       CALL LORENB(I2MASS(5),PL(1,5),PMXDA(1),PL(1,10))
       ENDIF
 C====> PREPARE THE LUNT COMMON <================================
  10   CONTINUE
@@ -427,10 +432,10 @@ C Check wether the Hadronic system is inelastic  <===================
         WRITE(6,*) ' GMUFIL : NUMBER OF CALLS IS ',NCALL
      &  ,'  PMOD 10-99:  # FRAC TRY :',NFRAC3,'  # FRAC TERM :',NTERM3
        ELSE
-        WRITE(6,*) ' GMUFIL : NUMBER OF CALLS IS ',NCALL,' W',GMUW,
-     &             pairm
+c        WRITE(6,*) ' GMUFIL : NUMBER OF CALLS IS ',NCALL,' W',GMUW,
+c     &             pairm
        ENDIF
-       CALL LULIST(1)
+c       CALL LULIST(1)
        NEXTW=NEXTW*2
       ENDIF
 !-      CALL LUHEPC(1)

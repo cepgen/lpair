@@ -63,8 +63,6 @@ C-----------------------------
       INTEGER M2DA2(9)
       DATA    M2DA2/    5,  9,  7,  0,  0,  0,  0,  0,  0/
 
-
-C
 C-----
       QP2MIN=-DBLE(Q2MN)
       QP2MAX=-DBLE(Q2MX)

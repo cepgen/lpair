@@ -1,9 +1,10 @@
 FF_FILES = $(wildcard source/*.f)
 EX_FILES = $(wildcard external/*.f)
 OBJ_DIR = obj
+LIBRARY = -L/usr/lib64/cernlib/2006/lib -lpdflib804 -lmathlib -lpacklib -lkernlib
 OBJ_FILES = $(patsubst source/%.f,$(OBJ_DIR)/%.o,$(FF_FILES))
 EXT_FILES = $(patsubst external/%.f,$(OBJ_DIR)/%.o,$(EX_FILES))
-LIB_FILES = ilpair-cms-pp.o evertex.o $(EXT_FILES) $(OBJ_FILES)
+LIB_FILES = ilpair-cms-pp.o $(EXT_FILES) $(OBJ_FILES)
 VPATH = source/ external/
 
 ###############################################################################
@@ -22,7 +23,7 @@ all: lpair
 #
 lpair: $(LIB_FILES) $(OBJ_FILES) $(LIB_FILES)
 	@echo "Linking..."
-	@$(FC) $(FFLAGS) -o $@ $^
+	@$(FC) $(FFLAGS) -o $@ $^ $(LIBRARY)
 	@echo "Done !"
 
 nice:

@@ -252,8 +252,8 @@ C
         CALL NULWIN(USGEVT)
         USGEVT_ID = NEXT
 *
-        CALL UCOPY( MSTI(1), USGEVT_IPA(1), 10)
-        CALL UCOPY( PARI(1), USGEVT_RPA(1), 10)
+CLFFIXME        CALL UCOPY( MSTI(1), USGEVT_IPA(1), 10)
+CLFFIXME        CALL UCOPY( PARI(1), USGEVT_RPA(1), 10)
         CALL InsTab(USGEvt)
 *
         FMCEvt_Id         = Next
@@ -268,8 +268,8 @@ C --- event counter updated after safe return to main program
        DO 10 IC1=11,60,10
         CALL NULWIN(USGEVT)
         USGEVT_ID = NEXT
-        CALL UCOPY( MSTI(IC1), USGEVT_IPA(1), 10)
-        CALL UCOPY( PARI(IC1), USGEVT_RPA(1), 10)
+CLFFIXME        CALL UCOPY( MSTI(IC1), USGEVT_IPA(1), 10)
+CLFFIXME        CALL UCOPY( PARI(IC1), USGEVT_RPA(1), 10)
         CALL INSTAB(USGEVT)
    10 CONTINUE
 *

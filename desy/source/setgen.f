@@ -8,6 +8,9 @@ C
       DIMENSION X(10),N(10)
       COMMON/VGMAXI/MDUM,MBIN,FFMAX,FMAX(7000),NM(7000)
       COMMON/VGASIO/NINP,NOUTP
+      real ran2
+      integer idum
+      data idum/-1/
 C
 C        WRITE(6,*) ' =======> AFTER CALL     NPOIN =',NPOIN
 C
@@ -35,7 +38,7 @@ C
          FSUM2=0.
          DO 3 M=1,NPOIN
             DO 4 K=1,NDIM
-               X(K)=(VGRAN(0.0)+N(K))/MBIN
+               X(K)=(ran2(idum)+N(K))/MBIN
 4           CONTINUE
             IF(NTREAT.GT.0)Z=TREAT(F,X,NDIM)
             IF(NTREAT.LE.0)Z=F(X)
@@ -71,7 +74,8 @@ C        WRITE(6,*) ' =======> BEFOR DEVISION NPOIN =',NPOIN
       IF(NPRIN.GE.1)WRITE(NOUTP,101)SUM,SIG,SIGP,FFMAX,EFF1,EFF2
 C
 100   FORMAT(I6,3X,G13.6,G12.4,G13.6,F8.2,3X,10I1)
-101   FORMAT('0THE AVERAGE FUNCTION VALUE =',G14.6/
+101   FORMAT('SETGEN :'/
+     +       ' THE AVERAGE FUNCTION VALUE =',G14.6/
      +       ' THE OVERALL STD DEV        =',G14.4/
      +       ' THE AVERAGE STD DEV        =',G14.4/
      +       ' THE MAXIMUM FUNCTION VALUE =',G14.6/

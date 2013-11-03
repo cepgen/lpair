@@ -44,55 +44,67 @@
 
 *KEND.
 *
-      Real         RINPP, RINPE, RECUT, RPTCUT
-        Common/DumKL/RINPP, RINPE, RECUT, RPTCUT
-*
 C*  End of common
 *
-        Integer IErr
+      integer i,lun,maxln
+      character(len=32) file
+      character(len=6) key
+      double precision value
+      logical fexst
 *
 *--------  Read data cards and overwrite defaults:
 *
-*..  Reinitialise FFRead:
-        Call KWFFRD(IErr)
-*
-*..  Define Key Words:
-        Call FFKEY ('IBEG',   IBEG,    1,    'NONE')
-        Call FFKEY ('IEND',   IEND,    1,    'NONE')
-        Call FFKEY ('NTRT', NTReat,    1,    'NONE')
-        Call FFKEY ('PRVG',  NPrin,    1,    'NONE')
-        Call FFKEY ('NCVG',   NCVG,    1,    'NONE')
-        Call FFKEY ('ITVG',   ITMX,    1,    'NONE')
-        Call FFKEY ('NCSG',  NPOIN,    1,    'NONE')
-        Call FFKEY ('INPP',  RINPP,    1,    'NONE')
-        Call FFKEY ('PMOD',   PMOD,    1,    'NONE')
-        Call FFKEY ('GPDF',   GPDF,    1,    'NONE')
-        Call FFKEY ('SPDF',   SPDF,    1,    'NONE')
-        Call FFKEY ('INPE',  RINPE,    1,    'NONE')
-        Call FFKEY ('EMOD',   EMOD,    1,    'NONE')
-        Call FFKEY ('PAIR',  IPAIR,    1,    'NONE')
-        Call FFKEY ('QPDF', NQUARK,    1,    'NONE')
-        Call FFKEY ('MCUT', MODCUT,    1,    'NONE')
-        Call FFKEY ('THMX',  THMAX,    1,    'NONE')
-        Call FFKEY ('THMN',  THMIN,    1,    'NONE')
-        Call FFKEY ('ECUT',  RECUT,    1,    'NONE')
-        Call FFKEY ('PTCT', RPTCUT,    1,    'NONE')
-        Call FFKEY ('Q2MN',   Q2MN,    1,    'NONE')
-        Call FFKEY ('Q2MX',   Q2MX,    1,    'NONE')
-        Call FFKEY ('MXMN',   MXMN,    1,    'NONE')
-        Call FFKEY ('MXMX',   MXMX,    1,    'NONE')
-*
-*..  Read cards and fill commons:
-        Call KWFFGO('ZLPAIR', IErr)
-*
-*..  Fix up double precision entries:
-         INPP = RINPP
-         INPE = RINPE
-         ECUT = RECUT
-        PTCUT = RPTCUT
+        lun=15
+        maxln=20
 
+        if (iargc().gt.0) then
+           call getarg(1,file)
+        else
+           file='lpair.card'
+        endif
+
+*---- Makes sure the file exists
+        inquire(file=file,exist=fexst)
+        if (fexst.eqv..false.) then
+           print *,'GMUCHA: ERROR! Input card does not exist!'
+           stop
+        endif
+
+*---- Read the parameter card using key/value pairs
+*
+        open(lun,file=file,status='old')
+        do i=1,maxln
+           read(lun,1000,end=10) key,value
+           if (trim(key).eq."IBEG") ibeg=value
+           if (trim(key).eq."IEND") iend=value
+           if (trim(key).eq."NTRT") ntreat=value
+           if (trim(key).eq."PRVG") nprin=value
+           if (trim(key).eq."NCVG") ncvg=value
+           if (trim(key).eq."ITVG") itmx=value
+           if (trim(key).eq."NCSG") npoin=value
+           if (trim(key).eq."INPP") inpp=value
+           if (trim(key).eq."PMOD") pmod=value
+           if (trim(key).eq."GPDF") gpdf=value
+           if (trim(key).eq."SPDF") spdf=value
+           if (trim(key).eq."INPE") inpe=value
+           if (trim(key).eq."EMOD") emod=value
+           if (trim(key).eq."PAIR") ipair=value
+           if (trim(key).eq."QPDF") nquark=value
+           if (trim(key).eq."MCUT") modcut=value
+           if (trim(key).eq."THMX") thmax=value
+           if (trim(key).eq."THMN") thmin=value
+           if (trim(key).eq."ECUT") ecut=value
+           if (trim(key).eq."PTCT") ptcut=value
+           if (trim(key).eq."Q2MN") q2mn=value
+           if (trim(key).eq."Q2MX") q2mx=value
+           if (trim(key).eq."MXMN") mxmn=value
+           if (trim(key).eq."MXMX") mxmx=value
+        enddo
+ 10     continue
+        close(lun)
 *
 *--------  Return
 *
-        Return
-        End
+ 1000   format(a4,d9.0)
+        return
+        end

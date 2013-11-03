@@ -27,6 +27,9 @@ C
 C
       SAVE CORRE2,FMDIFF,FMOLD,FMAX2
       DATA j/0/
+      real ran2
+      integer idum
+      data idum/-1/
 c
 c
       NGNA=NGNA+1
@@ -39,7 +42,7 @@ C CORRECTION CYCLES ARE STARTED <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 !          print *,'gmugna: correction',j,correc,corre2
  4       CONTINUE
          IF (CORREC .LT. 1.0)THEN
-            IF(VGRAN(0.0) .GE. CORREC) GOTO 7
+            IF(ran2(idum) .GE. CORREC) GOTO 7
             CORREC=-1.0
          ELSE
             CORREC=CORREC-1.0
@@ -47,7 +50,7 @@ C CORRECTION CYCLES ARE STARTED <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 C
 C SEL X VALUES IN VEGAS BIN <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
          DO 6 K=1,NDIM
-            X(K)=(VGRAN(0.0)+N(K))*AMI
+            X(K)=(ran2(idum)+N(K))*AMI
 !            if(x(k).lt.0.or.x(k).gt.1) then
 !               print *,'correction, X',x(k),k
 !            endif
@@ -65,7 +68,7 @@ C PARAMETER FOR CORRECTION OF CORRECTION <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
          ENDIF
 C
 C ACCEPT EVENT <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-         IF (WEIGHT .GE. FMDIFF*VGRAN(0.0)+FMOLD) THEN
+         IF (WEIGHT .GE. FMDIFF*ran2(idum)+FMOLD) THEN
 !            print *,'gmugna: done',weight,' x',(x(ipr),ipr=1,NDIM)
             RETURN
          ENDIF
@@ -97,8 +100,8 @@ C
 C  SEL A VEGAS BIN AND REJECT IF FMAX IS TOO LITTLE <<<<<<<<<<<<<<<<<<<<
 
  1    CONTINUE
-      J=VGRAN(0.0)*MAX+1.
-      Y=VGRAN(0.0)*FFMAX
+      J=ran2(idum)*MAX+1.
+      Y=ran2(idum)*FFMAX
       NM(J)=NM(J)+1
       IF(Y.GT.FMAX(J)) GOTO 1
 
@@ -108,7 +111,7 @@ C  SEL X VALUES IN THIS VEGAS BIN <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
       DO 2 K=1,NDIM
          JJJ=JJ/MBIN
          N(K)=JJ-JJJ*MBIN
-         X(K)=(VGRAN(0.0)+N(K))*AMI
+         X(K)=(ran2(idum)+N(K))*AMI
 !         if(x(k).lt.0.or.x(k).gt.1) then
 !            print *,'correction, X',x(k),k
 !            endif
@@ -144,7 +147,7 @@ C  INIT CORRECTION CYCLES IF WEIGHT IS HIGHER THEN FMAX OR FFMAX <<<<<<
       ENDIF
 C
 C RETURN WITH AN ACCEPTED EVENT <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-!      print *,'gmugna: done',weight,' x',(x(ipr),ipr=1,NDIM)
+c      print *,'gmugna: done',weight,' x',(x(ipr),ipr=1,NDIM)
 
       RETURN
       END

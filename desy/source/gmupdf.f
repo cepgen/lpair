@@ -3,7 +3,6 @@
 * SELECT MOMENTUM FRACTION USING REJECTION METHOD AND PDFLIB
 *
 ************************************************************
-      REAL*4 H1RN
       REAL*8          XMIN,XMAX,Q2MIN,Q2MAX
       COMMON /W50513/ XMIN,XMAX,Q2MIN,Q2MAX
       REAL*8 TMAS
@@ -64,7 +63,7 @@
         CALL GMURANX(IFLAV,X,DX)
         CALL PDF2PDG(X,QSCALE,DENS)
         NPDFC=NPDFC+1
-        IF (DENS(IFLAV)*DX/X.GE.XDMAX(IFLAV,IQS)*H1RN(DUMMY)) THEN
+        IF (DENS(IFLAV)*DX/X.GE.XDMAX(IFLAV,IQS)*RAN2(DUMMY)) THEN
           GMUSELX=X
           RETURN
         ENDIF
@@ -79,12 +78,11 @@
       SUBROUTINE GMURANX(IFLAV,X,DX)
 *  MAPPING OF X
 *****************************************************
-      REAL*4 H1RN
       REAL*8 X,DX,Y
       REAL*8          XMIN,XMAX,Q2MIN,Q2MAX
       COMMON /W50513/ XMIN,XMAX,Q2MIN,Q2MAX
         Y=XMAX/XMIN
-        X=XMIN*Y**H1RN(DUMMY)
+        X=XMIN*Y**RAN2(DUMMY)
         DX=X*DLOG(Y)
       END
 ***********************************************************************

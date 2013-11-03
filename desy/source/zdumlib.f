@@ -1,15 +1,3 @@
-      subroutine kwffrd(ierr)
-      common /cfread/ stor(1000)
-      call ffinit(1000)
-      ierr=0
-      end
-      subroutine kwffgo(name,ierr)
-      character *(*) name
-      print *,'Calling FFGO'
-      call ffgo
-      print *,'End of FFGO'
-      ierr=0
-      end
       subroutine nulwin
       entry instab
       entry pritab
