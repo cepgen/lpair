@@ -8,9 +8,9 @@
 *                                                        *
 * Created 03 January 2005, last update November 2013     *
 * Authors/Collaborators :                                *
-*   Jos Vermaseren <>                                    *
+*   Jos Vermaseren <t68@nikhef.nl>                       *
 *   Dariusz Bocian <dariusz.bocian@cern.ch>              *
-*   Janusz Chwastowski <>                                *
+*   Janusz Chwastowski <janusz.chwastowski@ifj.edu.pl>   *
 *   Laurent Forthomme <laurent.forthomme@cern.ch>        *
 *                                                        *
 **********************************************************
