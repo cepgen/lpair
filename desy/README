@@ -1,43 +1,37 @@
 -------------------------------------------------------
--                        LPAIR                        -
--                                                     -
+-               LPAIR ("DESY" VERSION)                -
 -              INSTALLATION INSTRUCTIONS              -
--         Aug. 2012, laurent.forthomme@cern.ch        -
+-                                                     -
+-              August 2012-November 2013              -
+-    Laurent Forthomme <laurent.forthomme@cern.ch>    -
 -                                                     -
 -------------------------------------------------------
 
  To build this version of LPAIR :
 
- * First of all ensure that you have an
-   instance of CERNLIB installed on your
-   computer with libjetset74
-
+ * First of all ensure that you have a working instance of
+   CERNLIB installed on your computer with PDFLIB.
    If not, go on 
 
    http://www-zeuthen.desy.de/linear_collider/cernlib/new/
 
-   and fetch one of the provided versions.
-   To install jetset74 (as well as other MC
-   tools) follow the instructions on 
+   and fetch one of the provided versions (the last one 
+   was released in 2006).
 
-   http://wwwasdoc.web.cern.ch/wwwasdoc/WWW/install_html3/node91.html
+ * Compile LPAIR (ilpair-cms-pp.f) and its dependencies
+   (located in source/) :
 
- * Compile the library from the sources : 
-   
-	 make lib
-
- * Compile LPAIR (ilpair-cms-pp.f) as well :
-
-   	 make lpair
+   	 make
 
  * Once the compilation has been done, edit the configuration
-   file lpair-cms-xx-pp.card (with xx=mumu, tautau, ...)
-   to select the process.
+   file lpair.card to set the requested the process and kinematics.
 
    See http://www.desy.de/~heramc/programs/lpair/lpair.pdf
    for the complete list of parameters to be provided.
    Run LPAIR by typing 
 
-         make run
-            or
-         ./lpair.exe < lpair-cms-xx-pp.card
+         ./lpair <path to any lpair.card>
+
+   where the argument is facultative (if no argument is provided
+   the program will look for any default card named lpair.card in
+   the current directory).
