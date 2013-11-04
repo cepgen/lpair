@@ -51,6 +51,8 @@ C
       REAL*4 PL(4,NLIMAX),PMXDA(4)
 C
 C   LUND COMMON <===================================================
+      real kchg,pmas,parf,vckm
+      COMMON/LUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)
       REAL*4        P(4000,5),V(4000,5)
       INTEGER       N,K(4000,5)
       COMMON/LUJETS/N,K,P,V
@@ -148,7 +150,7 @@ c----> Lepton pair mass
      &           ((PLAB(4,3)+PLAB(4,4))**2-(PLAB(3,3)+PLAB(3,4))**2)
      &          -((PLAB(1,3)+PLAB(1,4))**2+(PLAB(2,3)+PLAB(2,4))**2)
      &          )
-      print *,'Leptons pair mass =',pairm,'GeV'
+c      print *,'Leptons pair mass =',pairm,'GeV'
 
 C====> SET KINEMATIC VARIABLES FOR GKI   <============
        GMUX= -T2 /(EP*PLAB(4,4)-PP*PLAB(3,4))/2.0D0

@@ -1,17 +1,17 @@
 **********************************************************
 *                                                        *
-*       LPAIR ver. 4.1 - KRAKOW--LOUVAIN-LA-NEUVE        *
+*       LPAIR ver. 4.1 - KRAKOW - LOUVAIN-LA-NEUVE       *
 *                                                        *
 * Monte Carlo generator to simulate                      *
 *  (p/e)(p/e)->(p/p*/e)l+l-(p/e)                         *
-* processes                                              *
+* processes in High Energy Physics                       *
 *                                                        *
 * Created 03 January 2005, last update November 2013     *
 * Authors/Collaborators :                                *
 *   Jos Vermaseren <>                                    *
 *   Dariusz Bocian <dariusz.bocian@cern.ch>              *
 *   Janusz Chwastowski <>                                *
-*   Laurent Forthonne <laurent.forthomme@cern.ch>        *
+*   Laurent Forthomme <laurent.forthomme@cern.ch>        *
 *                                                        *
 **********************************************************
 *   
@@ -28,7 +28,7 @@
       common /mykin/ tmx
 *
       double precision pairm,pm
-      common /gmulpm/ pairm,pm(5,9)
+      common /gmulpm/ pairm
 *
 *-----------------------------------------------------------------
 *
@@ -68,7 +68,10 @@
      &     Nch,                        ! Nch   - number of charged particles in event
      &     Nn,                         ! Nn    - number of neutral particles in event
      &     ET,                         ! ET    - transversal energy
-     &     MX                          ! MX    - proton remnant mass                                     
+     &     MX                          ! MX    - proton remnant mass
+
+      real kchg,pmas,parf,vckm
+      COMMON/LUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)
 *     
 C...  Event loop.
       ie=0
@@ -86,6 +89,7 @@ c         IF(MOD(IEV,Nprt).EQ.0) print *,' Event nr = ',IEV
          ETall=0.
 !     outgoing proton-like remnants invariant mass
          MX=TMX
+         print *,pairm,tmx
 *
          DO I=1,N
             IF(K(I,1).EQ.1) THEN ! all stable particles
@@ -123,6 +127,7 @@ c         IF(MOD(IEV,Nprt).EQ.0) print *,' Event nr = ',IEV
                else
                   nch=nch+1
                endif
+               write(*,1000) px(ip),py(ip),pz(ip)
 *     
             endif
  97         continue
@@ -137,5 +142,6 @@ c         IF(MOD(IEV,Nprt).EQ.0) print *,' Event nr = ',IEV
 *-----------------------------------------------------------------
 *     
       call zduend
+ 1000 format(d20.8,d20.8,d20.8)
 *     
       end

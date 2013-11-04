@@ -82,7 +82,7 @@
       REAL*8          XMIN,XMAX,Q2MIN,Q2MAX
       COMMON /W50513/ XMIN,XMAX,Q2MIN,Q2MAX
         Y=XMAX/XMIN
-        X=XMIN*Y**RAN2(DUMMY)
+        X=XMIN*Y**ran2(dummy)
         DX=X*DLOG(Y)
       END
 ***********************************************************************

@@ -37,7 +37,7 @@ C----
       INTEGER NGNA
       COMMON /COMMUP/  NGNA
 *KEND.
-C PARAMETER FOR FDPLIB <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+C PARAMETER FOR PDFLIB <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
       REAL*8           XMIN,XMAX,Q2MIN,Q2MAX
       COMMON /W50513/  XMIN,XMAX,Q2MIN,Q2MAX
 
@@ -62,6 +62,10 @@ C-----------------------------
       DATA    M2DA1/    3,  4,  6,  0,  0,  0,  8,  0,  0/
       INTEGER M2DA2(9)
       DATA    M2DA2/    5,  9,  7,  0,  0,  0,  0,  0,  0/
+
+c---- Lund common for the masses
+      real kchg,pmas,parf,vckm
+      COMMON/LUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)
 
 C-----
       QP2MIN=-DBLE(Q2MN)
