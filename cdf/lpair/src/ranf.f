@@ -89,7 +89,7 @@ C          as proposed by Marsaglia and Zaman,
 C          Florida State University, March, 1989
 C
       DO 100 ivec= 1, lenv
-      uni = seeds(i24) - seeds(j24) - carry
+      uni = seeds(j24) - seeds(i24) - carry
       IF (uni .LT. 0.)  THEN
          uni = uni + 1.0
          carry = twom24
