@@ -48,7 +48,7 @@ C-----------------------------
 
       EXTERNAL F
 
-      REAL*4 ULMASS
+      DOUBLE PRECISION PYMASS
 
       DATA BCC/0.1D-03/
 
@@ -64,8 +64,8 @@ C-----------------------------
       DATA    M2DA2/    5,  9,  7,  0,  0,  0,  0,  0,  0/
 
 c---- Lund common for the masses
-      real kchg,pmas,parf,vckm
-      COMMON/LUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)
+      double precision kchg,pmas,parf,vckm
+      COMMON/PYDAT2/KCHG(500,4),PMAS(500,4),PARF(2000),VCKM(4,4)
 
 C-----
       QP2MIN=-DBLE(Q2MN)
@@ -124,11 +124,12 @@ C-----
       NGNA=0
 C-----
       PI    = DACOS(-1.D+00)
-      MU    = ULMASS(IPAIR)
+      MU    = PYMASS(IPAIR)
       WRITE(6,*) '*** THE LEPTON PAIR CODE IS ',IPAIR,
      & '  THE MASS IS ',MU,' ****************'
-      MP=ULMASS(I2PART(1))
-      ME=ULMASS(I2PART(2))
+      MP=PYMASS(I2PART(1))
+      ME=PYMASS(I2PART(2))
+      print *,mu,mp,me
 C-----
       PE    = INPE
       PP    = INPP

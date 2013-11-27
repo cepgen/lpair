@@ -7,8 +7,8 @@
 *
 C---JETSET and GENOUT common
       REAL*4        P(4000,5),V(4000,5)
-      INTEGER       N,K(4000,5)
-      COMMON/LUJETS/N,K,P,V
+      INTEGER       N,K(4000,5), npad
+      COMMON/PYJETS/N,npad,K,P,V
 *
       IF (LINE .GT. N) THEN
        WRITE(6,*)' LUKSET : LINE TOO BIG; LINE=',LINE,' N=',N

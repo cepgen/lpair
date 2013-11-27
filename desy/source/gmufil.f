@@ -4,7 +4,7 @@ C   THIS SUBROUTINE SHOULD FILL THE GTR-BANK
 C
       IMPLICIT none
 
-      DOUBLE PRECISION ulmass
+      DOUBLE PRECISION pymass
       DOUBLE PRECISION ulmq,ulmdq
       DOUBLE PRECISION pmxp,ranmxp,ranmxt
       DOUBLE PRECISION gmuselx
@@ -61,12 +61,12 @@ C
       REAL*4 PL(4,NLIMAX),PMXDA(4)
 C
 C   LUND COMMON <===================================================
-      real kchg,pmas,parf,vckm
-      COMMON/LUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)
+      double precision kchg,pmas,parf,vckm
+      COMMON/PYDAT2/KCHG(500,4),PMAS(500,4),PARF(2000),VCKM(4,4)
       REAL*4        P(4000,5),V(4000,5)
-      INTEGER       N,K(4000,5)
-      COMMON/LUJETS/N,K,P,V
-      save /lujets/
+      INTEGER       N,K(4000,5), npad
+      COMMON/PYJETS/N, npad, K, P, V
+      save /pyjets/
 C
       INTEGER NLINES
       REAL*8 PLAB(4,9)
@@ -181,7 +181,7 @@ C====> SET KINEMATIC VARIABLES FOR GKI   <============
          print *,'p,e,s,c',p5,e5,st5,cp5
          GMUW=0.0
       ENDIF
-      GMUNU= GMUY*2.0*ULMASS(2212)/EP/EE
+      GMUNU= GMUY*2.0*PYMASS(2212)/EP/EE
 C===> RANDOM REFLECTION AT XZ-PLAIN <==================
       IF (ran2(idum)  .GE. 0.5) THEN
          RANY=-1.0
@@ -260,8 +260,8 @@ C===> RANDOM SELECTION OF U AND D QUARKS <==
          IUSEDF=I2PART(1)
 C==> SET MASSES <=============
          I2MASS(1)=SNGL(MQ)
-         I2MASS(11)=ULMASS(I2PART(11))
-         I2MASS(10)=ULMASS(2212)
+         I2MASS(11)=PYMASS(I2PART(11))
+         I2MASS(10)=PYMASS(2212)
 C==> SET MOMENTA <============
          PL(1,10)=0.0
          PL(2,10)=0.0
@@ -332,9 +332,9 @@ C==> SET MASSES <=============
          I2MASS(1)=SNGL(MQ)
          I2MASS(5)=SNGL(MQ)
          I2MASS(12)=SNGL(MQ)
-         I2MASS(13)=ULMASS(I2PART(13))
-         I2MASS(11)=ULMASS(I2PART(11))
-         I2MASS(10)=ULMASS(2212)
+         I2MASS(13)=PYMASS(I2PART(13))
+         I2MASS(11)=PYMASS(I2PART(11))
+         I2MASS(10)=PYMASS(2212)
 C==> SET MOMENTA <=============
          PL(1,10)=0.0
          PL(2,10)=0.0
@@ -373,8 +373,8 @@ C===> RANDOM SELECTION OF U , D AND DI QUARKS <===========
             I2PART(10)=2
             I2PART(11)=2103
          ENDIF
-         ULMDQ=ULMASS(I2PART(11))
-         ULMQ =ULMASS(I2PART(10))
+         ULMDQ=PYMASS(I2PART(11))
+         ULMQ =PYMASS(I2PART(10))
 C====> SET OF LUND CODES <====================================
          I2MO1(10)=5
          I2DA1(10)=0
@@ -424,14 +424,14 @@ C SET PULS, ENERGY AND MASS OF THE PARTICLES <==================
          CALL LUPSET(I+NINIT,PL(1,I),PL(2,I),PL(3,I),PL(4,I),I2MASS(I))
  201  CONTINUE
 C PUTTING QUARK AND DIQUARK TO A COLOR SINGLET <======================
-      IF (LVAL) CALL LUJOIN(NJOIN,JLVAL)
+      IF (LVAL) CALL PYJOIN(NJOIN,JLVAL)
       IF (LSEA) THEN
-         CALL LUJOIN(NJOIN,JLSEA1)
-         CALL LUJOIN(NJOIN,JLSEA2)
+         CALL PYJOIN(NJOIN,JLSEA1)
+         CALL PYJOIN(NJOIN,JLSEA2)
       ENDIF
-      IF (PMOD.GE.10 .AND. PMOD.LE.99) CALL LUJOIN(NJOIN,JLPSF)
+      IF (PMOD.GE.10 .AND. PMOD.LE.99) CALL PYJOIN(NJOIN,JLPSF)
 C EXECUTE LUND FRAGMENTATION PROGRAM  <==============================
-      CALL LUEXEC
+      CALL PYEXEC
 C Check wether the Hadronic system is inelastic  <===================
       IF (PMOD.GE.10 .AND. PMOD.LE.99) THEN
          NPOUT=0
@@ -453,7 +453,7 @@ C Check wether the Hadronic system is inelastic  <===================
 c            WRITE(6,*) ' GMUFIL : NUMBER OF CALLS IS ',NCALL,' W',GMUW,
 c     &           pairm
          ENDIF
-c         CALL LULIST(1)
+         CALL PYLIST(1)
          NEXTW=NEXTW*2
       ENDIF
 !-      CALL LUHEPC(1)

@@ -11,6 +11,7 @@
       common/HEPRUP/IDBMUP(2),EBMUP(2),PDFGUP(2),PDFSUP(2),
      +     IDWTUP, NPRUP, XSECUP(MAXPUP), XERRUP(MAXPUP),
      +     XMAXUP(MAXPUP), LPRUP(MAXPUP)
+      save /HEPRUP/
 * === Event information
       integer MAXNUP
       parameter ( MAXNUP=500 )
@@ -21,10 +22,21 @@
      +     IDUP(MAXNUP), ISTUP(MAXNUP), MOTHUP(2,MAXNUP),
      +     ICOLUP(2,MAXNUP), PUP(5,MAXNUP), VTIMUP(MAXNUP),
      +     SPINUP(MAXNUP)
+      save /HEPEUP/
 * === Kinematic information from JETSET
-      integer n,k
+      integer n,k, npad
       real p,v
-      common /lujets/ N,K(4000,5),P(4000,5),V(4000,5)
+      common /pyjets/ N, npad, K(4000,5), P(4000,5), V(4000,5)
+* === 
+      integer MSTP, MSTI
+      double precision PARP, PARI
+      common/PYPARS/MSTP(200),PARP(200),MSTI(200),PARI(200)
+      save /PYPARS/
+*
+*
+      MSTP(161) = 0
+      MSTP(162) = 0
+      MSTP(163) = 0
 *
 * === Event filling
       NUP = N                   ! number of particle entries in the event

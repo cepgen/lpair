@@ -61,7 +61,7 @@ C PARAMETER FOR PDFLIB <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
       DIMENSION X(10)
 C
-      REAL*4 ULMASS
+      DOUBLE PRECISION PYMASS
 C
       DATA NCALL/0/,NDETCT/0/,NMXCUT/0/,NQ2CUT/0/,NPDFC/0/
       DATA NEXTW/1/
@@ -70,9 +70,9 @@ C
 C
       IF (PMOD .GE. 100) THEN
          IF (NQUARK.EQ.12) THEN
-            MQ=DBLE(ULMASS(2))
+            MQ=DBLE(PYMASS(2))
          ELSE
-            MQ=DBLE(ULMASS(NQUARK))
+            MQ=DBLE(PYMASS(NQUARK))
          ENDIF
          XQMIN =      4.0 * MU * MU / (S - MP * MP)
          XQMAX = (S - 2. * SQ * MP) / (S - MP * MP)

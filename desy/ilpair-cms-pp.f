@@ -19,8 +19,7 @@
 *   
       integer ireturn,iev,i,in
 *
-c      external ludata,pydata,luchge
-      integer luchge
+      integer pychge
       integer n,k
       real p,v
       common /lujets/ N,K(4000,5),P(4000,5),V(4000,5)
@@ -119,7 +118,7 @@ c         print *,pairm,mx
                fin(ip)   = phi              ! fin   - phi from generator
                iz(ip)    = etap/abs(etap)   ! iz    - the side indicator Left or Right
                Eta(ip)   = etap             ! Eta   - pseudorapidity
-               Charge(ip)= LUCHGE(K(I,2))/3 ! Charge
+               Charge(ip)= PYCHGE(K(I,2))/3 ! Charge
                if(abs(charge(ip)).eq.0) then
                   nn=nn+1
                else
