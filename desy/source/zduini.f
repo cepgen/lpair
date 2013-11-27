@@ -60,9 +60,6 @@ C*  End of common
      +                  MODCUT, THMAX, THMIN, ECUT, PTCUT, Q2MN, Q2MX,
      +                  MXMN, MXMX
 *
-*..  Store the generation parameters in USGRUN
-!-        Call ZLPUSG
-*
 *..  Initialise cross sections:
         WRITE(*,*) "Before GMUBEG"
         Call GMUBEG

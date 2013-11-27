@@ -11,15 +11,15 @@ C---JETSET and GENOUT common
       COMMON/LUJETS/N,K,P,V
 *
       IF ((LINE .LT. 1) .OR. (LINE .GT. 4000)) THEN
-       WRITE(6,*) ' LUNSET : WRONG LINE, LINE =',LINE
-       RETURN
+         WRITE(6,*) ' LUNSET : WRONG LINE, LINE =',LINE
+         RETURN
       ENDIF
-*
+*     
       N=LINE
-*
+*     
       DO 100 I=1,5
-       DO 200 II=1,N
-        V(II,I)=0.0
- 200   CONTINUE
+         DO 200 II=1,N
+            V(II,I)=0.0
+ 200     CONTINUE
  100  CONTINUE
       END

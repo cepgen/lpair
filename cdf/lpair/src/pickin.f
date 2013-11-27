@@ -2,7 +2,8 @@
       IMPLICIT DOUBLE PRECISION (a-h,o-z)
       DIMENSION y(4)
       COMMON/pickzz/w1,w2,w3,w4,w5,d1,d2,d5,d7,sl1
-      COMMON/extra/s1,s2,t1,t2/accura/acc3,acc4
+      COMMON/extra/s1,s2,t1,t2
+      COMMON/accura/acc3,acc4
       COMMON/levi/gram,dd1,dd2,dd3,dd4,dd5,delta,g4,sa1,sa2
       COMMON/dotp/p12,p13,p14,p15,p23,p24,p25,p34,p35,p45,p1k2,p2k1
       data pi/3.14159265358979d+00/

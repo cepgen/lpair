@@ -3,7 +3,8 @@
        COMMON/pickzz/w1,w2,w3,w4,w5,w31,w52,w12,tau,sl1
        COMMON/levi/gram,d1,d2,d3,d4,d5,delta,g4,a1,a2
        COMMON/civita/epsi,g5,g6,a5,a6,bb
-       COMMON/extra/s1,s2,t1,t2/dotps/q1dq,q1dq2,w6
+       COMMON/extra/s1,s2,t1,t2
+       COMMON/dotps/q1dq,q1dq2,w6
        data rho/.585d+00/
        IF(nup.GT.0) GO TO 1
        u1=1.

@@ -7,8 +7,7 @@
       DOUBLE PRECISION st3,wnvmass,yy
      1     ,w31min,w31max,w13,w132,dw13
      1     ,w52min,w52max,w25,w252,dw25
-      DOUBLE PRECISION pt6,pz6,pt7,pz7
-     1     ,eta6,eta7
+      DOUBLE PRECISION pt6,pz6,pt7,pz7,eta6,eta7
       INTEGER i
 
 *---- Common blocks variables

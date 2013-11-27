@@ -37,7 +37,8 @@ c       CALL genzini             ! initialize genz structures
        ENDIF
        
        IF(ipar(17).EQ.1) THEN
-          OPEN(20,file='events.ascii',status='new')
+c          OPEN(20,file='events.ascii',status='new')
+          OPEN(20,file='events.ascii',status='unknown')
        ENDIF
        
        nn=0
@@ -54,19 +55,19 @@ c       CALL genzini             ! initialize genz structures
        angcut = dcos(pi*lpar(4))
 *     
 *     ---- rapidity cuts
-       etacut =  lpar(5)
+       etacut = lpar(5)
 *     
 *     ---- energy cuts
        encut = lpar(6)
 *     
 *     ---- constant (convert GeV**2 to picobarns)
-       const=(19.732d+03)**2
+       const = (19.732d+03)**2
 *     
 *     ---- VEGAS integration
 *     
        xx = ranf(1211)
-       OPEN (15,file='dl2.vegas.grid',status='new')
-*     CALL vegas(fxn,bcc,ndim,nCALL,itmx,nprn,igraph)
+c       OPEN (15,file='dl2.vegas.grid',status='new')
+       OPEN (15,file='dl2.vegas.grid',status='unknown')
        CALL vegas(f,0.1d-03,ipar(5),ipar(6),ipar(7),+1,ipar(4))
        CALL save(7,15)
        PRINT*,'Wrote VEGAS grid to dl2.vegas.grid'
@@ -76,7 +77,7 @@ c       CALL genzini             ! initialize genz structures
 *     
        IF(ipar(1).EQ.1) THEN
           PRINT*,'IPAR(1) = 1: cross-section calculation complete'
-          stop
+          STOP
        ENDIF       
 *     
 *     ---- SETGEN: find local min/max
@@ -91,8 +92,8 @@ c       CALL genzini             ! initialize genz structures
        CALL restr(7,15)
        PRINT*,'Read dl2.vegas.grid'
        CLOSE (15)
-       OPEN (16,file='dl2.lattice.1',status='new')
-*     CALL setgen(f,ndim,npoin,nbin,nprin,ntreat)
+c       OPEN (16,file='dl2.lattice.1',status='new')
+       OPEN (16,file='dl2.lattice.1',status='unknown')
        CALL setgen(f,ndim,npoin,nbin,nprin,ntreat)
        PRINT*,'setgen complete'
        CALL save2(7,16)
@@ -114,7 +115,8 @@ c       CALL genzini             ! initialize genz structures
        CALL restr2(7,16)
        CLOSE (16)
        PRINT*,'Read maxima from dl2.lattice.1'
-       OPEN (17,file='dl2.lattice.2',status='new')
+c       OPEN (17,file='dl2.lattice.2',status='new')
+       OPEN (17,file='dl2.lattice.2',status='unknown')
        xxxx = ranf(1236785)
        CALL genera(f,ndim,nevent,nstrat,ntreat)
        CALL save2(7,17)

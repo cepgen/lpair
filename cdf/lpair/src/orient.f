@@ -1,8 +1,8 @@
       SUBROUTINE orient(s,v1,v2,v3,v4,v5,dj,nopt,y)
       IMPLICIT DOUBLE PRECISION (a-h,o-z)
-      COMMON/variab/e,e1,e2,e3,e4,e5,p,p3,p4,p5,ct3,st3,ct4,st4,ct5,
-     a     st5,cp3,sp3,cp5,sp5/variac/al3,al4,be4,be5,de3,de5,
-     a     pp3,pp4,pp5
+      COMMON/variab/e,e1,e2,e3,e4,e5,p,p3,p4,p5,ct3,st3,ct4,st4,
+     a     ct5,st5,cp3,sp3,cp5,sp5
+      COMMON/variac/al3,al4,be4,be5,de3,de5,pp3,pp4,pp5
       COMMON/pickzz/w1,w2,w3,w4,w5,w31,w52,w12,tau,sl1
       COMMON/extra/s1,s2,t1,t2
       COMMON/levi/gram,dd1,dd2,dd3,dd4,dd5,delta,g4,sa1,sa2

@@ -1,6 +1,6 @@
 **********************************************************
 *                                                        *
-*       LPAIR ver. 4.1 - KRAKOW - LOUVAIN-LA-NEUVE       *
+*       LPAIR ver. 4.1 - KRAKOW / LOUVAIN-LA-NEUVE       *
 *                                                        *
 * Monte Carlo generator to simulate                      *
 *  (p/e)(p/e)->(p/p*/e)l+l-(p/e)                         *
@@ -11,7 +11,7 @@
 *   Jos Vermaseren <t68@nikhef.nl>                       *
 *   Dariusz Bocian <dariusz.bocian@cern.ch>              *
 *   Janusz Chwastowski <janusz.chwastowski@ifj.edu.pl>   *
-*   Laurent Forthomme <laurent.forthomme@cern.ch>        *
+*   Laurent Forthomme <laurent.forthomme@uclouvain.be>   *
 *                                                        *
 **********************************************************
 *   
@@ -19,9 +19,10 @@
 *   
       integer ireturn,iev,i,in
 *
-      external ludata,pydata
-      integer n
-      double precision k,p,v
+c      external ludata,pydata,luchge
+      integer luchge
+      integer n,k
+      real p,v
       common /lujets/ N,K(4000,5),P(4000,5),V(4000,5)
 *
       double precision tmx
@@ -32,33 +33,31 @@
 *
 *-----------------------------------------------------------------
 *
+      integer ip,icode,maxp
       integer NEV,Nprt
-      parameter (NEV=1E5)             ! number of events NEV
-      parameter (Nprt=NEV/100)        ! printing period Nprt
 *
       double precision pi
-      parameter (pi=3.14159265)
-*     
-      double precision ETall
-*     
       double precision phi,charge
       double precision etap,Pp,PTp,thp
 *     
-      integer ip,icode
       real px,py,pz,E,m,Ptot,PT,Eta,fin,iz
-      integer Lpawc,maxp,NNTUP
-      parameter (maxp=100)	! maxp=max number of particles in event
+*
+      parameter (NEV=1E5)              ! nev   - number of events to generate
+      parameter (Nprt=NEV/100)         ! nprt  - printing period
+      parameter (pi=3.14159265)
+      parameter (maxp=100)	       ! maxp  - max number of particles in event
 *     
       common /kine/ ip,
      &     icode(maxp),                ! icode - particle code
      &     px(maxp),py(maxp),pz(maxp), ! px-z  - 3-momentum
      &     E(maxp),                    ! E     - energy
      &     m(maxp),                    ! m     - mass
-     &     Ptot(maxp),                 ! Ptot  - momentum of particle	
-     &     PT(maxp),                   ! PT    - transversal momentum of particle
+     &     Ptot(maxp),                 ! Ptot  - momentum
+     &     PT(maxp),                   ! PT    - transverse momentum
      &     fin(maxp),                  ! fin   - phi from generator
      &     iz(maxp),                   ! iz    - the side indicator Left or Right
-     &     Eta(maxp)                   ! Eta   - pseudo-rapidity of the particle
+     &     Eta(maxp),                  ! Eta   - pseudo-rapidity of the particle
+     &     Charge(maxp)                ! Charge- charge
 *
       integer ie,Ntot,Nch,Nn
       real ET,MX
@@ -75,7 +74,6 @@
 *     
 C...  Event loop.
       ie=0
-      ETall=0.
 *     
 *     
       call zduini
@@ -86,10 +84,9 @@ c         IF(MOD(IEV,Nprt).EQ.0) print *,' Event nr = ',IEV
 *     
          ip=0
 *     
-         ETall=0.
 !     outgoing proton-like remnants invariant mass
          MX=TMX
-         print *,pairm,tmx
+c         print *,pairm,mx
 *
          DO I=1,N
             IF(K(I,1).EQ.1) THEN ! all stable particles
@@ -111,23 +108,26 @@ c         IF(MOD(IEV,Nprt).EQ.0) print *,' Event nr = ',IEV
 *------------------------------------
 *     
                ip=ip+1
-               icode(ip)= K(I,2)         ! icode - particle code
-               px(ip)   = P(I,1)         ! px    - x-component of momentum
-               py(ip)   = P(I,2)         ! py    - y-component of momentum
-               pz(ip)   = P(I,3)         ! pz    - z-component of momentum
-               E(ip)    = P(I,4)         ! E     - Energy of particle
-               m(ip)    = P(I,5)         ! m     - mass of particle
-               Ptot(ip) = Pp             ! Ptot  - momentum of particle
-               PT(ip)   = PTp            ! PT    - transversal momentum of particle
-               fin(ip)  = phi            ! fin   - phi from generator
-               iz(ip)   = etap/abs(etap) ! iz    - the side indicator Left or Right
-               Eta(ip)  = etap           ! Eta   - pseudorapidity 
-               if(abs(charge).eq.0) then
+               icode(ip) = K(I,2)           ! icode - particle code
+               px(ip)    = P(I,1)           ! px    - x-component of momentum
+               py(ip)    = P(I,2)           ! py    - y-component of momentum
+               pz(ip)    = P(I,3)           ! pz    - z-component of momentum
+               E(ip)     = P(I,4)           ! E     - Energy of particle
+               m(ip)     = P(I,5)           ! m     - mass of particle
+               Ptot(ip)  = Pp               ! Ptot  - momentum of particle
+               PT(ip)    = PTp              ! PT    - transversal momentum of particle
+               fin(ip)   = phi              ! fin   - phi from generator
+               iz(ip)    = etap/abs(etap)   ! iz    - the side indicator Left or Right
+               Eta(ip)   = etap             ! Eta   - pseudorapidity
+               Charge(ip)= LUCHGE(K(I,2))/3 ! Charge
+               if(abs(charge(ip)).eq.0) then
                   nn=nn+1
                else
                   nch=nch+1
                endif
-               write(*,1000) px(ip),py(ip),pz(ip)
+c               print *,charge(ip)
+               write(*,1000) icode(ip),px(ip),py(ip),pz(ip),E(ip),m(ip)
+c               print *,icode(ip),px(ip),py(ip),pz(ip),E(ip),m(ip)
 *     
             endif
  97         continue
@@ -141,7 +141,6 @@ c         IF(MOD(IEV,Nprt).EQ.0) print *,' Event nr = ',IEV
 *     
 *-----------------------------------------------------------------
 *     
-      call zduend
- 1000 format(d20.8,d20.8,d20.8)
+ 1000 format(i8,f12.6,f12.6,f12.6,f12.6,f12.6)
 *     
       end

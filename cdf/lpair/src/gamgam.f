@@ -1,10 +1,12 @@
        SUBROUTINE gamgam(ebeam,v1,v2,v3,v5,v6,v7,vmin,vmax,dj,nopt,x,nm)
        IMPLICIT DOUBLE PRECISION (a-h,o-z)
        COMMON/variab/e,e1,e2,e3,e4,e5,p,p3,p4,p5,ct3,st3,ct4,st4,ct5,
-     a st5,cp3,sp3,cp5,sp5/variac/al3,al4,be4,be5,de3,de5,pp3,pp4,pp5
+     a st5,cp3,sp3,cp5,sp5
+       COMMON/variac/al3,al4,be4,be5,de3,de5,pp3,pp4,pp5
        COMMON/variad/e6,e7,p6,p7,ct6,st6,ct7,st7,cp6,sp6,cp7,sp7,w
        COMMON/pickzz/w1,w2,w3,w4,w5,w31,w52,w12,tau,sl1
-       COMMON/dotps/q1dq,q1dq2,w6/extra/s1,s2,t1,t2
+       COMMON/dotps/q1dq,q1dq2,w6
+       COMMON /extra/s1,s2,t1,t2
        COMMON/dotp/p12,p13,p14,p15,p23,p24,p25,p34,p35,p45,p1k2,p2k1
        COMMON/civita/epsi,g5,g6,a5,a6,bb
        COMMON/ext/ctg,stg,cpg,spg

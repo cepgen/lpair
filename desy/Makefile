@@ -35,7 +35,7 @@ clean: nice
 # Make the objects
 #
 $(OBJ_DIR)/%.o: %.f
-	@echo "Building "$<" -> "$@
+	@echo "Building "$<
 	$(FC) -c $(FFLAGS) $< -o $@
 
 $(OBJ_FILES): | $(OBJ_DIR)
