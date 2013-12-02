@@ -198,7 +198,7 @@ C====> ROTATE, REFELECT AND TRANSFORM TO REAL*4 VALUES <=============
          PL(2,I) =-SNGL(PLAB(1,I))*SINPHI + RANY*SNGL(PLAB(2,I))*COSPHI
          PL(3,I) = SNGL(PLAB(3,I))
          PL(4,I) = SNGL(PLAB(4,I))
-         print *,'Particle',I,'P=',(PL(j,I),j=1,4)
+c         print *,'Particle',I,'P=',(PL(j,I),j=1,4)
  100  CONTINUE
 C===> RANDOM DISTRIBUTION OF LEPTON+ AND LEPTON- <===========
       IF (RAN2(idum) .LT. 0.5) THEN
@@ -225,7 +225,7 @@ C===> SELECTION OF HADRON MODE IN PARTON MODEL <================
          ENDIF
       ENDIF
 
-      print *,'LVAL=',LVAL,', LSEA=',LSEA
+c      print *,'LVAL=',LVAL,', LSEA=',LSEA
 C===> add. Particles for Val.Quark scatering in Parton model <=====
       IF (LVAL) THEN
          NINIT =2
