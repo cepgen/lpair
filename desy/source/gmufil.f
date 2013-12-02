@@ -63,7 +63,7 @@ C
 C   LUND COMMON <===================================================
       double precision kchg,pmas,parf,vckm
       COMMON/PYDAT2/KCHG(500,4),PMAS(500,4),PARF(2000),VCKM(4,4)
-      REAL*4        P(4000,5),V(4000,5)
+      DOUBLE PRECISION P(4000,5),V(4000,5)
       INTEGER       N,K(4000,5), npad
       COMMON/PYJETS/N, npad, K, P, V
       save /pyjets/
@@ -198,7 +198,7 @@ C====> ROTATE, REFELECT AND TRANSFORM TO REAL*4 VALUES <=============
          PL(2,I) =-SNGL(PLAB(1,I))*SINPHI + RANY*SNGL(PLAB(2,I))*COSPHI
          PL(3,I) = SNGL(PLAB(3,I))
          PL(4,I) = SNGL(PLAB(4,I))
-c     print *,'Particle',I,'P=',PL(1,I),PL(2,I),PL(3,I),PL(4,I)
+         print *,'Particle',I,'P=',(PL(j,I),j=1,4)
  100  CONTINUE
 C===> RANDOM DISTRIBUTION OF LEPTON+ AND LEPTON- <===========
       IF (RAN2(idum) .LT. 0.5) THEN
@@ -436,7 +436,7 @@ C Check wether the Hadronic system is inelastic  <===================
       IF (PMOD.GE.10 .AND. PMOD.LE.99) THEN
          NPOUT=0
          DO 300 I=1,N
-            IF (K(I,1) .EQ. 1) NPOUT=NPOUT+1
+            IF (K(I,1) .EQ. 1) NPOUT=NPOUT+1 ! History code (KH=1 = mother particle)
  300     CONTINUE
          NFRAC3=NFRAC3+1
          NFRACS=NFRACS+1
@@ -444,6 +444,7 @@ C Check wether the Hadronic system is inelastic  <===================
          IF (NFRACS .GT. 1000) NTERM3=NTERM3+1
       ENDIF
       NCALL=NCALL+1
+c      CALL PYLIST(1)
       IF (NCALL .GE. NEXTW) THEN
          IF (PMOD.GE.10 .AND. PMOD.LE.99) THEN
             WRITE(6,*) ' GMUFIL : NUMBER OF CALLS IS ',NCALL
@@ -453,7 +454,7 @@ C Check wether the Hadronic system is inelastic  <===================
 c            WRITE(6,*) ' GMUFIL : NUMBER OF CALLS IS ',NCALL,' W',GMUW,
 c     &           pairm
          ENDIF
-         CALL PYLIST(1)
+c         CALL PYLIST(1)
          NEXTW=NEXTW*2
       ENDIF
 !-      CALL LUHEPC(1)

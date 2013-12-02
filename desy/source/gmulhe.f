@@ -25,7 +25,7 @@
       save /HEPEUP/
 * === Kinematic information from JETSET
       integer n,k, npad
-      real p,v
+      double precision p,v
       common /pyjets/ N, npad, K(4000,5), P(4000,5), V(4000,5)
 * === 
       integer MSTP, MSTI
@@ -33,10 +33,10 @@
       common/PYPARS/MSTP(200),PARP(200),MSTI(200),PARI(200)
       save /PYPARS/
 *
+c      integer nstable
 *
-      MSTP(161) = 0
-      MSTP(162) = 0
-      MSTP(163) = 0
+*
+c      nstable = 0
 *
 * === Event filling
       NUP = N                   ! number of particle entries in the event
@@ -58,13 +58,13 @@
          do 11 j=1,5
             PUP(j,i) = P(i,j)   ! lab frame momentum (Px, Py, Pz, E, M) of particle in GeV
  11      continue
+         
          VTIMUP(i) = 0.         ! invariant lifetime c*tau (distance from production to decay) in mm
          SPINUP(i) = 0.         ! cosine of the angle between the spin-vector of particle I and the 3-
                                 ! momentum of the decaying particle, specified in the lab frame
  10   continue
+c      print *,nstable
 *
-      call pylhef
-*
- 1000 format(i8,f12.6,f12.6,f12.6,f12.6,f12.6)
+c      call pylhef
 *
       end

@@ -1,6 +1,6 @@
 **********************************************************
 *                                                        *
-*       LPAIR ver. 4.1 - KRAKOW / LOUVAIN-LA-NEUVE       *
+*       LPAIR ver. 4.2 - KRAKOW / LOUVAIN-LA-NEUVE       *
 *                                                        *
 * Monte Carlo generator to simulate                      *
 *  (p/e)(p/e)->(p/p*/e)l+l-(p/e)                         *
@@ -20,9 +20,9 @@
       integer ireturn,iev,i,in
 *
       integer pychge
-      integer n,k
+      integer n,k,npad
       real p,v
-      common /lujets/ N,K(4000,5),P(4000,5),V(4000,5)
+      common /pyjets/ N,K(4000,5),P(4000,5),V(4000,5)
 *
       double precision tmx
       common /mykin/ tmx
@@ -41,7 +41,7 @@
 *     
       real px,py,pz,E,m,Ptot,PT,Eta,fin,iz
 *
-      parameter (NEV=1E5)              ! nev   - number of events to generate
+      parameter (NEV=1E2)              ! nev   - number of events to generate
       parameter (Nprt=NEV/100)         ! nprt  - printing period
       parameter (pi=3.14159265)
       parameter (maxp=100)	       ! maxp  - max number of particles in event
@@ -76,10 +76,12 @@ C...  Event loop.
 *     
 *     
       call zduini
+      call printlhe(1)
 *
       DO IEV=1,NEV
          call zduevt(ireturn)
 c         IF(MOD(IEV,Nprt).EQ.0) print *,' Event nr = ',IEV
+         call printlhe(2)
 *     
          ip=0
 *     
@@ -125,7 +127,7 @@ c         print *,pairm,mx
                   nch=nch+1
                endif
 c               print *,charge(ip)
-               write(*,1000) icode(ip),px(ip),py(ip),pz(ip),E(ip),m(ip)
+c               write(*,1000) icode(ip),px(ip),py(ip),pz(ip),E(ip),m(ip)
 c               print *,icode(ip),px(ip),py(ip),pz(ip),E(ip),m(ip)
 *     
             endif
@@ -137,6 +139,7 @@ c               print *,icode(ip),px(ip),py(ip),pz(ip),E(ip),m(ip)
  99      continue
 *     
       enddo
+      call printlhe(3)
 *     
 *-----------------------------------------------------------------
 *     

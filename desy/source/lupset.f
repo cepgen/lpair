@@ -4,8 +4,8 @@
 *=================================================================
       IMPLICIT NONE
       INTEGER LINE
-      REAL PX,PY,PZ,E,M
-      DOUBLE PRECISION pymass
+      REAL*4 PX,PY,PZ,E,M
+      REAL*8 pymass
 *
 C---JETSET and GENOUT common
       double precision P(4000,5),V(4000,5)

@@ -29,6 +29,6 @@
 *
 *..  Fill /LUJETS/
         Call GMUFIL
-c        Call GMULHE
+        Call GMULHE
 *
         End
