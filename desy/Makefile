@@ -12,7 +12,10 @@ VPATH = source/ external/
 FC = @gfortran
 FFLAGS = -g -w
 CC = @g++
-CFLAGS = -lgfortran -Wall
+CFLAGS = -lgfortran -Wall -I$(RHEAD)
+RFLAGS = $(shell root-config --cflags)
+RLIBS = $(shell root-config --libs)
+RHEAD = $(shell root-config --incdir)
 
 RM = /bin/rm
 RMFLAGS = -rf
@@ -23,9 +26,9 @@ all: lpair
 #
 # Make the executable
 #
-lpair: main.o $(LIB_FILES) $(OBJ_FILES) $(LIB_FILES)
+lpair: main.opp $(LIB_FILES) $(OBJ_FILES) $(LIB_FILES)
 	@echo "Linking..."
-	$(CC) $(CFLAGS) -o $@ $^ $(LIBRARY)
+	$(CC) $(CFLAGS) -o $@ $^ $(LIBRARY) $(RLIBS)
 	@echo "Done !"
 
 nice:
@@ -39,6 +42,10 @@ clean: nice
 $(OBJ_DIR)/%.o: %.f
 	@echo "Building "$<
 	$(FC) -c $(FFLAGS) $< -o $@
+
+%.opp: %.cpp
+	@echo "Building "$<
+	$(CC) $(CFLAGS) -c $(RFLAGS) $< -o $@
 
 $(OBJ_FILES): | $(OBJ_DIR)
 $(EXT_FILES): | $(OBJ_DIR)
