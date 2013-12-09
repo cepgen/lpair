@@ -41,8 +41,8 @@
 *     
       real px,py,pz,E,m,Ptot,PT,Eta,fin,iz
 *
-      parameter (NEV=1E2)              ! nev   - number of events to generate
-      parameter (Nprt=NEV/100)         ! nprt  - printing period
+      parameter (NEV=1E0)              ! nev   - number of events to generate
+      parameter (Nprt=NEV/1)         ! nprt  - printing period
       parameter (pi=3.14159265)
       parameter (maxp=100)	       ! maxp  - max number of particles in event
 *     
@@ -76,12 +76,12 @@ C...  Event loop.
 *     
 *     
       call zduini
-      call printlhe(1)
+      call prtlhe(1)
 *
       DO IEV=1,NEV
          call zduevt(ireturn)
 c         IF(MOD(IEV,Nprt).EQ.0) print *,' Event nr = ',IEV
-         call printlhe(2)
+         call prtlhe(2)
 *     
          ip=0
 *     
@@ -139,7 +139,7 @@ c               print *,icode(ip),px(ip),py(ip),pz(ip),E(ip),m(ip)
  99      continue
 *     
       enddo
-      call printlhe(3)
+      call prtlhe(3)
 *     
 *-----------------------------------------------------------------
 *     

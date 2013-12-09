@@ -32,6 +32,7 @@ C
          ENDIF
          Z(I)=XI(JJ,I)-DD*(1.-Y)
          W=W*DD
+c         print *,i,z(i),dd,w,y,j,jj
 4     CONTINUE
       TREAT=W*F(Z)
 C
