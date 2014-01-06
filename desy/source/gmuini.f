@@ -4,7 +4,7 @@
       Implicit NONE
 
 C ####################################################################
-C #   SET DEFAULT PARAMETERS OF THE GENERATOR.                        #
+C #   SET DEFAULT PARAMETERS OF THE GENERATOR.                       #
 C ####################################################################
 
       Real         PI

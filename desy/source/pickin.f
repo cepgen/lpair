@@ -17,6 +17,7 @@
       COMMON/LEVI/   GRAM,DD1,DD2,DD3,DD4,DD5,DELTA,G4,SA1,SA2
       COMMON/DOTP/   P12,P13,P14,P15,P23,P24,P25,P34,P35,P45,P1K2,P2K1
       COMMON/ACCURA/ ACC3,ACC4
+      COMMON/PHOTONS/ T1MIN,T1MAX,T2MIN,T2MAX,D3
 
       DIMENSION Y(4)
 
@@ -43,13 +44,17 @@
       SL1= DSQRT(RL1)
       IF(NOPT.NE.0)GO TO 1
       SMAX=S+W3-2.*V3*DSQRT(S)
+c      print *,'smax=',smax
       CALL MAPS2(S2,X3,SIG1,SMAX,DS2)
+c      print *,'--->',s2,ds2
       SIG1=S2
 1     SP  =S+W3-SIG1
+c      print *,'s=',s,'w3=',w3,'sig1=',sig1
       D3  =SIG1-W2
       RL2 =SP*SP-4.*S*W3
       IF(RL2.LE.0)GO TO 20
       SL2 =SQRT(RL2)
+c      print *,'ss=',ss,'sp=',sp,'sl1=',sl1,'sl2=',sl2
       T1MAX=W1+W3-(SS*SP+SL1*SL2)/(2.*S)
       T1MIN=(D1*D3+(D3-D1)*(D3*W1-D1*W2)/S)/T1MAX
       IF (T1MAX.GT.QP2MIN .OR. T1MIN.LT.QP2MAX) GOTO 20
@@ -121,6 +126,7 @@ C
       S2P=C/(T2*S2MIN)
 9     IF(NOPT.GT.1)CALL MAPS2(S2,X3,S2MIN,S2MAX,DS2)
       IF(NOPT.EQ.1)CALL MAPLA(S2,T1,W2,X3,S2MIN,S2MAX,DS2)
+
       AP=-(S2+D8)*(S2+D8)*0.25+S2*T1
       IF(W1.EQ.0)GO TO 10
       DD1=-W1*(S2-S2MAX)*(S2-SPLUS)*0.25
@@ -143,7 +149,10 @@ C
       DELTA=DELB-YY4*ST*DSQRT(DD)/(2.*AP)
       S1=T2+W1+(2.*P12*R3-4.*DELTA)/ST
       IF(AP.GE.0)GO TO 20
+c      print *,nopt,ds2
       DJ=DS2*DT1*DT2*PI*PI/(8.*SL1*DSQRT(-AP))
+c      print *,dj,ds2,dt1,dt2,sl1,-ap
+
       GRAM=(1.-YY4)*(1.+YY4)*DD/AP
       P13=-T13*0.5
       P14=(D7+S1-W3)*0.5

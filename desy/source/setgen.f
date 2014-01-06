@@ -7,21 +7,32 @@ C
       EXTERNAL F
       DIMENSION X(10),N(10)
       COMMON/VGMAXI/MDUM,MBIN,FFMAX,FMAX(7000),NM(7000)
-      COMMON/VGASIO/NINP,NOUTP
+      COMMON/VGASIO/NINP,NOUTP,NSGOUT
       real ran2
       integer idum
       data idum/-1/
+      DOUBLE PRECISION mus
+      data mus/0.1/
 C
 C        WRITE(6,*) ' =======> AFTER CALL     NPOIN =',NPOIN
 C
       CALL VGDAT
 C
+c      DO 43 J=1,10
+c         DO 42 I=1,NDIM
+c            X(I)=mus*J
+c 42      CONTINUE
+c         print *,X(1)!,TREAT(F,X,NDIM)
+c         Z = TREAT(F,X,NDIM)
+c 43   CONTINUE
+c      stop
       MBIN=3
       FFMAX=0.
       SUM=0.
       SUM2=0.
       SUM2P=0.
       MAX=MBIN**NDIM
+      print *,max
       IF(NPRIN.GE.2)WRITE(NOUTP,200)MBIN,MAX,NPOIN
       DO 5 J=1,MAX
          NM(J)=0
@@ -49,6 +60,7 @@ C
 C        WRITE(6,*) ' =======> BEFOR DEVISION NPOIN =',NPOIN
          AV=FSUM/NPOIN
          AV2=FSUM2/NPOIN
+c         print *,av,av2
          SIG2=AV2-AV*AV
          SIG=SQRT(SIG2)
          SUM=SUM+AV
@@ -57,7 +69,9 @@ C        WRITE(6,*) ' =======> BEFOR DEVISION NPOIN =',NPOIN
          IF(FMAX(J).GT.FFMAX)FFMAX=FMAX(J)
          EFF=10000.
          IF(FMAX(J).NE.0)EFF=FMAX(J)/AV
-         IF(NPRIN.GE.3)WRITE(NOUTP,100)J,AV,SIG,FMAX(J),EFF,
+c         IF(NPRIN.GE.3)WRITE(NOUTP,100)J,AV,SIG,FMAX(J),EFF,
+c     +                                 (N(KJ),KJ=1,NDIM)
+         IF(NPRIN.GE.3)WRITE(NSGOUT,100)J,AV,SIG,FMAX(J),EFF,
      +                                 (N(KJ),KJ=1,NDIM)
 1     CONTINUE
       SUM=SUM/MAX
@@ -73,7 +87,7 @@ C        WRITE(6,*) ' =======> BEFOR DEVISION NPOIN =',NPOIN
       EFF2=FFMAX/SUM
       IF(NPRIN.GE.1)WRITE(NOUTP,101)SUM,SIG,SIGP,FFMAX,EFF1,EFF2
 C
-100   FORMAT(I6,3X,G13.6,G12.4,G13.6,F8.2,3X,10I1)
+100   FORMAT(I6,3X,G13.6,G12.4,G13.6,F8.2,3X,10I2)
 101   FORMAT('SETGEN :'/
      +       ' THE AVERAGE FUNCTION VALUE =',G14.6/
      +       ' THE OVERALL STD DEV        =',G14.4/

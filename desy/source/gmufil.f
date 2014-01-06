@@ -389,18 +389,20 @@ C====> CHOOSE RANDOM DIRECTION IN MX FRAME <===================
          RANMXT=ACOS(2.0*ran2(idum)-1.0)
 C====> COMPUTE MOMENTUM OF DECAY PARTICLE FROM MX <=============
          PMXP=DSQRT((MX**2-ULMDQ**2+ULMQ**2)**2/4.0/MX/MX - ULMQ**2 )
+c         print *,ulmdq,ulmq,mx,pmxp,
+c     +        (MX**2-ULMDQ**2+ULMQ**2)**2/4.0/MX/MX-ULMQ**2
 C=====> BUILD 4-VECTORS AND BOOST DECAY PARTICLES <===============
          PMXDA(1)=SIN(RANMXT)*COS(RANMXP)*PMXP
          PMXDA(2)=SIN(RANMXT)*SIN(RANMXP)*PMXP
          PMXDA(3)=COS(RANMXT)*PMXP
          PMXDA(4)=SQRT(PMXP**2+ULMDQ**2)
+c         PRINT *,' GMUFIL : PMXDA BEFORE LB:',(PMXDA(I),I=1,4)
          CALL LORENB(I2MASS(5),PL(1,5),PMXDA(1),PL(1,11))
          PMXDA(1)=-PMXDA(1)
          PMXDA(2)=-PMXDA(2)
          PMXDA(3)=-PMXDA(3)
          PMXDA(4)=SQRT(PMXP**2+ULMQ**2)
-*       WRITE(6,*) ' GMUFIL : E OF QUARK AND DIQUARK BEFOR LB:'
-*     &   ,PMXDA(4)+EDQPR
+c         PRINT *,' GMUFIL : PMXDA BEFORE LB:',(PMXDA(I),I=1,4)
          CALL LORENB(I2MASS(5),PL(1,5),PMXDA(1),PL(1,10))
       ENDIF
 C====> PREPARE THE LUND COMMON <================================

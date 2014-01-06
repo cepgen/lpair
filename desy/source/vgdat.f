@@ -13,7 +13,7 @@ C                                         ALSO )
 C
 C  AUTHOR : S. DE JONG
 C
-      COMMON/VGASIO/NINP,NOUTP
+      COMMON/VGASIO/NINP,NOUTP,NSGOUT
       COMMON/VGPLIO/NIN,NOUT
       COMMON/VGSAV/LUN1,LUN2,LUN3,LUN4,LUN5
 C
@@ -25,6 +25,7 @@ C
          FIRST=.FALSE.
          NINP =5
          NIN  =5
+         NSGOUT =42
          NOUTP=6
          NOUT =6
          LUN1 =21
@@ -32,6 +33,8 @@ C
          LUN3 =8
          LUN4 =17
          LUN5 =18
+         OPEN(NSGOUT,file='test_setgen_lpair',status="replace",
+     +        position="append",action="write")
       ENDIF
 C
       RETURN

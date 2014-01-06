@@ -8,6 +8,7 @@
       COMMON /EXTRA/  S1,S2,T1,T2
       COMMON /DOTPS/  Q1DQ,Q1DQ2,W6
       COMMON /LEVI/   GRAM,D1,D2,D3,D4,D5,DELTA,G4,A1,A2
+      COMMON /PERIC/  U1,U2,V1,V2,T11,T12,T21,T22
 *
       DATA RHO /.585D+00/,Cc1/0.86926/,Cc2/2.23422/,Dd1/0.12549/
       DATA Cp/0.96/,Bp/0.63/
@@ -16,6 +17,7 @@
 
       REAL*8 DUMMY,PSFW1,PSFW2,M1
 
+c      print *,'peripp','nup=',nup,'ndown=',ndown
       IF(NUP.EQ.1) THEN
          U1 = 1.
          U2 = 1.

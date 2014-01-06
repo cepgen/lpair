@@ -12,7 +12,7 @@ C
       EXTERNAL FXN
       DIMENSION XIN(50),R(50),DX(10),IA(10),KG(10),DT(10)
       DIMENSION XL(10),XU(10),QRAN(10),X(10)
-      COMMON/VGASIO/NINP,NOUTP
+      COMMON/VGASIO/NINP,NOUTP,NSGOUT
       COMMON/VGB2/NDO,IT,SI,SI2,SWGT,SCHI,XI(50,10),SCALLS
      + ,D(50,10),DI(50,10)
       COMMON/VGRES/S1,S2,S3,S4
@@ -89,14 +89,18 @@ C
       NDM=ND-1
       DXG=DXG*XND
       XJAC=ONE
+c      print *,k,ng,calls,dxg,dv2g,xnd,ndm
+c      stop
       DO 3 J=1,NDIM
          DX(J)=XU(J)-XL(J)
          XJAC=XJAC*DX(J)
+c         print *,j,xjac,dx(j)
 3     CONTINUE
 C
 C  REBIN PRESERVING BIN DENSITY
 C
       IF(ND.NE.NDO)THEN
+c         print *,'rebinning',nd,ndo
          RC=NDO/XND
          DO 7 J=1,NDIM
             K=0
@@ -111,14 +115,18 @@ C
             I=I+1
             DR=DR-RC
             XIN(I)=XN-(XN-XO)*DR
+c            print *,i,j,k,dr,xin(i)
             IF(I.LT.NDM) GO TO 5
             DO 6  I=1,NDM
                XI(I,J)=XIN(I)
+c               print *,i,j,xi(i,j)
 6           CONTINUE
             XI(ND,J)=ONE
 7        CONTINUE
          NDO=ND
       ENDIF
+c      print *,nd,ndo,dr,xn
+c      stop
 C
        IF(NPRN.NE.0.AND.NPRN.NE.10)WRITE(NOUTP,200)NDIM,CALLS,IT,ITMX
      + ,ACC,MDS,ND
@@ -151,6 +159,7 @@ C
       K=K+1
       DO 121 J=1,NDIM
          QRAN(J)=ran2(idum)
+c         QRAN(j) = 0.7
 121   CONTINUE
       WGT=XJAC
       DO 15 J=1,NDIM
@@ -158,6 +167,7 @@ C
          IA(J)=XN
          IAJ=IA(J)
          IAJ1=IAJ-1
+c         print *,xn,iaj,xo
          IF(IAJ.LE.1)THEN
             XO=XI(IAJ,J)
             RC=(XN-IAJ)*XO
@@ -166,10 +176,14 @@ C
             RC=XI(IAJ1,J)+(XN-IAJ)*XO
          ENDIF
          X(J)=XL(J)+RC*DX(J)
+c         print *,j,x(j)
+c         stop
          WGT=WGT*XO*XND
+c         print *,'-->',kg(j),iaj,xn
 15    CONTINUE
 C
       F=FXN(X)*WGT
+c      print *,'passed!',k,f
       F1=F/CALLS
       W=WGT/CALLS
 C
@@ -180,7 +194,9 @@ C
          IAJ=IA(J)
          DI(IAJ,J)=DI(IAJ,J)+F/CALLS
          IF(MDS.GE.0)  D(IAJ,J)=D(IAJ,J)+F2
+c         print *,iaj,D(iaj,j),Di(iaj,j)
 16    CONTINUE
+c      print *,wgt,xo,f,f1,w,fb,f2b
       IF(K.LT.NPG) GO TO 12
 C
       F2B=F2B*NPG
@@ -192,19 +208,30 @@ C
          DO 17 J=1,NDIM
             IAJ=IA(J)
             D(IAJ,J)=D(IAJ,J)+F2B
+c            print *,d(iaj,j),f2b
 17       CONTINUE
       ENDIF
+
       K=NDIM
 19    KG(K)=MOD(KG(K),NG)+1
+c      print *,kg(k),'--->',ng
       IF(KG(K).NE.1) GO TO 11
       K=K-1
       IF(K.GT.0) GO TO 19
+c      do 314 j=1,ndim
+c         do 315 i=1,ndm
+c            print *,'->',i,j,d(i,j)
+c 315     continue
+c 314  continue
+c      stop
 C
 C  FINAL RESULTS FOR THIS ITERATION
 C
       TI=TI/CALLS
       TSI=TSI*DV2G
       TI2=TI*TI
+c      print *,ti,tsi,ti2
+c      STOP
       IF(TSI .EQ. 0.)THEN
          WGT = 0.
       ELSE
@@ -258,6 +285,7 @@ C
       S3=TI
       S4=TSI
 C
+
       DO 23 J=1,NDIM
          XO=D(1,J)
          XN=D(2,J)
@@ -269,6 +297,7 @@ C
             XN=D(I+1,J)
             D(I,J)=(D(I,J)+XN)/3.
             DT(J)=DT(J)+D(I,J)
+c            print *,'====>',i,xo,xn,dt(j),d(i,j)
 22       CONTINUE
          D(ND,J)=(XN+XO)/2.
          DT(J)=DT(J)+D(ND,J)
@@ -282,9 +311,12 @@ C
                XO=DT(J)/D(I,J)
                R(I)=((XO-ONE)/XO/DLOG(XO))**ALPH
             ENDIF
+c            print *,'-->',i,r(i),xo,dlog(xo)
             RC=RC+R(I)
 24       CONTINUE
          RC=RC/XND
+c         print *,rc
+c         stop
          K=0
          XN=0.
          DR=XN
@@ -293,6 +325,7 @@ C
          DR=DR+R(K)
          XO=XN
          XN=XI(K,J)
+c         print *,'-->',k,dr,xo,xn
 26       IF(RC.GT.DR) GO TO 25
          I=I+1
          DR=DR-RC
@@ -301,14 +334,18 @@ C
          ELSE
             XIN(I)=XN-(XN-XO)*DR/R(K)
          ENDIF
+c         print *,i,xn,xo,dr,r(k)
+c         print *,i,xin(i),dr,rc,r(k),xn,xo
+c         print *,i,xin(i),dr,r(k)
          IF(I.LT.NDM) GO TO 26
+c         stop
          DO 27 I=1,NDM
             XI(I,J)=XIN(I)
 27       CONTINUE
          XI(ND,J)=ONE
 28    CONTINUE
 C
-      print *,dabs(acc),rel
+c      print *,dabs(acc),rel
       IF(IT.LT.ITMX.AND.DABS(ACC).LT.REL)GO TO 9
 C
       S1=AVGI

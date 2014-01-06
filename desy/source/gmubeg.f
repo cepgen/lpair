@@ -47,6 +47,7 @@ C----- MGVH  27 APR 96 -------
 C-----------------------------
 
       EXTERNAL F
+      double precision x(10),test
 
       DOUBLE PRECISION PYMASS
 
@@ -172,6 +173,11 @@ c=====
 C-----
       IF (IBEG .EQ. 1) THEN
        PRINT *,'GMUBEG : ===> VEGAS  IS OPERATIVE... '
+       do 111 i=1,10
+          x(i)=0.4
+ 111   continue
+c       test = f(x)
+c       stop
        CALL  VEGAS(F,BCC,NDIM,NCVG,ITMX,NPRN,IGRAPH)
        WRITE(6,*)
      &  'SORRY SAVING OF VEGAS-PARAMETER IS ONLY POSSIBLE ON THE IBM'

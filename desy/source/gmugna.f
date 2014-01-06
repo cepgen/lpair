@@ -26,13 +26,15 @@ C
       SAVE WEIGHT,CORREC,J
 C
       SAVE CORRE2,FMDIFF,FMOLD,FMAX2
-      DATA j/0/
       real ran2
       integer idum
+      DATA j/0/
       data idum/-1/
 c
 c
+c
       NGNA=NGNA+1
+      IGNA = 0
 C
       AMI=1.0D0/DBLE(MBIN)
       MAX=MBIN**NDIM
@@ -90,12 +92,15 @@ C CORRECTION IF TOO BIG WEIGHT IS FOUND WHILE CORRECTION <<<<<<<<<<<<
             CORRE2=0.0
             FMAX2=0.0
             GOTO 4
+         ELSE
+c            print *,'Did not go to 4'
+            IGNA=1
          ENDIF
       ENDIF
 C
 C  NORMAL GENERATION CYCLE STARTS HERE !!!!!!!       *******************
 C
-!      print *,'gmugna: generation'
+!      print *,'gmugna: generation',IGNA
 
 C  SEL A VEGAS BIN AND REJECT IF FMAX IS TOO LITTLE <<<<<<<<<<<<<<<<<<<<
 

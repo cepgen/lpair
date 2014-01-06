@@ -104,6 +104,7 @@ C
          CALL MAPWX(WX,X(8),WXMIN,WXMAX,DWX)
          MX=DSQRT(WX)
          TMX=MX
+c         print *,mx,x(8),mp,ssq,me,2*mu,mxmax2
 C
 C  COMPUTING MAT.EL. FOR P E -> X E MU MU   <=========================
          CALL GAMGAM(SSQ,MP,ME,MX,ME,MU,MU,0.D+00,SQ,DJ,0,X,1)
@@ -112,6 +113,7 @@ C
          WRITE(6,*) ' F(X) : WRONG PROTON MODE PMOD =',PMOD
          STOP
       ENDIF
+c      print *,dj
       IF (DJ .EQ. 0D0) THEN
          F=0D0
          RETURN
@@ -181,6 +183,7 @@ C CUT ON MASS OFF FINAL HADRONIC SYSTEM  (MX)
       IF ((PMOD .GT. 2) .AND.
      &    (MX*MX.LT.MXMIN2 .OR. MX*MX.GT.MXMAX2)) LCUT=.FALSE.
       IF (LCUT) NMXCUT=NMXCUT+1
+c      print *,'haha',t1,qp2min,qp2max
 C
 C CUT ON THE PROTON Q**2 (T1)
       IF (T1.LT.QP2MAX .OR. T1.GT.QP2MIN) LCUT=.FALSE.
@@ -268,5 +271,6 @@ C
 *       NEXTW=NEXTW*2
 *      ENDIF
 C
+c      print *,f
       RETURN
       END

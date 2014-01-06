@@ -6,7 +6,7 @@
       INTEGER LINE,STATUS,PART,MOTH,DAUG1,DAUG2,NOFF
 *
 C---JETSET and GENOUT common
-      REAL*4        P(4000,5),V(4000,5)
+      double precision P(4000,5),V(4000,5)
       INTEGER       N,K(4000,5), npad
       COMMON/PYJETS/N,npad,K,P,V
 *
