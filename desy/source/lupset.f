@@ -3,7 +3,7 @@
       SUBROUTINE LUPSET(LINE,PX,PY,PZ,E,M)
 *=================================================================
       IMPLICIT NONE
-      INTEGER LINE
+      INTEGER LINE,i,j
       REAL PX,PY,PZ,E,M,ULMASS
 *
 C---JETSET and GENOUT common
@@ -12,8 +12,8 @@ C---JETSET and GENOUT common
       COMMON/LUJETS/N,K,P,V
 *
       IF (LINE .GT. N) THEN
-       WRITE(6,*) ' LUPSET : TOO BIG LINE NUMBER, LINE =',LINE,', N =',N
-       RETURN
+         WRITE(6,*) ' LUPSET : TOO BIG LINE NUMBER, LINE =',LINE,', N =',N
+         RETURN
       ENDIF
 *
       P(LINE,1)=PX
@@ -21,8 +21,13 @@ C---JETSET and GENOUT common
       P(LINE,3)=PZ
       P(LINE,4)=E
       IF (M .GE. -9998.0) THEN
-       P(LINE,5)=M
+         P(LINE,5)=M
       ELSE
-       P(LINE,5)=ULMASS(K(LINE,2))
+         P(LINE,5)=ULMASS(K(LINE,2))
       ENDIF
+
+c      do 10, i=1,5
+c         print *,'LINE',line,(P(LINE,j),j=1,5)
+c 10   continue
+
       END

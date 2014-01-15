@@ -51,7 +51,7 @@
                                 ! momentum of the decaying particle, specified in the lab frame
  10   continue
 *
-      call pylhef
+c      call pylhef
 *
  1000 format(i8,f12.6,f12.6,f12.6,f12.6,f12.6)
 *
