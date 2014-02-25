@@ -26,9 +26,14 @@ all: lpair
 #
 # Make the executable
 #
-lpair: main.opp $(LIB_FILES) $(OBJ_FILES) $(LIB_FILES)
+lpair: $(OBJ_DIR)/main.opp $(LIB_FILES) $(OBJ_FILES)
 	@echo "Linking..."
 	$(CC) $(CFLAGS) -o $@ $^ $(LIBRARY) $(RLIBS)
+	@echo "Done !"
+
+xsect: $(OBJ_DIR)/xsect.opp $(LIB_FILES) $(OBJ_FILES)
+	@echo "Linking $<..."
+	$(CC) $(CFLAGS) -o $@ $^ $(LIBRARY)
 	@echo "Done !"
 
 nice:
@@ -43,7 +48,7 @@ $(OBJ_DIR)/%.o: %.f
 	@echo "Building "$<
 	$(FC) -c $(FFLAGS) $< -o $@
 
-%.opp: %.cpp
+$(OBJ_DIR)/%.opp: %.cpp
 	@echo "Building "$<
 	$(CC) $(CFLAGS) -c $(RFLAGS) $< -o $@
 

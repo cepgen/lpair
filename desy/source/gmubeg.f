@@ -49,7 +49,7 @@ C-----------------------------
       EXTERNAL F
       double precision x(10),test
 
-      DOUBLE PRECISION PYMASS
+      REAL ULMASS
 
       DATA BCC/0.1D-03/
 
@@ -67,7 +67,7 @@ C-----------------------------
 c---- Lund common for the masses
       double precision kchg,pmas,parf,vckm
       COMMON/PYDAT2/KCHG(500,4),PMAS(500,4),PARF(2000),VCKM(4,4)
-
+      
 C-----
       QP2MIN=-DBLE(Q2MN)
       QP2MAX=-DBLE(Q2MX)
@@ -114,23 +114,23 @@ C-----
          I2DA1(I)=M2DA1(I)
          I2DA2(I)=M2DA2(I)
  100  CONTINUE
-C
+C     
 C-----
-         IF (.NOT.(IPAIR.EQ.11 .OR. IPAIR.EQ.13 .OR. IPAIR.EQ.15)) THEN
-           WRITE(6,*) 'WRONG CODE FOR LEPTON PAIR,  PAIR=',IPAIR,
-     &       '  VALID ARE 11, 13 AND 15 '
-           STOP
-         ENDIF
+      IF (.NOT.(IPAIR.EQ.11 .OR. IPAIR.EQ.13 .OR. IPAIR.EQ.15)) THEN
+         WRITE(6,*) 'WRONG CODE FOR LEPTON PAIR,  PAIR=',IPAIR,
+     &        '  VALID ARE 11, 13 AND 15 '
+         STOP
+      ENDIF
 C-----
       NGNA=0
 C-----
       PI    = DACOS(-1.D+00)
-      MU    = PYMASS(IPAIR)
-      WRITE(6,*) '*** THE LEPTON PAIR CODE IS ',IPAIR,
-     & '  THE MASS IS ',MU,' ****************'
-      MP=PYMASS(I2PART(1))
-      ME=PYMASS(I2PART(2))
-      print *,mu,mp,me
+      MU    = ULMASS(IPAIR)
+c      WRITE(6,*) '*** THE LEPTON PAIR CODE IS ',IPAIR,
+c     &     '  THE MASS IS ',MU,' ****************'
+      MP=ULMASS(I2PART(1))
+      ME=ULMASS(I2PART(2))
+c      print *,mu,mp,me
 C-----
       PE    = INPE
       PP    = INPP
@@ -142,21 +142,21 @@ C-----
       ETOT  = EP + EE
       CONST = (19.732D+03)**2
 C COMPUTING OF COTAN FOR THETA CUTS <====================
-         COTTH1= 1D0 / DTAN(DBLE(THMAX)*PI/180D0)
-         COTTH2= 1D0 / DTAN(DBLE(THMIN)*PI/180D0)
+      COTTH1= 1D0 / DTAN(DBLE(THMAX)*PI/180D0)
+      COTTH2= 1D0 / DTAN(DBLE(THMIN)*PI/180D0)
 C SETTING OF THE PROTON STRUCTURE FUNCTION <====================
       IF (PMOD .GE. 100) THEN
 C----- MGVH  27 APR 96 -------
 Cxx       CALL PDFSET('MODE',MPDF)
-      parm(1)= 'NPTYPE'
-      VAL(1)  = 1
-      PARM(2) = 'NGROUP'
-      VAL(2)  = gpdf
-      PARM(3) = 'NSET'
-      VAL(3)  = spdf
-      CALL PDFSET(PARM,VAL)
+         parm(1)= 'NPTYPE'
+         VAL(1)  = 1
+         PARM(2) = 'NGROUP'
+         VAL(2)  = gpdf
+         PARM(3) = 'NSET'
+         VAL(3)  = spdf
+         CALL PDFSET(PARM,VAL)
 C-----------------------------
-       WRITE(6,'(/A,/A,I8,A,I8,A,
+         WRITE(6,'(/A,/A,I8,A,I8,A,
      &  /A,G13.4,A,G13.4,A,/A,G13.4,A,G13.4,A,/A)')
      &'***************************************************************',
      &'* PDFLIB GROUP :',gpdf    ,'  SET :',spdf    ,'               *',
@@ -164,49 +164,48 @@ C-----------------------------
      &'* Q2MIN = ',Q2MIN   ,'      Q2MAX = ',Q2MAX     ,'            *',
      &'***************************************************************'
       ENDIF
-         IF (Q2MAX .EQ. 0.D0) Q2MAX=1.D20
+      IF (Q2MAX .EQ. 0.D0) Q2MAX=1.D20
 c=====
-         print *,'====================='
-         print *,'Masses',MP,ME,' Interaction',INTGP,INTGE
-         print *,'====================='
+c      print *,'====================='
+c      print *,'Masses',MP,ME,' Interaction',INTGP,INTGE
+c      print *,'====================='
 c=====
 C-----
       IF (IBEG .EQ. 1) THEN
-       PRINT *,'GMUBEG : ===> VEGAS  IS OPERATIVE... '
-       do 111 i=1,10
-          x(i)=0.4
- 111   continue
-c       test = f(x)
-c       stop
-       CALL  VEGAS(F,BCC,NDIM,NCVG,ITMX,NPRN,IGRAPH)
-       WRITE(6,*)
-     &  'SORRY SAVING OF VEGAS-PARAMETER IS ONLY POSSIBLE ON THE IBM'
+c         PRINT *,'GMUBEG : ===> VEGAS  IS OPERATIVE... '
+         CALL  VEGAS(F,BCC,NDIM,NCVG,ITMX,NPRN,IGRAPH)
+c         WRITE(6,*)
+c     &        'SORRY SAVING OF VEGAS-PARAMETER IS ONLY POSSIBLE'//
+c     &        ' ON THE IBM'
       ELSE
-       WRITE(6,*)
-     &  'SORRY READING OF VEGAS-PARAMETER IS ONLY POSSIBLE ON THE IBM'
-       STOP
+         WRITE(6,*)
+     &        'SORRY READING OF VEGAS-PARAMETER IS ONLY POSSIBLE'//
+     &        ' ON THE IBM'
+         STOP
       ENDIF
 C-----
       IF (IBEG .GT. 2) THEN
-       PRINT *,'GMUBEG : ===> STORED SETGEN VARIABLES READ ...'
-       CALL RESTR2(NDIM)
-       CALL GMUPSG
+         PRINT *,'GMUBEG : ===> STORED SETGEN VARIABLES READ ...'
+         CALL RESTR2(NDIM)
+         CALL GMUPSG
       ELSEIF (IEND .LT. 2) THEN
-       WRITE(6,*)
-     &  ' GMUBEG : PROGRAM STOPS WITHOUT SETGEN FILE AND'//
-     &  ' EVENT GENERATION , IEND < 2 '
-       STOP
+c         WRITE(6,*)
+c     &        ' GMUBEG : PROGRAM STOPS WITHOUT SETGEN FILE AND'//
+c     &        ' EVENT GENERATION , IEND < 2 '
+c         STOP
       ELSE
-       PRINT *,'GMUBEG : ===> SETGEN IS OPERATIVE... '
-       CALL SETGEN(F,NDIM,NPOIN,NPRIN,NTREAT)
-       WRITE(6,*)
-     &  'SORRY SAVING OF SETGEN-PARAMETER IS ONLY POSSIBLE ON THE IBM'
+         PRINT *,'GMUBEG : ===> SETGEN IS OPERATIVE... '
+         CALL SETGEN(F,NDIM,NPOIN,NPRIN,NTREAT)
+c         WRITE(6,*)
+c     &        'SORRY SAVING OF SETGEN-PARAMETER IS ONLY POSSIBLE'//
+c     &        ' ON THE IBM'
       ENDIF
 C-----
       IF (IEND .LT. 3) THEN
-       WRITE(6,*)
-     &  ' GMUBEG : PROGRAM STOPS WITHOUT EVENT GENERATION , IEND < 3 '
-       STOP
+c         WRITE(6,*)
+c     &        ' GMUBEG : PROGRAM STOPS WITHOUT EVENT GENERATION ,'//
+c     &        ' IEND < 3 '
+c         STOP
       ENDIF
 C-----
       RETURN

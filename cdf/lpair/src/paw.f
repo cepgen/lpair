@@ -82,6 +82,8 @@
       common/mygenz/px3,py3,pz3,px4,py4,pz4,px5,py5,pz5,
      +              px6,py6,pz6,px7,py7,pz7
 
+      REAL PT3,PT4,PT5,PT6,PT7
+
       DIMENSION P12(4)
       REAL PI,XTRA1(23)
 *     

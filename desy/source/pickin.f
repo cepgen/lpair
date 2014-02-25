@@ -44,12 +44,9 @@
       SL1= DSQRT(RL1)
       IF(NOPT.NE.0)GO TO 1
       SMAX=S+W3-2.*V3*DSQRT(S)
-c      print *,'smax=',smax
       CALL MAPS2(S2,X3,SIG1,SMAX,DS2)
-c      print *,'--->',s2,ds2
       SIG1=S2
 1     SP  =S+W3-SIG1
-c      print *,'s=',s,'w3=',w3,'sig1=',sig1
       D3  =SIG1-W2
       RL2 =SP*SP-4.*S*W3
       IF(RL2.LE.0)GO TO 20

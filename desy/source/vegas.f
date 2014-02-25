@@ -25,7 +25,6 @@ C
       DATA NDMX/50/,ALPH/1.5/,ONE/1./,MDS/1/
       data idum/-1/
 C
-      print *,'swgt=',swgt
       CALL VGDAT
       IF(ITMX.LE.0)THEN
          WRITE(NOUTP,199)'VEGAS CALLED WITH AT MAX LESS EQUAL ZERO'//
