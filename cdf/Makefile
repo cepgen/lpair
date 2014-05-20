@@ -24,14 +24,11 @@ RLIBS = $(shell root-config --libs)
 RHEAD = $(shell root-config --incdir)
 
 .PHONY: all
-all: lpair xsect clpair
+all: xsect clpair
 
 #
 # Make the executable
 #
-lpair: eemumu.o $(LIB_FILES) $(OBJ_FILES) $(LIB_FILES)
-	@echo "Linking $@..."
-	$(FC) $(FFLAGS) -o $@ $^ $(LIBRARY)
 
 clpair: $(OBJ_DIR)/lpair.oxx $(LIB_FILES) $(OBJ_FILES) $(LIB_FILES)
 	@echo "Linking $@..."
