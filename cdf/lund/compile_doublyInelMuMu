@@ -1,7 +1,0 @@
-gfortran -g -fno-automatic -w \
-	 -fno-underscoring \
-	 -o doublyInelMuMu_frag.exe \
-	 doublyLundMuMu_frag.f lib.a \
-	 -L /usr/lib/cernlib/2006/lib -lkernlib -lgeant -lgeant321 -lmathlib -lpdflib804 -lpacklib \
-	 -L . -ljetset74
-     #`cernlib jetset74 geant mathlib pdflib804`
