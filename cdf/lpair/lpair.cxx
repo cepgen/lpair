@@ -1,6 +1,12 @@
 #include <iostream>
 #include <fstream>
 
+#include "utils.h"
+
+#include "TFile.h"
+#include "TTree.h"
+#include "TLorentzVector.h"
+
 using namespace std;
 
 extern "C" {
@@ -9,8 +15,8 @@ extern "C" {
   void fileini_();
   void integrate_();
   void generate_(int& nevents);
-  void pawfil1_();
-  void doublefragmentation_();
+  void fragmentation_();
+  int luchge_(int&);
 
   extern struct {
     int ipar[20];
@@ -23,85 +29,135 @@ extern "C" {
 
   extern struct {
     bool accepted;
+    int ndim;
+    double x[10];
   } event_;
 
   extern struct {
-    double e, e1, e2, e3, e4, e5;
-    double p, p3, p4, p5;
-    double ct3, st3, ct4, st4, ct5, st5, cp3, sp3, cp5, sp5;
-  } variab_;
-
+    int n, k[5][4000];
+    float p[5][4000],v[5][4000];
+  } lujets_;
   extern struct {
-    double al3, al4, be4, be5, de3, de5;
-    double pp3, pp4, pp5;
-  } variac_;
-
-  extern struct {
-    double px3, py3, pz3;
-    double px4, py4, pz4;
-    double px5, py5, pz5;
-    double px6, py6, pz6;
-    double px7, py7, pz7;
-  } mygenz_;
-
-  /*
-      common/inpu/me,mu,ebeam,const,sq
-      common/variab/e,e1,e2,e3,e4,e5,p,p3,p4,p5,ct3,st3,ct4,st4,ct5
-     1                                         ,st5,cp3,sp3,cp5,sp5
-      common/variac/al3,al4,be4,be5,de3,de5,pp3,pp4,pp5
-      common/variad/e6,e7,p6,p7,ct6,st6,ct7,st7,cp6,sp6,cp7,sp7,w
-      common/lplot/xl(10),v1(2),v2(2),av(10)
-      common/extra/s1,s2,t1,t2
-      common/pickzz/w1,w2,w3,w4,w5,w31,w52,w12,tau,sl1
-      common/levi/gram,d1,d2,d3,d4,d5,delta,g4,a1,a2
-      common/civita/epsi,g5,g6,a5,a6,bb
-      common/dotps/q1dq,q1dq2,w6
-      common/tell/nn
-      common/cuts/angcut,encut,etacut
-      common/mygenz/px3,py3,pz3,px4,py4,pz4,px5,py5,pz5,
-     +              px6,py6,pz6,px7,py7,pz7
-   */
+    double mx1, mx2;
+    double wx1, wx2;
+    double w1, w6, w3, w8;
+  } remnts_;
 }
 
 int main() {
   // Number of events to generate
-  const int nevent = 2;
+  const int nevent = 1e5;
+  //const int nevent = 1e4;
   int ev = 1;
   int i;
+
+  Timer tmr;
 
   fileini_();
 
   // Beam parameters
-  datapar_.ipar[4] = 7;
+  datapar_.ipar[4] = 9;
   datapar_.lpar[2] = 3500.;
 
   // Outgoing leptons kinematics
-  //datapar_.lpar[4] = 999.; // eta cut
+  datapar_.lpar[4] = 3.1313; // eta cut
   datapar_.lpar[5] = 0.; // energy cut
   datapar_.lpar[6] = 5.; // pt cut
 
   integrate_();
 
-  std::cout << "Pt > " << datapar_.lpar[6] << " GeV : xsec = " << result_.s1 << ", error = " << result_.s2 << std::endl;  
+  std::cout << "Pt > " << datapar_.lpar[6] << " GeV :" << std::endl
+	    << "  xsec  = " << result_.s1 << std::endl
+	    << "  error = " << result_.s2 << std::endl;  
+
+  const Int_t maxpart = 1000;
+
+  Double_t xsect, errxsect;
+  Int_t npart, ndim;
+  Double_t eta[maxpart], phi[maxpart], rapidity[maxpart];
+  Double_t px[maxpart], py[maxpart], pz[maxpart], pt[maxpart];
+  Double_t E[maxpart], M[maxpart], charge[maxpart];
+  Int_t PID[maxpart], isstable[maxpart], status[maxpart], parentid[maxpart];
+  Double_t mx[2];
+  TLorentzVector *mom;
+  TTree *t;
+  Float_t time_gen, time_tot;
+
+  t = new TTree("h4444", "A TTree containing information from the events produced from LPAIR (CDF)");
+  mom = new TLorentzVector();
+
+  t->Branch("ip", &npart, "npart/I");
+  t->Branch("xsect", &xsect, "xsect/D");
+  t->Branch("errxsect", &errxsect, "errxsect/D");
+  t->Branch("Eta", eta, "eta[npart]/D");
+  t->Branch("phi", phi, "phi[npart]/D");
+  t->Branch("rapidity", rapidity, "rapidity[npart]/D");
+  t->Branch("px", px, "px[npart]/D");
+  t->Branch("py", py, "py[npart]/D");
+  t->Branch("pz", pz, "pz[npart]/D");
+  t->Branch("pt", pt, "pt[npart]/D");
+  t->Branch("charge", charge, "charge[npart]/D");
+  t->Branch("icode", PID, "PID[npart]/I");
+  t->Branch("parent", parentid, "parent[npart]/I");
+  t->Branch("stable", isstable, "stable[npart]/I");
+  t->Branch("status", status, "status[npart]/I");
+  t->Branch("E", E, "E[npart]/D");
+  t->Branch("m", M, "M[npart]/D");
+  t->Branch("MX", mx, "MX[2]/D");
+  t->Branch("ndim", &ndim, "ndim/I");
+  t->Branch("generation_time", &time_gen, "generation_time/F");
+  t->Branch("total_time", &time_tot, "total_time/F");
+
+  xsect = result_.s1;
+  errxsect = result_.s2;
+  ndim = event_.ndim;
 
   i = 0;
   do {
+    tmr.reset();    
     generate_(ev);
     if (event_.accepted) i++;
-    std::cout << "Event " << i << " generated !" << std::endl;
-    pawfil1_();
-    doublefragmentation_();
-    /*// first outgoing proton
-    double px3, py3, pz3;
-    px3 = variac_.pp3*variab_.cp3;
-    py3 = variac_.pp3*variab_.sp3;
-    pz3 = variab_.p3*variab_.ct3;
+    if (i%5000==0) std::cout << "Event " << i << " generated !" << std::endl;
+    time_gen = tmr.elapsed();
+    fragmentation_();
+    time_tot = tmr.elapsed();
+    npart = 0;
+    mx[0] = remnts_.mx1;
+    mx[1] = remnts_.mx2;
+    for (int p=0; p<lujets_.n; p++) {
+      /*firstdaughterid[npart] = lujets_.k[3][p];
+      lastdaughterid[npart] = lujets_.k[4][p];
+      if (firstdaughterid!=0 or lastdaughterid!=0) continue;*/
+      parentid[npart] = lujets_.k[2][p];
 
-    std::cout << px3 << "\t" << mygenz_.px3 << std::endl;
-    std::cout << py3 << "\t" << mygenz_.py3 << std::endl;
-    std::cout << pz3 << "\t" << mygenz_.pz3 << std::endl;*/
+      PID[npart] = lujets_.k[1][p];
+      isstable[npart] = lujets_.k[0][p]==1;
+      status[npart] = lujets_.k[0][p];
+      charge[npart] = luchge_(lujets_.k[1][p])/3.;
 
+      px[npart] = lujets_.p[0][p];
+      py[npart] = lujets_.p[1][p];
+      pz[npart] = lujets_.p[2][p];
+      E[npart] = lujets_.p[3][p];
+      M[npart] = lujets_.p[4][p];
+      mom->SetXYZM(px[npart], py[npart], pz[npart], M[npart]);
+      pt[npart] = mom->Pt();
+      if (pt[npart]!=0.) {
+	eta[npart] = mom->PseudoRapidity();
+      }
+      else eta[npart] = 9999.;
+      rapidity[npart] = mom->Rapidity();
+      phi[npart] = mom->Phi();
+
+      npart++;
+    }
+    t->Fill();
   } while (i<nevent);
+
+  t->SaveAs("events.root");
+
+  delete t;
+  delete mom;
 
   return 0;
 }

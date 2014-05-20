@@ -241,62 +241,73 @@ C===  > RANDOM SELECTION OF U , D AND DI QUARKS <===========
          ENDIF
          
 C...  Set Lund code
+!     First incoming proton
          I2STAT(1)=21
          I2PART(1)=2212
          I2MO1(1)=0
          I2DA1(1)=3
          I2DA2(1)=5
          
+!     Second incoming proton
          I2STAT(2)=21
          I2PART(2)=2212
          I2MO1(2)=0
          I2DA1(2)=4
          I2DA2(2)=7
          
+!     First outgoing proton
          I2STAT(5)=21
          I2PART(5)=2212
          I2MO1(5)=1
          I2DA1(5)=0
          I2DA2(5)=0
          
+!     Second outgoing proton
          I2STAT(7)=21
          I2PART(7)=2212
          I2MO1(7)=2
          I2DA1(7)=0
          I2DA2(7)=0
          
+!     Quark (from second outgoing proton)
          I2STAT(8)=1
          I2MO1(8)=7
          I2DA1(8)=0
          I2DA2(8)=0
          
+!     Diquark (from second outgoing proton)
          I2STAT(9)=1
          I2MO1(9)=7
          I2DA1(9)=0
          I2DA2(9)=0
          
+!     Quark (from first outgoing proton)
          I2STAT(10)=1
          I2MO1(10)=5
          I2DA1(10)=0
          I2DA2(10)=0
          
+!     Diquark (from first outgoing proton)
          I2STAT(11)=1
          I2MO1(11)=5
          I2DA1(11)=0
          I2DA2(11)=0
          
+!     Inner photon (from first incoming proton)
          I2STAT(3)=11
          I2PART(3)=22
          I2MO1(3)=1
          I2DA1(3)=0
          I2DA2(3)=0
          
+!     Inner photon (from second incoming proton)
          I2STAT(4)=11
          I2PART(4)=22
          I2MO1(4)=2
          I2DA1(4)=6
          I2DA2(4)=0
          
+!     Central two-photon system
          I2STAT(6)=1
          I2PART(6)=14
          I2MO1(6)=4

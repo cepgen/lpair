@@ -18,8 +18,10 @@
       de3=re*(s2-w3+w12)
       de5=re*(s1-w5-w12)
       e3=e1-de3
+      IF(e3.gt.e1) GOTO 10      ! Laurent workaround
       e4=de3+de5
       e5=e2-de5
+      IF(e5.gt.e2) GOTO 10      ! Laurent workaround
       IF(e4.LT.v4) GO TO 10
       p3=dsqrt(e3*e3-w3)
       p4=dsqrt((e4-v4)*(e4+v4))

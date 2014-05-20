@@ -127,5 +127,9 @@
      a      *pp3*pp5+(de5*qz+q0*(p+p5*ct5))*c3
        a6=-(qx*cp5+qy*sp5)*pp5*p2k1-(e2*q0+p*qz)*(cp3*cp5+sp3*sp5)
      a      *pp3*pp5+(de3*qz-q0*(p-p3*ct3))*b3
+C     LF FIXME... introduced to filter out these negative-energy internal photon 1 events
+c       IF(E3.GT.E1) dj=0.
+c       IF(E5.Gt.E2) dj=0.
+C     LF FIXME
        RETURN
        END

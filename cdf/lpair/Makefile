@@ -35,7 +35,7 @@ lpair: eemumu.o $(LIB_FILES) $(OBJ_FILES) $(LIB_FILES)
 
 clpair: $(OBJ_DIR)/lpair.oxx $(LIB_FILES) $(OBJ_FILES) $(LIB_FILES)
 	@echo "Linking $@..."
-	$(CC) $(CFLAGS) -I$(RHEAD) -o $@ $^ $(LIBRARY)
+	$(CC) $(CFLAGS) -I$(RHEAD) -o $@ $^ $(LIBRARY) $(RLIBS)
 
 nice:
 	$(RM) $(RMFLAGS) *.o $(OBJ_DIR)

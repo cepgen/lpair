@@ -1,15 +1,19 @@
       SUBROUTINE genera(f,ndim,nevent,nstrat,ntreat)
       IMPLICIT DOUBLE PRECISION (a-h,o-z)
-      DOUBLE PRECISION am,ami,ranf,y,x(10),treat,g,h,a,b,t,z,tf,tot
+      DOUBLE PRECISION am,ami,ranf,y,treat,g,h,a,b,t,z,tf,tot
       DOUBLE PRECISION ffmax,fmax
       INTEGER mbin,max,m,ndim,ncall,mcall,nev,mev,nstrat,nn,j,n(10)
       INTEGER k,jj,jjj,ncycle,ntreat,nm,mdum,nevent
       EXTERNAL f
       
       LOGICAL accepted
-      COMMON/event/accepted,x(10)
-      
+      INTEGER endim
+      DOUBLE PRECISION x(10)
+      COMMON/event/accepted,endim,x
+
       COMMON/maxi/mdum,mbin,ffmax,fmax(80000),nm(80000)
+
+      endim = ndim
       
       accepted = .FALSE.
       am  = mbin
@@ -82,8 +86,9 @@
       IF ( nstrat .GT. 0 ) GO TO 18
       IF ( g .GT. ffmax ) ffmax = g
       IF ( nev .LT. nevent ) GO TO 1
- 8    PRINT 100,nev,ncall,nn
-      PRINT 101,m,mev,mcall
+ 8    CONTINUE
+c      PRINT 100,nev,ncall,nn
+c      PRINT 101,m,mev,mcall
       accepted = .TRUE.
       RETURN
       

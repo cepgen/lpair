@@ -125,6 +125,8 @@ C PARTICLE 9 = ELEKTRON OUT <===============
       PLAB(2,9)=P5*ST5*SP5
       PLAB(3,9)=GAMMA*CT5*P5 + BETGAM  *  E5
       PLAB(4,9)=GAMMA  *  E5 + BETGAM*CT5*P5
+      print *,'electron :', p5*p5-e5*e5,gamma,betgam
+      print *,PLAB(4,9)**2-PLAB(3,9)**2-PLAB(2,9)**2-PLAB(1,9)**2
 C PARTICLE 4 = GAMMA_E   <==================
       PLAB(1,4)=-PLAB(1,9)
       PLAB(2,4)=-PLAB(2,9)
@@ -200,6 +202,8 @@ C====> ROTATE, REFELECT AND TRANSFORM TO REAL*4 VALUES <=============
          PL(4,I) = SNGL(PLAB(4,I))
 c         print *,'Particle',I,'P=',(PL(j,I),j=1,4)
  100  CONTINUE
+      print *,'after rotation:'
+      print *,PL(4,9)**2-PL(3,9)**2-PL(2,9)**2-PL(1,9)**2
 C===> RANDOM DISTRIBUTION OF LEPTON+ AND LEPTON- <===========
       IF (RAN2(idum) .LT. 0.5) THEN
          I2PART(6) = IPAIR
@@ -398,8 +402,9 @@ C=====> BUILD 4-VECTORS AND BOOST DECAY PARTICLES <===============
          PMXDA(2)=SIN(RANMXT)*SIN(RANMXP)*PMXP
          PMXDA(3)=COS(RANMXT)*PMXP
          PMXDA(4)=SQRT(PMXP**2+ULMDQ**2)
-c         PRINT *,' GMUFIL : PMXDA BEFORE LB:',(PMXDA(I),I=1,4)
+         PRINT *,' GMUFIL : PMXDA BEFORE LB:',(PMXDA(I),I=1,4)
          CALL LORENB(I2MASS(5),PL(1,5),PMXDA(1),PL(1,11))
+         PRINT *,' GMUFIL : PL(11) AFTER LB:',(PL(I,11),I=1,4)
          PMXDA(1)=-PMXDA(1)
          PMXDA(2)=-PMXDA(2)
          PMXDA(3)=-PMXDA(3)
@@ -426,6 +431,9 @@ C SET MOTHER/DAUGHTER VALUES, MARKING PARTICLES AS DECAYED <=======
      &        I2MO1(I),I2DA1(I),I2DA2(I),NINIT)
 C SET PULS, ENERGY AND MASS OF THE PARTICLES <==================
          CALL LUPSET(I+NINIT,PL(1,I),PL(2,I),PL(3,I),PL(4,I),I2MASS(I))
+         IF(I.EQ.9) THEN
+            PRINT *,I,I2MASS(I),(PL(J,I),J=1,4)
+         ENDIF
  201  CONTINUE
 C PUTTING QUARK AND DIQUARK TO A COLOR SINGLET <======================
       IF (LVAL) CALL LUJOIN(NJOIN,JLVAL)
@@ -433,8 +441,16 @@ C PUTTING QUARK AND DIQUARK TO A COLOR SINGLET <======================
          CALL LUJOIN(NJOIN,JLSEA1)
          CALL LUJOIN(NJOIN,JLSEA2)
       ENDIF
+      DO 1024, J=1,11
+         print *,'I=',J,'STATUS=',I2STAT(J)
+ 1024 CONTINUE
+      print *,'Before LUJOIN================================'
+      CALL LULIST(2)
       IF (PMOD.GE.10 .AND. PMOD.LE.99) CALL LUJOIN(NJOIN,JLPSF)
 C EXECUTE LUND FRAGMENTATION PROGRAM  <==============================
+      print *,'Before LUEXEC================================'
+      call LULIST(2)
+      print *,'After  LUEXEC================================'
       CALL LUEXEC
 C Check wether the Hadronic system is inelastic  <===================
       IF (PMOD.GE.10 .AND. PMOD.LE.99) THEN

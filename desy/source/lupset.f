@@ -23,6 +23,9 @@ C---JETSET and GENOUT common
       P(LINE,4)=E
       IF (M .GE. -9998.0) THEN
        P(LINE,5)=M
+       print *,'--> Setting the mass for the particle',LINE
+       print *,'    E**2-P**2=',E**2-PX**2-PY**2-PZ**2
+       print *,'    M**2=',M**2
       ELSE
        P(LINE,5)=ULMASS(K(LINE,2))
       ENDIF

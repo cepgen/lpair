@@ -52,12 +52,14 @@ Int_t main() {
 
   Int_t firstdaughterid, lastdaughterid;
 
+  //const Int_t maxevts = 1e5;
+  const Int_t maxevts = 2;
   const Int_t maxpart = 1000;
 
   Int_t npart;
   Double_t xsect, errxsect;
   Double_t eta[maxpart], phi[maxpart], rapidity[maxpart], px[maxpart], py[maxpart], pz[maxpart], pt[maxpart], E[maxpart], M[maxpart], charge[maxpart];
-  Int_t PID[maxpart], isstable[maxpart], parentid[maxpart];
+  Int_t PID[maxpart], isstable[maxpart], parentid[maxpart], daughterid1[maxpart], daughterid2[maxpart], status[maxpart];
   Double_t mx;
   Double_t t1, t1min, t1max, t2, t2min, t2max;
   Double_t valtreat, wtreat;
@@ -90,7 +92,10 @@ Int_t main() {
   t->Branch("charge", charge, "charge[npart]/D");
   t->Branch("icode", PID, "PID[npart]/I");
   t->Branch("parent", parentid, "parent[npart]/I");
+  t->Branch("daughter1", daughterid1, "daughter1[npart]/I");
+  t->Branch("daughter2", daughterid2, "daughter2[npart]/I");
   t->Branch("stable", isstable, "stable[npart]/I");
+  t->Branch("status", status, "status[npart]/I");
   t->Branch("E", E, "E[npart]/D");
   t->Branch("m", M, "M[npart]/D");
   t->Branch("MX", &mx, "MX/D");
@@ -121,11 +126,10 @@ Int_t main() {
 
   xsect = vgres_.s1;
   errxsect = vgres_.s2;
-  for (Int_t i=0; i<1e5; i++) {
+  for (Int_t i=0; i<maxevts; i++) {
     zduevt_(&one);
-    if (i%10000==0 and i>0) {
+    //if (i%10000==0 and i>0) 
       cout << "Generating event #" << i << endl;
-    }
     npart = 0;
     mx = mykin_.tmx;
     t1 = extra_.t1;
@@ -154,9 +158,12 @@ Int_t main() {
     for (Int_t p=0; p<lujets_.n; p++) {
       firstdaughterid = lujets_.k[3][p];
       lastdaughterid = lujets_.k[4][p];
-      if (firstdaughterid!=0 or lastdaughterid!=0) continue;
+      //if (firstdaughterid!=0 or lastdaughterid!=0) continue;
       PID[npart] = lujets_.k[1][p];
       parentid[npart] = lujets_.k[2][p];
+      daughterid1[npart] = firstdaughterid;
+      daughterid2[npart] = lastdaughterid;
+      status[npart] = lujets_.k[0][p];
       //cout << p << "\t" << PID[npart] << "\t" << firstdaughterid << "\t" << lastdaughterid << endl;
       //isstable[npart] = lujets_.v[4][p]==0.;
       isstable[npart] = lujets_.k[0][p]==1;

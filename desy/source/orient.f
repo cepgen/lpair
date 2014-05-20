@@ -25,6 +25,10 @@
       E3  = E1-DE3
       E4  = DE3+DE5
       E5  = E2-DE5
+C     FIXME FIXME FIXME Laurent workaround to avoid very unphysical events
+      IF(E3.GT.E1)GO TO 10
+      IF(E5.GT.E2)GO TO 10
+C     FIXME FIXME FIXME
       IF(E4.LT.V4)GO TO 10
       P3  = DSQRT(E3*E3-W3)
       P4  = DSQRT((E4-V4)*(E4+V4))

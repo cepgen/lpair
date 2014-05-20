@@ -1,51 +1,58 @@
-       subroutine genzfil
-*
-       implicit double precision (a-h,o-z)
-       double precision me,mu
-*
-* --- HEPEVT common block
-       PARAMETER (NMXHEP=10000)
-       COMMON/HEPEVT/NEVHEP,NHEP,ISTHEP(NMXHEP),IDHEP(NMXHEP),
-     & JMOHEP(2,NMXHEP),JDAHEP(2,NMXHEP),PHEP(5,NMXHEP),VHEP(4,NMXHEP)
-       REAL PHEP,VHEP
-       INTEGER I,J
-*
-* --- LPAIR common blocks
-*
-       common/inpu/me,mu,ebeam,const,sq
-       common/variab/e,e1,e2,e3,e4,e5,p,p3,p4,p5,ct3,st3,ct4,st4,ct5
-     1 ,st5,cp3,sp3,cp5,sp5
-       common/variad/e6,e7,p6,p7,ct6,st6,ct7,st7,cp6,sp6,cp7,sp7,w
-       common/lplot/xl(10),v1(2),v2(2),av(10)
-       common/extra/s1,s2,t1,t2
-       common/pickzz/w1,w2,w3,w4,w5,w31,w52,w12,tau,sl1
-*
+      subroutine genzfil
+*     
+      implicit double precision (a-h,o-z)
+      double precision me,mu
+*     
+*     --- HEPEVT common block
+      PARAMETER (NMXHEP=10000)
+      COMMON/HEPEVT/NEVHEP,NHEP,ISTHEP(NMXHEP),IDHEP(NMXHEP),
+     &     JMOHEP(2,NMXHEP),JDAHEP(2,NMXHEP),PHEP(5,NMXHEP),
+     &     VHEP(4,NMXHEP)
+      REAL PHEP,VHEP
+      INTEGER I,J
+*     
+*     --- LPAIR common blocks
+*     
+      common/inpu/me,mu,ebeam,const,sq
+      common/variab/e,e1,e2,e3,e4,e5,p,p3,p4,p5,ct3,st3,ct4,st4,ct5
+     1     ,st5,cp3,sp3,cp5,sp5
+      common/variad/e6,e7,p6,p7,ct6,st6,ct7,st7,cp6,sp6,cp7,sp7,w
+      common/lplot/xl(10),v1(2),v2(2),av(10)
+      common/extra/s1,s2,t1,t2
+      common/pickzz/w1,w2,w3,w4,w5,w31,w52,w12,tau,sl1
+*     
 * --- GENZ quantities common block
 *
 
 
 *
 * --- LPAIR data common block
-*
-       INTEGER IPAR(20)
-       REAL*8 LPAR(20)
-       COMMON/DATAPAR/IPAR,LPAR
-*
+*     
+      INTEGER IPAR(20)
+      REAL*8 LPAR(20)
+      COMMON/DATAPAR/IPAR,LPAR
+*     
 * --- MYGENZ common block
 *
-       common/mygenz/px3,py3,pz3,px4,py4,pz4,px5,py5,pz5,
-     +               px6,py6,pz6,px7,py7,pz7
+      common/mygenz/px3,py3,pz3,px4,py4,pz4,px5,py5,pz5,
+     +     px6,py6,pz6,px7,py7,pz7
 *
 *
-       IF(IPAR(3).EQ.0) RETURN
-*
-       IF(NEVHEP.GE.IPAR(11)) RETURN ! max # of events to GNZ output
+c      PRINT *,'Genzfil called'
+      IF(IPAR(3).EQ.0) RETURN
+*     
+      IF(NEVHEP.GE.IPAR(11)) RETURN ! max # of events to GNZ output
 *
 * ---- begin GENZ (LPAIR)
 *
 * ---- fill HEPEVT common block
 *
-      NHEP = 7 ! elastic production
+      NHEP = 7                  ! elastic production
+      P1=SQRT(E1**2-LPAR(1)**2)
+      P2=SQRT(E2**2-LPAR(1)**2)
+c      P1=E1
+c      P2=-E2
+c      PRINT *,p1,p2
 *
 * ---- store entries for:
 *   1  proton       (incoming, left)
@@ -58,18 +65,18 @@
 *
 * ---- initialize all HEPEVT entries to zero
       do i=1,nhep
-        isthep(i)=0.
+         isthep(i)=0.
          idhep(i)=0.
-        do j=1,2
-          jmohep(j,i)=0.
-          jdahep(j,i)=0.
-        enddo
-        do j=1,5
-          phep(j,i)=0.
-        enddo
-        do j=1,4
-          vhep(j,i)=0.
-        enddo
+         do j=1,2
+            jmohep(j,i)=0.
+            jdahep(j,i)=0.
+         enddo
+         do j=1,5
+            phep(j,i)=0.
+         enddo
+         do j=1,4
+            vhep(j,i)=0.
+         enddo
       enddo
 *
 * ---- proton (incoming, 1)
@@ -84,7 +91,7 @@
       phep(3,1)=real(p1)*( 1.)
       phep(4,1)=real(e1)
       phep(5,1)=real(me)
-*
+*     
 * ---- proton (incoming, 2)
       isthep(2)=1.
       idhep(2)=2212.
@@ -97,7 +104,7 @@
       phep(3,2)=real(p2)*(-1.)
       phep(4,2)=real(e2)
       phep(5,2)=real(me)
-*
+*     
 * ---- proton (outgoing, 3)
       isthep(3)=1.
       idhep(3)=2212.
@@ -110,7 +117,7 @@
       phep(3,3)=real(pz3)
       phep(4,3)=real(e3)
       phep(5,3)=real(me)
-*
+*     
 * ---- proton (outgoing, 5)
       isthep(5)=1.
       idhep(5)=2212.
@@ -170,16 +177,15 @@
 *
 * ... print some diagnostics
 *
-      WRITE(20,*) NEVHEP, NHEP
-      DO JJ=1,NHEP
-        WRITE(20,*) JJ, ISTHEP(JJ),IDHEP(JJ),JMOHEP(1,JJ),JMOHEP(2,JJ),
-     &             JDAHEP(1,JJ),JDAHEP(2,JJ)
-        WRITE(20,*) PHEP(1,JJ),PHEP(2,JJ),PHEP(3,JJ),PHEP(4,JJ),
-     &             PHEP(5,JJ)
-        WRITE(20,*) VHEP(1,JJ),VHEP(2,JJ),VHEP(3,JJ),VHEP(4,JJ)
-      ENDDO
+c      PRINT *, NEVHEP, NHEP
+c      DO JJ=1,NHEP
+c         PRINT 4000, JJ, ISTHEP(JJ),IDHEP(JJ),
+c     &        (JMOHEP(I,JJ),I=1,2),(JDAHEP(I,JJ),I=1,2),
+c     &        (PHEP(I,JJ),I=1,5),
+c     &        (VHEP(I,JJ),I=1,4)
+c      ENDDO
 *
-*      translate HEPEVT to GENZ
+*     translate HEPEVT to GENZ
 *
 c        CALL GNZFRHC(IRET)
 *
@@ -203,5 +209,7 @@ c        ENDIF
 *
 *  --- end GENZ (LPAIR)
 *
-       return
-       end
+ 4000 FORMAT(1I2,1I3,1I5,4I2,9E15.6)
+
+      RETURN
+      END
