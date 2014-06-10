@@ -82,6 +82,21 @@ c     Event common
 *   5  proton       (outgoing,right)
 *   6  muon         (outgoing, left)
 *   7  muon         (outgoing,right)
+*
+*
+*    1 ------x------------ 3
+*        p    \    p/q
+*          gam \
+*               \_________ 6
+*               |  ell+-
+*               | 4
+*               |_________ 7
+*               /  ell-+
+*          gam /
+*             /
+*    2 ------x------------ 5
+*        p         p/q
+*
 *****
 
       IF(NDIM.EQ.7) THEN
@@ -108,6 +123,23 @@ c...  READ the kinematics from the event
          RETURN
       ENDIF
 
+***** PL (Lund) kinematic quantities mapping
+*
+*    1 ------x------------ 5
+*        p    \    p/q
+*            3 \ gam
+*               \_________ 8
+*               |  ell+-
+*               | 6
+*               |_________ 9
+*               /  ell-+
+*            4 / gam
+*             /
+*    2 ------x------------ 7
+*        p         p/q
+*
+*****
+
       NPART=9
 c...  Fill the Lund common block
 C     PARTICLE 1 = "PROTON1" <===================================
@@ -125,7 +157,7 @@ C     PARTICLE 5 = QUARK1 OUT <==================================
       PL(2,5)=PHEP(2,3)
       PL(3,5)=PHEP(3,3)
       PL(4,5)=PHEP(4,3)
-C     PARTICLE 8 = QUARK2 OUT <==================================
+C     PARTICLE 7 = QUARK2 OUT <==================================
       PL(1,7)=PHEP(1,5)
       PL(2,7)=PHEP(2,5)
       PL(3,7)=PHEP(3,5)

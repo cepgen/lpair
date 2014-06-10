@@ -12,7 +12,7 @@ void ConvertLPairToLHE()
   //TFile *f1 = TFile::Open("lpair-inelel-tautau-pt15-0908.root");
 
   const Double_t energy = 4000;
-  const int N = 100; // max number of particles in per event
+  const Int_t N = 200; // max number of particles in per event
   const Int_t max_events = 100000;
 
   TFile *f1 = TFile::Open("events.root");
@@ -60,98 +60,60 @@ void ConvertLPairToLHE()
   output << xsec << " " << errxsec << " 0.26731120000E-03 0" << endl;
   output << "</init>" << endl;
 
-  for(Int_t i = first_event;i < first_event+max_events;i++)
-    {
-      t1->GetEntry(i);
-      if (i%10000==0)
-	cout << i << ", Npart = " << ip << endl;
-
-      // JH - for filtering on e/mu/had tau decays
-      int founde = 0;
-      int foundmu = 0;
-      int foundpik = 0;
-      for(int k = 0;k < ip;k++)	{
-	if(fabs(partid[k]) == 13)
-	  foundmu++;
-	if(fabs(partid[k]) == 11)
-	  founde++;
-	if(fabs(partid[k]) == 211 || fabs(partid[k]) == 321)
-	  foundpik++;
-      }
+  for(Int_t i = first_event;i < first_event+max_events;i++) {
+    t1->GetEntry(i);
+    if (i%10000==0)
+      cout << i << ", Npart = " << ip << endl;
+    
+    output << "<event>" << endl;
+    output << ip-2 << " 0 0.2983460E-04  0.9118800E+02  0.7546772E-02  0.1300000E+00" << endl;
+    //	cout << "there are " << ip << " particles in this event\n";
+    
+    for(int j=0; j<ip; j++) {
+      //	Stupid trick to produce inelastic events in both directions!
       
-      /* For selecting e+mu tautau events */
-      /*
-	if(founde == 0 || foundmu == 0)
-	continue;
-      */
-
-      /* For selecting lepton + 1-prong tautau events - probably only works for ElEl */ 
-      /*
-      if((founde > 0) && (foundpik != 1))
-      	continue;
-      if((foundmu > 0) && (foundpik != 1))
-      	continue;
-      if((foundmu == 0) && (founde == 0))
-      	continue;
-      if((foundmu > 0) && (founde > 0))
-	continue;
-      */
-
-      output << "<event>" << endl;
-      //output << ip+2 << "   0  0.2983460E-04  0.9118800E+02  0.7546772E-02  0.1300000E+00" << endl;
-      output << ip-2 << " 0 0.2983460E-04  0.9118800E+02  0.7546772E-02  0.1300000E+00" << endl;
-      //	cout << "there are " << ip << " particles in this event\n";
-
-      // JH - note here we add in two fake photons as the beam particles. The energies don't matter - this is only for 
-      // the LHE event record.       
-      //output << "22   -1    0    0    0    0  0.00000000000E+00  0.00000000000E+00 0.00000000000E+02  0.10000000000E+02  0.00000000000E+00 0.  1." << endl;
-      //output << "22   -1    0    0    0    0  0.00000000000E+00  0.00000000000E+00 0.00000000000E+00  0.10000000000E+02  0.00000000000E+00 0. -1." << endl;   
-  
-      for(int j=0; j<ip; j++) {
-	//	Stupid trick to produce inelastic events in both directions!
-
-	iz[j] = 0.;
-	parent[j] -= 2;
-
-	if(i%2 == 0)
-	  pz[j] = -pz[j];
-
-	if (partid[j]==2212 && status[j]==21) {
-	  if (fabs(pz[j])!=energy) {
-	    status[j] = 1; // outgoing proton
-	    parent[j] = 1;
-	  }
-	  //else status[j] = -9; // incoming proton
-	  else continue;
-	}
-	else if (partid[j]==22 && status[j]==21) {
-	  if (j%2==0) iz[j] = 1.;
-	  else iz[j] = -1.; // helicity
-	  parent[j] = 0;
-	  status[j] = -1; // incoming photon
-	}
-	else if (partid[j]==92) status[j] = 3; // string
-	else if ((partid[j]==1 || partid[j]==2 || partid[j]==2101 || partid[j]==2103 || partid[j]==2203) && (status[j]>=11 && status[j]<=13)) status[j] = 3; // quarks content
-	else if (status[j]==11) status[j] = 2; // intermediate resonance
-
-	//output << partid[j] << " 1 1 2 0 0 " << px[j] << " " << py[j] << " " << pz[j] << " " << en[j] << " " << m[j] << " 0. " << iz[j] << endl; 	
-	output << partid[j] << " " 
-	       << status[j] << " " 
-	       << parent[j] << " 0 0 0 " 
-	       << px[j] << " " 
-	       << py[j] << " " 
-	       << pz[j] << " " 
-	       << en[j] << " " 
-	       << m[j] << " 0. " 
-	       << iz[j] << endl; 	
-	//	output << "P "<< i*N+j << " " << partid[j] << " " << px[j] << " " << py[j] << " " << pz[j] << " " << en[j] << " 1 0 0 0 0" << endl;      
-      }
+      iz[j] = 0.;
+      parent[j] -= 2;
       
-
-      output << "</event>" << endl;
+      if(i%2 == 0)
+	pz[j] = -pz[j];
+      
+      if (partid[j]==2212 && status[j]==21) {
+	if (fabs(pz[j])!=energy) {
+	  status[j] = 1; // outgoing proton
+	  parent[j] = 1;
+	}
+	//else status[j] = -9; // incoming proton
+	else continue;
+      }
+      else if (partid[j]==22 && status[j]==21) {
+	if (j%2==0) iz[j] = 1.;
+	else iz[j] = -1.; // helicity
+	parent[j] = 0;
+	status[j] = -1; // incoming photon
+      }
+      else if (partid[j]==92) status[j] = 3; // string
+      else if ((partid[j]==1 || partid[j]==2 || partid[j]==2101 || partid[j]==2103 || partid[j]==2203) && (status[j]>=11 && status[j]<=13)) status[j] = 3; // quarks content
+      else if (status[j]==11) status[j] = 2; // intermediate resonance
+      
+      //output << partid[j] << " 1 1 2 0 0 " << px[j] << " " << py[j] << " " << pz[j] << " " << en[j] << " " << m[j] << " 0. " << iz[j] << endl; 	
+      output << partid[j] << " " 
+	     << status[j] << " " 
+	     << parent[j] << " 0 0 0 " 
+	     << px[j] << " " 
+	     << py[j] << " " 
+	     << pz[j] << " " 
+	     << en[j] << " " 
+	     << m[j] << " 0. " 
+	     << iz[j] << endl; 	
+      //	output << "P "<< i*N+j << " " << partid[j] << " " << px[j] << " " << py[j] << " " << pz[j] << " " << en[j] << " 1 0 0 0 0" << endl;      
     }
+    
+    
+    output << "</event>" << endl;
+  }
   output << "</LesHouchesEvents>" << endl;
   output.close();
-
+  
   cout << "Converted " << max_events << " events" << endl;
 }
