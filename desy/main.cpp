@@ -48,8 +48,6 @@ extern "C" {
 Int_t main() {
   Int_t one = 1;
 
-  Int_t firstdaughterid, lastdaughterid;
-
   Timer tmr;
 
   const Int_t maxevts = 1e5;
@@ -143,12 +141,10 @@ Int_t main() {
     }
     //npart = pyjets_.n;
     for (Int_t j=0; j<lujets_.n; j++) {
-      firstdaughterid = lujets_.k[3][j];
-      lastdaughterid = lujets_.k[4][j];
       PID[npart] = lujets_.k[1][j];
       parentid[npart] = lujets_.k[2][j];
-      daughterid1[npart] = firstdaughterid;
-      daughterid2[npart] = lastdaughterid;
+      daughterid1[npart] = lujets_.k[3][j];
+      daughterid2[npart] = lujets_.k[4][j];
       status[npart] = lujets_.k[0][j];
       isstable[npart] = lujets_.k[0][j]==1;
       px[npart] = lujets_.p[0][j];

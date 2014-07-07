@@ -6,14 +6,9 @@ using namespace std;
 
 void ConvertLPairToLHE()
 {
-  //  TFile *f1 = TFile::Open("lpair-mumu-7tev-pt6pt5.root");
-  //TFile *f1 = TFile::Open("lpair-el-tautau-7tev-pt19.root");  
-  //TFile *f1 = TFile::Open("lpair-inelel-mumu-pt15-0908.root");
-  //TFile *f1 = TFile::Open("lpair-inelel-tautau-pt15-0908.root");
-
   const Double_t energy = 4000;
   const Int_t N = 200; // max number of particles in per event
-  const Int_t max_events = 100000;
+  const Int_t max_events = 1e2;
 
   TFile *f1 = TFile::Open("events.root");
   TTree *t1 = (TTree*) f1->Get("h4444");
@@ -37,9 +32,9 @@ void ConvertLPairToLHE()
   //t1->SetBranchAddress("iz",iz);
   t1->SetBranchAddress("ip",&ip);
 
-  //ofstream output("gammagammamumu.lpair_inelel_pt15_8tev.lhe");
+  ofstream output("gammagammamumu.lpair_inelel_pt15_8tev.lhe");
   //ofstream output("gammagammatautau.lpair_inelel_pt15_7tev.lhe");
-  ofstream output("gammagammatautau.lpair_inelel_tautau_pt25_8tev.lhe");
+  //ofstream output("gammagammatautau.lpair_inelel_tautau_pt25_8tev.lhe");
   //ofstream output("gammagammatautau.lpair_elel_tautau_pt40_7tev.lhe");
 
   Int_t nevts = t1->GetEntries();
@@ -66,25 +61,23 @@ void ConvertLPairToLHE()
       cout << i << ", Npart = " << ip << endl;
     
     output << "<event>" << endl;
-    output << ip-2 << " 0 0.2983460E-04  0.9118800E+02  0.7546772E-02  0.1300000E+00" << endl;
+    output << ip-3 << " 0 0.2983460E-04  0.9118800E+02  0.7546772E-02  0.1300000E+00" << endl;
     //	cout << "there are " << ip << " particles in this event\n";
     
     for(int j=0; j<ip; j++) {
       //	Stupid trick to produce inelastic events in both directions!
       
       iz[j] = 0.;
-      parent[j] -= 2;
+      parent[j] -= 3;
+      parent[j] = TMath::Max(parent[j], 0);
       
       if(i%2 == 0)
 	pz[j] = -pz[j];
       
       if (partid[j]==2212 && status[j]==21) {
-	if (fabs(pz[j])!=energy) {
-	  status[j] = 1; // outgoing proton
-	  parent[j] = 1;
-	}
-	//else status[j] = -9; // incoming proton
-	else continue;
+	/*if (fabs(pz[j])==energy) status[j] = -9; // incoming proton
+	else*/
+	continue;
       }
       else if (partid[j]==22 && status[j]==21) {
 	if (j%2==0) iz[j] = 1.;
