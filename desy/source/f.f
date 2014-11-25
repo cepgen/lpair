@@ -95,7 +95,7 @@ C
 C  COMPUTING MAT.EL. FOR P E -> P E MU MU   <=========================
          CALL GAMGAM(SSQ,MP,ME,MP,ME,MU,MU,0.D+00,SQ,DJ,0,X,1)
 C
-      ELSEIF (PMOD .EQ. 11 .OR. PMOD .EQ. 12) THEN
+      ELSEIF (PMOD .EQ. 11 .OR. PMOD .EQ. 12 .OR. PMOD .EQ. 13) THEN
          ETOT  = EP + EE
          PTOT  = PP - PE
          SSQ = DSQRT(MP * MP + ME * ME + 2. * (EE * EP + PE * PP))
@@ -200,7 +200,7 @@ C
 
                NPDFC=NPDFC+1
 C
-               CALL PDF2PDG(XQ,DSQRT(QSCALE),XDENS)
+clf               CALL PDF2PDG(XQ,DSQRT(QSCALE),XDENS)
                IF (NQUARK.EQ.2 .AND. PMOD.EQ.103) THEN
                   FORMF = (XDENS(2)+XDENS(-2)*2D0)*4D0/9D0/XQ
                   PVALD=0.0D0

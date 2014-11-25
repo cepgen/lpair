@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <cmath>
 
 using namespace std;
 
@@ -39,8 +40,8 @@ int main() {
 
   // Beam parameters
   beam_.inpe = beam_.inpp = 3500.;
-  //beam_.pmod = 11;
-  beam_.pmod = 2;
+  beam_.pmod = 11;
+  //beam_.pmod = 2;
   beam_.emod = 2;
 
   // Vegas parameters
@@ -48,12 +49,16 @@ int main() {
 
   // Outgoing leptons kinematics
   cuts_.ecut = 0.;
+  cuts_.thmin = 2*atan(exp(-2.5))/acos(-1.)*180.;
+  cuts_.thmax = 2*atan(exp(2.5))/acos(-1.)*180.;
+  cuts_.mxmx = 1000.;
+  cout << "Theta in range [" << cuts_.thmin << ", " << cuts_.thmax << "]" << endl;
 
-  //ofstream cs("tmp/xsec_lpair_singleinelastic.dat");
-  ofstream cs("tmp/xsec_lpair_elastic.dat");
+  ofstream cs("xsect_scan_lpair_singleinelastic.dat");
+  //ofstream cs("xsect_scan_lpair_elastic.dat");
 
-  for (int i=0; i<100; i++) {
-    cuts_.ptcut = 0.+i*0.1;
+  for (int i=0; i<50; i++) {
+    cuts_.ptcut = 0.+i*0.5;
     gmubeg_();
 
     cs << cuts_.ptcut << "\t" << vgres_.s1 << "\t" << vgres_.s2 << endl;
