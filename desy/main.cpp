@@ -50,7 +50,7 @@ Int_t main() {
 
   Timer tmr;
 
-  const Int_t maxevts = 1e5;
+  const Int_t maxevts = 2.5e6;
   //const Int_t maxevts = 5;
   const Int_t maxpart = 1000;
 
