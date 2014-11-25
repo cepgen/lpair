@@ -80,7 +80,7 @@ C-----
       ELSEIF (PMOD .EQ. 2) THEN
          NDIM=7
          INTGP=2
-      ELSEIF (PMOD .EQ. 11 .OR. PMOD .EQ. 12) THEN
+      ELSEIF (PMOD .EQ. 11 .OR. PMOD .EQ. 12 .OR. PMOD .EQ. 13) THEN
          NDIM=8
          INTGP=PMOD-8
          MXMIN2=DBLE(MXMN)**2
@@ -154,7 +154,7 @@ Cxx       CALL PDFSET('MODE',MPDF)
          VAL(2)  = gpdf
          PARM(3) = 'NSET'
          VAL(3)  = spdf
-         CALL PDFSET(PARM,VAL)
+clf         CALL PDFSET(PARM,VAL)
 C-----------------------------
          WRITE(6,'(/A,/A,I8,A,I8,A,
      &  /A,G13.4,A,G13.4,A,/A,G13.4,A,G13.4,A,/A)')

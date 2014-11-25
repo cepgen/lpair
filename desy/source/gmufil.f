@@ -347,11 +347,11 @@ C==> SET MOMENTA <=============
          PL(4,10)=SNGL(EP)
          PL(1,12)=0.0
          PL(2,12)=0.0
-         PL(3,12)=GMUSELX(-IABS(IUSEDF),QSCALE)*PP
+clf         PL(3,12)=GMUSELX(-IABS(IUSEDF),QSCALE)*PP
          PL(4,12)=SQRT(PL(3,12)**2+I2MASS(12)**2)
          PL(1,IPQ)=0.0
          PL(2,IPQ)=0.0
-         PL(3,IPQ)=GMUSELX(I2PART(IPQ),QSCALE)*PP
+clf         PL(3,IPQ)=GMUSELX(I2PART(IPQ),QSCALE)*PP
          PL(4,IPQ)=SQRT(PL(3,IPQ)**2+I2MASS(IPQ)**2)
          PL(1,IPDQ)=0.0
          PL(2,IPDQ)=0.0
@@ -452,7 +452,7 @@ C EXECUTE LUND FRAGMENTATION PROGRAM  <==============================
 c      print *,'Before LUEXEC================================'
 c      call LULIST(2)
 c      print *,'After  LUEXEC================================'
-      CALL LUEXEC
+clf      CALL LUEXEC
 C Check wether the Hadronic system is inelastic  <===================
       IF (PMOD.GE.10 .AND. PMOD.LE.99) THEN
          NPOUT=0
