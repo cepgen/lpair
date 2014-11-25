@@ -7,7 +7,17 @@
       COMMON/maxi/mdum,mbin,ffmax,fmax(80000),nm(80000)
       DOUBLE PRECISION maxar(11,100)
       INTEGER kk,kkk
-      
+      LOGICAL hassetgen
+      DATA hassetgen/.FALSE./
+      SAVE hassetgen
+ 
+*     
+*     One does not want to perform setgen twice
+*     (awfully time consuming...)
+*
+      IF ( hassetgen ) RETURN
+      hassetgen = .TRUE.
+
       DO 50 i = 1,100
          DO 50 j = 1,11
  50   maxar(j,i) = 0

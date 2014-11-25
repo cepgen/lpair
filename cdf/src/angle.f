@@ -1,5 +1,5 @@
  
-      FUNCTION ULANGL(X,Y) 
+      FUNCTION MYULANGL(X,Y) 
 C...Purpose: to reconstruct an angle from given x and y coordinates. 
 
       REAL ULANGL,R,PI

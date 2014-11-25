@@ -6,9 +6,9 @@
       INTEGER LINE,STATUS,PART,MOTH,DAUG1,DAUG2,NOFF
 *
 C---JETSET and GENOUT common
-      double precision P(4000,5),V(4000,5)
-      INTEGER       N,K(4000,5), npad
-      COMMON/PYJETS/N,npad,K,P,V
+      REAL P(4000,5),V(4000,5)
+      INTEGER       N,K(4000,5)
+      COMMON/LUJETS/N,K,P,V
 *
       IF (LINE .GT. N) THEN
        WRITE(6,*)' LUKSET : LINE TOO BIG; LINE=',LINE,' N=',N

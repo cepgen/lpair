@@ -16,7 +16,7 @@
        COMMON/DATAPAR/IPAR,LPAR
 *     
 *     --- HEPEVT COMMON block
-       PARAMETER (NMXHEP=10000)
+       PARAMETER (NMXHEP=100)
        COMMON/HEPEVT/NEVHEP,NHEP,ISTHEP(NMXHEP),IDHEP(NMXHEP),
      &      JMOHEP(2,NMXHEP),JDAHEP(2,NMXHEP),PHEP(5,NMXHEP),
      &      VHEP(4,NMXHEP)
@@ -25,7 +25,7 @@
        EXTERNAL f
 *     
        CALL fileini(IPAR,LPAR)  ! initialize variables
-c       CALL pawini              ! initialize histograms
+       CALL pawini              ! initialize histograms
 c       CALL genzini             ! initialize genz structures
 *     
        pi = dacos(-1.d+00)
@@ -125,7 +125,7 @@ c       OPEN (17,file='dl2.lattice.2',status='new')
 *     
        CLOSE(20)                ! CLOSE events.ascii
 *     
-c       CALL pawend              ! CLOSE histograms
+       CALL pawend              ! CLOSE histograms
 c       CALL genzend             ! CLOSE genz
 *     
        PRINT*,'GENZ events generated: NEVHEP = ',NEVHEP

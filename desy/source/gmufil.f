@@ -4,7 +4,7 @@ C   THIS SUBROUTINE SHOULD FILL THE GTR-BANK
 C
       IMPLICIT none
 
-      DOUBLE PRECISION pymass
+      DOUBLE PRECISION ulmass
       DOUBLE PRECISION ulmq,ulmdq
       DOUBLE PRECISION pmxp,ranmxp,ranmxt
       DOUBLE PRECISION gmuselx
@@ -125,6 +125,8 @@ C PARTICLE 9 = ELEKTRON OUT <===============
       PLAB(2,9)=P5*ST5*SP5
       PLAB(3,9)=GAMMA*CT5*P5 + BETGAM  *  E5
       PLAB(4,9)=GAMMA  *  E5 + BETGAM*CT5*P5
+c      print *,'electron :', p5*p5-e5*e5,gamma,betgam
+c      print *,PLAB(4,9)**2-PLAB(3,9)**2-PLAB(2,9)**2-PLAB(1,9)**2
 C PARTICLE 4 = GAMMA_E   <==================
       PLAB(1,4)=-PLAB(1,9)
       PLAB(2,4)=-PLAB(2,9)
@@ -181,7 +183,7 @@ C====> SET KINEMATIC VARIABLES FOR GKI   <============
          print *,'p,e,s,c',p5,e5,st5,cp5
          GMUW=0.0
       ENDIF
-      GMUNU= GMUY*2.0*PYMASS(2212)/EP/EE
+      GMUNU= GMUY*2.0*ULMASS(2212)/EP/EE
 C===> RANDOM REFLECTION AT XZ-PLAIN <==================
       IF (ran2(idum)  .GE. 0.5) THEN
          RANY=-1.0
@@ -200,6 +202,9 @@ C====> ROTATE, REFELECT AND TRANSFORM TO REAL*4 VALUES <=============
          PL(4,I) = SNGL(PLAB(4,I))
 c         print *,'Particle',I,'P=',(PL(j,I),j=1,4)
  100  CONTINUE
+      
+c      print *,'after rotation:'
+c      print *,PL(4,9)**2-PL(3,9)**2-PL(2,9)**2-PL(1,9)**2
 C===> RANDOM DISTRIBUTION OF LEPTON+ AND LEPTON- <===========
       IF (RAN2(idum) .LT. 0.5) THEN
          I2PART(6) = IPAIR
@@ -260,8 +265,8 @@ C===> RANDOM SELECTION OF U AND D QUARKS <==
          IUSEDF=I2PART(1)
 C==> SET MASSES <=============
          I2MASS(1)=SNGL(MQ)
-         I2MASS(11)=PYMASS(I2PART(11))
-         I2MASS(10)=PYMASS(2212)
+         I2MASS(11)=ULMASS(I2PART(11))
+         I2MASS(10)=ULMASS(2212)
 C==> SET MOMENTA <============
          PL(1,10)=0.0
          PL(2,10)=0.0
@@ -332,9 +337,9 @@ C==> SET MASSES <=============
          I2MASS(1)=SNGL(MQ)
          I2MASS(5)=SNGL(MQ)
          I2MASS(12)=SNGL(MQ)
-         I2MASS(13)=PYMASS(I2PART(13))
-         I2MASS(11)=PYMASS(I2PART(11))
-         I2MASS(10)=PYMASS(2212)
+         I2MASS(13)=ULMASS(I2PART(13))
+         I2MASS(11)=ULMASS(I2PART(11))
+         I2MASS(10)=ULMASS(2212)
 C==> SET MOMENTA <=============
          PL(1,10)=0.0
          PL(2,10)=0.0
@@ -342,11 +347,11 @@ C==> SET MOMENTA <=============
          PL(4,10)=SNGL(EP)
          PL(1,12)=0.0
          PL(2,12)=0.0
-         PL(3,12)=GMUSELX(-IABS(IUSEDF),QSCALE)*PP
+clf         PL(3,12)=GMUSELX(-IABS(IUSEDF),QSCALE)*PP
          PL(4,12)=SQRT(PL(3,12)**2+I2MASS(12)**2)
          PL(1,IPQ)=0.0
          PL(2,IPQ)=0.0
-         PL(3,IPQ)=GMUSELX(I2PART(IPQ),QSCALE)*PP
+clf         PL(3,IPQ)=GMUSELX(I2PART(IPQ),QSCALE)*PP
          PL(4,IPQ)=SQRT(PL(3,IPQ)**2+I2MASS(IPQ)**2)
          PL(1,IPDQ)=0.0
          PL(2,IPDQ)=0.0
@@ -373,8 +378,8 @@ C===> RANDOM SELECTION OF U , D AND DI QUARKS <===========
             I2PART(10)=2
             I2PART(11)=2103
          ENDIF
-         ULMDQ=PYMASS(I2PART(11))
-         ULMQ =PYMASS(I2PART(10))
+         ULMDQ=ULMASS(I2PART(11))
+         ULMQ =ULMASS(I2PART(10))
 C====> SET OF LUND CODES <====================================
          I2MO1(10)=5
          I2DA1(10)=0
@@ -388,7 +393,9 @@ C====> CHOOSE RANDOM DIRECTION IN MX FRAME <===================
          RANMXP=PI2*ran2(idum)
          RANMXT=ACOS(2.0*ran2(idum)-1.0)
 C====> COMPUTE MOMENTUM OF DECAY PARTICLE FROM MX <=============
-         PMXP=DSQRT((MX**2-ULMDQ**2+ULMQ**2)**2/4.0/MX/MX - ULMQ**2 )
+         PMXP=(MX**2-ULMDQ**2+ULMQ**2)**2/4.0/MX/MX - ULMQ**2
+         if (pmxp.lt.0) return !FIXME FIXME FIXME FIXME !!!!!!!!
+         pmxp=dsqrt(pmxp)
 c         print *,ulmdq,ulmq,mx,pmxp,
 c     +        (MX**2-ULMDQ**2+ULMQ**2)**2/4.0/MX/MX-ULMQ**2
 C=====> BUILD 4-VECTORS AND BOOST DECAY PARTICLES <===============
@@ -398,6 +405,7 @@ C=====> BUILD 4-VECTORS AND BOOST DECAY PARTICLES <===============
          PMXDA(4)=SQRT(PMXP**2+ULMDQ**2)
 c         PRINT *,' GMUFIL : PMXDA BEFORE LB:',(PMXDA(I),I=1,4)
          CALL LORENB(I2MASS(5),PL(1,5),PMXDA(1),PL(1,11))
+c         PRINT *,' GMUFIL : PL(11) AFTER LB:',(PL(I,11),I=1,4)
          PMXDA(1)=-PMXDA(1)
          PMXDA(2)=-PMXDA(2)
          PMXDA(3)=-PMXDA(3)
@@ -424,16 +432,27 @@ C SET MOTHER/DAUGHTER VALUES, MARKING PARTICLES AS DECAYED <=======
      &        I2MO1(I),I2DA1(I),I2DA2(I),NINIT)
 C SET PULS, ENERGY AND MASS OF THE PARTICLES <==================
          CALL LUPSET(I+NINIT,PL(1,I),PL(2,I),PL(3,I),PL(4,I),I2MASS(I))
+c         IF(I.EQ.9) THEN
+c            PRINT *,I,I2MASS(I),(PL(J,I),J=1,4)
+c         ENDIF
  201  CONTINUE
 C PUTTING QUARK AND DIQUARK TO A COLOR SINGLET <======================
-      IF (LVAL) CALL PYJOIN(NJOIN,JLVAL)
+      IF (LVAL) CALL LUJOIN(NJOIN,JLVAL)
       IF (LSEA) THEN
-         CALL PYJOIN(NJOIN,JLSEA1)
-         CALL PYJOIN(NJOIN,JLSEA2)
+         CALL LUJOIN(NJOIN,JLSEA1)
+         CALL LUJOIN(NJOIN,JLSEA2)
       ENDIF
-      IF (PMOD.GE.10 .AND. PMOD.LE.99) CALL PYJOIN(NJOIN,JLPSF)
+c      DO 1024, J=1,11
+c         print *,'I=',J,'STATUS=',I2STAT(J)
+c 1024 CONTINUE
+c      print *,'Before LUJOIN================================'
+c      CALL LULIST(2)
+      IF (PMOD.GE.10 .AND. PMOD.LE.99) CALL LUJOIN(NJOIN,JLPSF)
 C EXECUTE LUND FRAGMENTATION PROGRAM  <==============================
-      CALL PYEXEC
+c      print *,'Before LUEXEC================================'
+c      call LULIST(2)
+c      print *,'After  LUEXEC================================'
+clf      CALL LUEXEC
 C Check wether the Hadronic system is inelastic  <===================
       IF (PMOD.GE.10 .AND. PMOD.LE.99) THEN
          NPOUT=0
@@ -446,7 +465,7 @@ C Check wether the Hadronic system is inelastic  <===================
          IF (NFRACS .GT. 1000) NTERM3=NTERM3+1
       ENDIF
       NCALL=NCALL+1
-c      CALL PYLIST(1)
+c      CALL LULIST(1)
       IF (NCALL .GE. NEXTW) THEN
          IF (PMOD.GE.10 .AND. PMOD.LE.99) THEN
             WRITE(6,*) ' GMUFIL : NUMBER OF CALLS IS ',NCALL
@@ -456,7 +475,7 @@ c      CALL PYLIST(1)
 c            WRITE(6,*) ' GMUFIL : NUMBER OF CALLS IS ',NCALL,' W',GMUW,
 c     &           pairm
          ENDIF
-c         CALL PYLIST(1)
+         CALL LULIST(2)
          NEXTW=NEXTW*2
       ENDIF
 !-      CALL LUHEPC(1)

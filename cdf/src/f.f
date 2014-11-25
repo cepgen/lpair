@@ -151,6 +151,7 @@
 *     IF ( ppcut .GT. 0.01 ) goto 30
 *     
       ENDIF
+
 *     
 *     ------------------------------------ *
 *     ---- matrix element calculation ---- *
@@ -188,7 +189,8 @@ c         CALL pawfil1
 c         CALL genzfil
 *     
          RETURN
- 20      PRINT *,'Matrix element is negative'
+ 20      CONTINUE
+c     PRINT *,'Matrix element is negative'
  30      f = 0.
          do 3 i=1,7
  3          xl(i)=-100.

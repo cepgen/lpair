@@ -13,6 +13,7 @@
       LOGICAL fexst
 *
       LUN = 15
+      CALL LUGIVE("MSTU(21)=1")
 *
 * LF workaround to pass the input card as an argument
       IF (iargc().gt.0) then
