@@ -32,8 +32,10 @@
 * === Input parameters
       integer      MODCUT
       real*4       THMAX,THMIN,MXMN,MXMX,Q2MN,Q2MX
-      real*8       COTTH1,COTTH2,ECUT,PTCUT,MXMIN2,MXMAX2,QP2MIN,QP2MAX
-      common/CUTS/    COTTH1,COTTH2,ECUT,PTCUT,MXMIN2,MXMAX2,
+      real*8       COTTH1,COTTH2,ECUT,PTCUTMIN,PTCUTMAX,MXMIN2,MXMAX2,
+     +             QP2MIN,QP2MAX
+      common/CUTS/    COTTH1,COTTH2,ECUT,PTCUTMIN,PTCUTMAX,
+     +                MXMIN2,MXMAX2,
      +                THMAX,THMIN,QP2MIN,QP2MAX,MODCUT,MXMN,MXMX,
      +                Q2MN,Q2MX
       integer         NDIM,NCVG,ITMX,NPRN,IGRAPH,
@@ -83,7 +85,8 @@ c      data lhe/6/
          write(lhe,1000) 'PAIR',ipair
          write(lhe,1000) 'MCUT',modcut
          write(lhe,1001) 'ECUT',ecut
-         write(lhe,1001) 'PTCT',ptcut
+         write(lhe,1001) 'PTCT',ptcutmin
+         write(lhe,1001) 'PTMX',ptcutmax
          write(lhe,1002)
          write(lhe,'(A)') '-->'
       elseif (mode.eq.2) then   ! event
