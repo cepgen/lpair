@@ -6,9 +6,9 @@
       INTEGER LINE,I,II
 *
 C---JETSET and GENOUT common
-      REAL*4        P(4000,5),V(4000,5)
-      INTEGER       N,K(4000,5),npad
-      COMMON/PYJETS/N,npad,K,P,V
+      REAL P(4000,5),V(4000,5)
+      INTEGER       N,K(4000,5)
+      COMMON/LUJETS/N,K,P,V
 *
       IF ((LINE .LT. 1) .OR. (LINE .GT. 4000)) THEN
          WRITE(6,*) ' LUNSET : WRONG LINE, LINE =',LINE

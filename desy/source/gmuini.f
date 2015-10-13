@@ -4,7 +4,7 @@
       Implicit NONE
 
 C ####################################################################
-C #   SET DEFAULT PARAMETERS OF THE GENERATOR.                        #
+C #   SET DEFAULT PARAMETERS OF THE GENERATOR.                       #
 C ####################################################################
 
       Real         PI
@@ -27,8 +27,9 @@ C ####################################################################
 *KEEP,CUTS.
       INTEGER      MODCUT
       REAL*4       THMAX,THMIN,MXMN,MXMX,Q2MN,Q2MX
-      REAL*8       COTTH1,COTTH2,ECUT,PTCUT,MXMIN2,MXMAX2,QP2MIN,QP2MAX
-      COMMON /CUTS/COTTH1,COTTH2,ECUT,PTCUT,MXMIN2,MXMAX2,
+      REAL*8       COTTH1,COTTH2,ECUT,PTCUTMIN,PTCUTMAX,MXMIN2,MXMAX2,
+     &             QP2MIN,QP2MAX
+      COMMON /CUTS/COTTH1,COTTH2,ECUT,PTCUTMIN,PTCUTMAX,MXMIN2,MXMAX2,
      &             THMAX,THMIN,QP2MIN,QP2MAX,MODCUT,MXMN,MXMX,Q2MN,Q2MX
       save /cuts/
 *KEND.
@@ -73,8 +74,9 @@ C THMIN,THMAX : MIN AND MAX THETA OF BOTH MUONS <====================
          THMAX  = 175.0
 C ECUT : MIN. ENERGY OF BOTH MUONS <============================
          ECUT   = 1.0D0
-C PTCUT : MIN. TRANSVERS MOMENT OF BOTH MUONS <==================
-         PTCUT  = 0.5D0
+C PTCUT : MIN. AND MAX. TRANSVERS MOMENT OF BOTH MUONS <==================
+         PTCUTMIN = 0.5D0
+         PTCUTMAX = 1.0D5
 C GPDF, SPDF : DEFAULT PDF GRV LO <======
          GPDF = 5
          SPDF = 4

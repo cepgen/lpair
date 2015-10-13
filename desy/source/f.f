@@ -20,8 +20,9 @@ C----
 *KEEP,CUTS.
       INTEGER      MODCUT
       REAL*4       THMAX,THMIN,MXMN,MXMX,Q2MN,Q2MX
-      REAL*8       COTTH1,COTTH2,ECUT,PTCUT,MXMIN2,MXMAX2,QP2MIN,QP2MAX
-      COMMON /CUTS/COTTH1,COTTH2,ECUT,PTCUT,MXMIN2,MXMAX2,
+      REAL*8       COTTH1,COTTH2,ECUT,PTCUTMIN,PTCUTMAX,MXMIN2,MXMAX2,
+     &             QP2MIN,QP2MAX
+      COMMON /CUTS/COTTH1,COTTH2,ECUT,PTCUTMIN,PTCUTMAX,MXMIN2,MXMAX2,
      &             THMAX,THMIN,QP2MIN,QP2MAX,MODCUT,MXMN,MXMX,Q2MN,Q2MX
 
 *KEEP,XQCOM.
@@ -61,7 +62,7 @@ C PARAMETER FOR PDFLIB <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
       DIMENSION X(10)
 C
-      DOUBLE PRECISION PYMASS
+      REAL ULMASS
 C
       DATA NCALL/0/,NDETCT/0/,NMXCUT/0/,NQ2CUT/0/,NPDFC/0/
       DATA NEXTW/1/
@@ -70,9 +71,9 @@ C
 C
       IF (PMOD .GE. 100) THEN
          IF (NQUARK.EQ.12) THEN
-            MQ=DBLE(PYMASS(2))
+            MQ=DBLE(ULMASS(2))
          ELSE
-            MQ=DBLE(PYMASS(NQUARK))
+            MQ=DBLE(ULMASS(NQUARK))
          ENDIF
          XQMIN =      4.0 * MU * MU / (S - MP * MP)
          XQMAX = (S - 2. * SQ * MP) / (S - MP * MP)
@@ -95,7 +96,7 @@ C
 C  COMPUTING MAT.EL. FOR P E -> P E MU MU   <=========================
          CALL GAMGAM(SSQ,MP,ME,MP,ME,MU,MU,0.D+00,SQ,DJ,0,X,1)
 C
-      ELSEIF (PMOD .EQ. 11 .OR. PMOD .EQ. 12) THEN
+      ELSEIF (PMOD .EQ. 11 .OR. PMOD .EQ. 12 .OR. PMOD .EQ. 13) THEN
          ETOT  = EP + EE
          PTOT  = PP - PE
          SSQ = DSQRT(MP * MP + ME * ME + 2. * (EE * EP + PE * PP))
@@ -104,6 +105,7 @@ C
          CALL MAPWX(WX,X(8),WXMIN,WXMAX,DWX)
          MX=DSQRT(WX)
          TMX=MX
+c         print *,'=====>',mx,x(8),mp,ssq,me,2*mu,mxmax2
 C
 C  COMPUTING MAT.EL. FOR P E -> X E MU MU   <=========================
          CALL GAMGAM(SSQ,MP,ME,MX,ME,MU,MU,0.D+00,SQ,DJ,0,X,1)
@@ -112,6 +114,7 @@ C
          WRITE(6,*) ' F(X) : WRONG PROTON MODE PMOD =',PMOD
          STOP
       ENDIF
+c      print *,dj
       IF (DJ .EQ. 0D0) THEN
          F=0D0
          RETURN
@@ -138,15 +141,15 @@ C  COMPUTING COT(THETA) OF MUON PAIR OR SINGLE MUON  <=============
          COTT7= PZ7/PT7
 C
 C  CUT IN THETA, PT AND E OF THE MUON PAIR <=====================
-         IF (NCALL .EQ. 1)
-     &  WRITE(6,*)'F : COTTH1 =',COTTH1,'  COTTH2 =',COTTH2,
-     &            '  PTCUT =',PTCUT,'  ECUT =',ECUT
+c         IF (NCALL .EQ. 1)
+c     &  WRITE(6,*)'F : COTTH1 =',COTTH1,'  COTTH2 =',COTTH2,
+c     &            '  PTCUT =',PTCUT,'  ECUT =',ECUT
          LMU1 = (COTT6 .GE. COTTH1) .AND. (COTT6 .LE. COTTH2) .AND.
-     &        (PT6 .GE. PTCUT) .AND.
+     &        (PT6 .GE. PTCUTMIN) .AND. (PT6 .LE. PTCUTMAX) .AND.
      &        (E6LAB .GE. ECUT)
          LMU2 = (COTT7 .GE. COTTH1) .AND. (COTT7 .LE. COTTH2) .AND.
-     &        (PT7 .GE. PTCUT) .AND.
-     &        (E7LAB .GE. ECUT) 
+     &        (PT7 .GE. PTCUTMIN) .AND. (PT7 .LE. PTCUTMAX) .AND.
+     &        (E7LAB .GE. ECUT )
          IF (MODCUT .EQ. 2) THEN
             LCUT = LMU1 .AND. LMU2
          ELSE
@@ -181,6 +184,7 @@ C CUT ON MASS OFF FINAL HADRONIC SYSTEM  (MX)
       IF ((PMOD .GT. 2) .AND.
      &    (MX*MX.LT.MXMIN2 .OR. MX*MX.GT.MXMAX2)) LCUT=.FALSE.
       IF (LCUT) NMXCUT=NMXCUT+1
+c      print *,'haha',t1,qp2min,qp2max
 C
 C CUT ON THE PROTON Q**2 (T1)
       IF (T1.LT.QP2MAX .OR. T1.GT.QP2MIN) LCUT=.FALSE.
@@ -197,7 +201,7 @@ C
 
                NPDFC=NPDFC+1
 C
-               CALL PDF2PDG(XQ,DSQRT(QSCALE),XDENS)
+clf               CALL PDF2PDG(XQ,DSQRT(QSCALE),XDENS)
                IF (NQUARK.EQ.2 .AND. PMOD.EQ.103) THEN
                   FORMF = (XDENS(2)+XDENS(-2)*2D0)*4D0/9D0/XQ
                   PVALD=0.0D0
@@ -268,5 +272,6 @@ C
 *       NEXTW=NEXTW*2
 *      ENDIF
 C
+c      print *,f
       RETURN
       END

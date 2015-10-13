@@ -30,6 +30,7 @@
       Y    = W2MAX/W2MIN
       W2   = W2MIN*Y**X
       DW   = W2*DLOG(Y)
+c      print *,w2min,w2max,x,sqrt(w2),sqrt(dw)
 
       RETURN
       END

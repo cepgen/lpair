@@ -2,9 +2,10 @@
 #include "TTree.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
 using namespace std;
 
-void ConvertLPairToLHE()
+void convert()
 {
   const Double_t energy = 4000;
   const Int_t N = 200; // max number of particles in per event
@@ -16,6 +17,8 @@ void ConvertLPairToLHE()
   Double_t px[N],py[N],pz[N],en[N],m[N];
   Int_t partid[N], parent[N], daughter1[N], daughter2[N], ip, status[N];
   Double_t iz[N];
+  stringstream ss;
+  Int_t np;
 
   t1->SetBranchAddress("xsect",&xsec);
   t1->SetBranchAddress("errxsect",&errxsec);
@@ -57,26 +60,57 @@ void ConvertLPairToLHE()
 
   for(Int_t i = first_event;i < first_event+max_events;i++) {
     t1->GetEntry(i);
-    if (i%10000==0)
-      cout << i << ", Npart = " << ip << endl;
+    if (i%10000==0) cout << i << ", Npart = " << ip << endl;
     
-    output << "<event>" << endl;
-    output << ip-3 << " 0 0.2983460E-04  0.9118800E+02  0.7546772E-02  0.1300000E+00" << endl;
-    //	cout << "there are " << ip << " particles in this event\n";
-    
+
+    /*
+      Event content :
+      (0) : incoming proton 1 (elastic, or dissociating)
+      (1) : incoming proton 2 (elastic only)
+      (2) : photon from proton 1
+      (3) : photon from proton 2
+      (4) : outgoing proton (or remnant) 1
+      (5) : muon 1
+      (6) : dimuon system
+      (7) : muon 2
+      (8) : outgoing proton 2
+      (9) : quark (from remnants)
+      (10) : diquark (from remnants)
+     */
+    cout << "there are " << ip << " particles (" << ip-11 << " from remnants) in this event\n";
+
+    ss.str("");
+
     for(int j=0; j<ip; j++) {
-      //	Stupid trick to produce inelastic events in both directions!
-      
-      iz[j] = 0.;
-      parent[j] -= 3;
-      parent[j] = TMath::Max(parent[j], 0);
-      
-      if(i%2 == 0)
-	pz[j] = -pz[j];
+      // Stupid trick to produce inelastic events in both directions!
+      if(i%2 == 0) pz[j] = -pz[j];
+    }
+    
+    ss << partid[2] << " " << status[2] << " -1 0 0 0 0 " << px[2] << " " << py[2] << " " << pz[2] << " " << en[2] << " " << m[2] << " 0 0" << endl; np++;
+    ss << partid[3] << " " << status[3] << " -1 0 0 0 0 " << px[3] << " " << py[3] << " " << pz[3] << " " << en[3] << " " << m[3] << " 0 0" << endl; np++;
+    if (status[4]==1) { // elastic case
+      ss << partid[4] << " " << status[4] << " 0 0 0 0 " << px[4] << " " << py[4] << " " << pz[4] << " " << en[4] << " " << m[4] << " 0 0" << endl; np++;
+    }
+    ss << partid[8] << " " << status[8] << " 0 0 0 0 " << px[8] << " " << py[8] << " " << pz[8] << " " << en[8] << " " << m[8] << " 0 0" << endl; np++;
+    // Outgoing muons
+    ss << partid[5] << " " << status[5] << " 1 0 0 0 " << px[5] << " " << py[5] << " " << pz[5] << " " << en[5] << " " << m[5] << " 0 0" << endl; np++;
+    ss << partid[7] << " " << status[7] << " 2 0 0 0 " << px[7] << " " << py[7] << " " << pz[7] << " " << en[7] << " " << m[7] << " 0 0" << endl; np++;
+
+    if (status[4]==21) { // single-dissociative case
+      for (Int_t j=11; j<ip; j++) {
+	if (status[j]!=1) continue;
+	ss << partid[j] << " " << status[j] << " 1 2 0 0 " << px[j] << " " << py[j] << " " << pz[j] << " " << en[j] << " " << m[j] << " 0 0" << endl; np++;
+      }
+    }
+
+    output << "<event>" << endl;
+    output << np << " 0 0.298346E-04  0.91188E+02  0.7546772E-02  0.13E+00" << endl;
+    output << ss.str();
+    output << "</event>" << endl;
+    
+    /*
       
       if (partid[j]==2212 && status[j]==21) {
-	/*if (fabs(pz[j])==energy) status[j] = -9; // incoming proton
-	else*/
 	continue;
       }
       else if (partid[j]==22 && status[j]==21) {
@@ -100,10 +134,8 @@ void ConvertLPairToLHE()
 	     << m[j] << " 0. " 
 	     << iz[j] << endl; 	
       //	output << "P "<< i*N+j << " " << partid[j] << " " << px[j] << " " << py[j] << " " << pz[j] << " " << en[j] << " 1 0 0 0 0" << endl;      
-    }
+    }*/
     
-    
-    output << "</event>" << endl;
   }
   output << "</LesHouchesEvents>" << endl;
   output.close();

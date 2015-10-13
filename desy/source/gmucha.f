@@ -38,8 +38,9 @@
 *KEEP,CUTS.
       INTEGER      MODCUT
       REAL*4       THMAX,THMIN,MXMN,MXMX,Q2MN,Q2MX
-      REAL*8       COTTH1,COTTH2,ECUT,PTCUT,MXMIN2,MXMAX2,QP2MIN,QP2MAX
-      COMMON /CUTS/COTTH1,COTTH2,ECUT,PTCUT,MXMIN2,MXMAX2,
+      REAL*8       COTTH1,COTTH2,ECUT,PTCUTMIN,PTCUTMAX,MXMIN2,MXMAX2,
+     &             QP2MIN,QP2MAX
+      COMMON /CUTS/COTTH1,COTTH2,ECUT,PTCUTMIN,PTCUTMAX,MXMIN2,MXMAX2,
      &             THMAX,THMIN,QP2MIN,QP2MAX,MODCUT,MXMN,MXMX,Q2MN,Q2MX
 
 *KEND.
@@ -94,7 +95,8 @@ C*  End of common
            if (trim(key).eq."THMX") thmax=value
            if (trim(key).eq."THMN") thmin=value
            if (trim(key).eq."ECUT") ecut=value
-           if (trim(key).eq."PTCT") ptcut=value
+           if (trim(key).eq."PTCT") ptcutmin=value
+           if (trim(key).eq."PTMX") ptcutmax=value
            if (trim(key).eq."Q2MN") q2mn=value
            if (trim(key).eq."Q2MX") q2mx=value
            if (trim(key).eq."MXMN") mxmn=value

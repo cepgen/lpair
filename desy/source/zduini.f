@@ -23,8 +23,9 @@
 *KEEP,CUTS.
       INTEGER      MODCUT
       REAL*4       THMAX,THMIN,MXMN,MXMX,Q2MN,Q2MX
-      REAL*8       COTTH1,COTTH2,ECUT,PTCUT,MXMIN2,MXMAX2,QP2MIN,QP2MAX
-      COMMON /CUTS/COTTH1,COTTH2,ECUT,PTCUT,MXMIN2,MXMAX2,
+      REAL*8       COTTH1,COTTH2,ECUT,PTCUTMIN,PTCUTMAX,MXMIN2,MXMAX2,
+     &             QP2MIN,QP2MAX
+      COMMON /CUTS/COTTH1,COTTH2,ECUT,PTCUTMIN,PTCUTMAX,MXMIN2,MXMAX2,
      &             THMAX,THMIN,QP2MIN,QP2MAX,MODCUT,MXMN,MXMX,Q2MN,Q2MX
 
 *KEEP,VEGPAR.
@@ -57,7 +58,8 @@ C*  End of common
         Write (6, 9010) IBEG, IEND, NTreat, NPrin, NCVG, ITMX, NPoin,
      +                  INPP, PMOD, GPDF, SPDF, INPE, EMOD, IPAIR,
      +                  NQUARK,
-     +                  MODCUT, THMAX, THMIN, ECUT, PTCUT, Q2MN, Q2MX,
+     +                  MODCUT, THMAX, THMIN, ECUT, PTCUTMIN, PTCUTMAX,
+     +                  Q2MN, Q2MX,
      +                  MXMN, MXMX
 *
 *..  Initialise cross sections:
@@ -107,7 +109,8 @@ C*  End of common
      + 8X, ' ThMax:', G16.4/
      + 8X, ' ThMin:', G16.4/
      + 8X, '  ECut:', G16.4/
-     + 8X, ' PTCut:', G16.4/
+     + 8X, ' PTMin:', G16.4/
+     + 8X, ' PTMax:', G16.4/
      + 8X, '  Q2MN:', G16.4/
      + 8X, '  Q2MX:', G16.4/
      + 8X, '  MXMN:', G16.4/
