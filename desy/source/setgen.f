@@ -3,11 +3,25 @@
 C
 C  AUTHOR      : J. VERMASEREN
 C
-      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
-      EXTERNAL F
+c      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+      IMPLICIT none
+
+      integer m,n,ndim,npoin,nprin,ntreat
+      double precision x,f,treat
+      external F
       DIMENSION X(10),N(10)
+
+      integer MDUM,MBIN,NM,max
+      double precision FFMAX,FMAX
       COMMON/VGMAXI/MDUM,MBIN,FFMAX,FMAX(7000),NM(7000)
-      COMMON/VGASIO/NINP,NOUTP,NSGOUT
+
+      integer NINP,NOUTP
+      COMMON/VGASIO/NINP,NOUTP
+
+      integer j,jj,jjj,k,kj
+      double precision sum,sum2,sum2p,fsum,fsum2,sig,sig2,sigp
+      double precision eff,eff1,eff2
+      double precision av,av2,z
       real ran2
       integer idum
       data idum/-1/
@@ -43,6 +57,7 @@ c      stop
          DO 2 K=1,NDIM
             JJJ=JJ/MBIN
             N(K)=JJ-JJJ*MBIN
+c            print *,'J=',K,'JJ=',JJ,'JJJ=',JJJ,'N=',N(K)
             JJ=JJJ
 2        CONTINUE
          FSUM=0.
@@ -53,6 +68,7 @@ c      stop
 4           CONTINUE
             IF(NTREAT.GT.0)Z=TREAT(F,X,NDIM)
             IF(NTREAT.LE.0)Z=F(X)
+c            print *,Z
             IF(Z.GT.FMAX(J))FMAX(J)=Z
             FSUM=FSUM+Z
             FSUM2=FSUM2+Z*Z
@@ -60,7 +76,7 @@ c      stop
 C        WRITE(6,*) ' =======> BEFOR DEVISION NPOIN =',NPOIN
          AV=FSUM/NPOIN
          AV2=FSUM2/NPOIN
-c         print *,av,av2
+c         print *,'av=',av,'av2=',av2
          SIG2=AV2-AV*AV
          SIG=SQRT(SIG2)
          SUM=SUM+AV
