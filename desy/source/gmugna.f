@@ -17,7 +17,7 @@ C
       COMMON /COMMUP/  NGNA
       SAVE /commup/
 *KEND.
-C
+C     
       COMMON/VGMAXI/MDUM,MBIN,FFMAX,FMAX(7000),NM(7000)
       SAVE /vgmaxi/
       DIMENSION X(10),N(10)
@@ -108,6 +108,7 @@ C  SEL A VEGAS BIN AND REJECT IF FMAX IS TOO LITTLE <<<<<<<<<<<<<<<<<<<<
 C
 C  SEL X VALUES IN THIS VEGAS BIN <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
       JJ=J-1
+      print *,'mbin=',mbin
       DO 2 K=1,NDIM
          JJJ=JJ/MBIN
          N(K)=JJ-JJJ*MBIN

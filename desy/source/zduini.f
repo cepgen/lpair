@@ -64,6 +64,11 @@ C*  End of common
         WRITE(*,*) "Before GMUBEG"
         Call GMUBEG
         WRITE(*,*) "After GMUBEG"
+
+        if(iend.lt.3) then
+           print *, 'No generation requested. Stopping the program.'
+           stop
+        endif       
 *
 *--------  No more - return
 *
