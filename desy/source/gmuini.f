@@ -12,9 +12,9 @@ C ####################################################################
 
 *KEEP,VEGPAR.
       INTEGER          NDIM,NCVG,ITMX,NPRN,IGRAPH,
-     &                 NPOIN,NPRIN,NTREAT,IBEG,IEND
+     &                 NPOIN,NPRIN,NTREAT,IBEG,IEND,NGEN
       COMMON /VEGPAR/  NDIM,NCVG,ITMX,NPRN,IGRAPH,
-     &                 NPOIN,NPRIN,NTREAT,IBEG,IEND
+     &                 NPOIN,NPRIN,NTREAT,IBEG,IEND,NGEN
       save /vegpar/
 
 *KEEP,BEAM.
@@ -49,6 +49,7 @@ C ####################################################################
 *  START AND STOP POINT OF THE GENERATOR PROGRAMM (1-3 = WHOLE RUN)
          IBEG   = 1
          IEND   = 3
+         NGEN   = 100
 *
 *  NUMBER OF CALLS PER VEGAS ITERRATION
          NCVG   = 14000

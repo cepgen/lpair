@@ -60,9 +60,10 @@ int main() {
   datapar_.lpar[2] = 3500.;
 
   // Outgoing leptons kinematics
+  datapar_.lpar[4] = 2.5; // eta cut
   //datapar_.lpar[4] = 3.1313; // eta cut
   datapar_.lpar[5] = 0.; // energy cut
-  datapar_.lpar[6] = 15.; // pt cut
+  datapar_.lpar[6] = 5.; // pt cut
 
   integrate_();
 
@@ -70,18 +71,19 @@ int main() {
 	    << "  xsec  = " << result_.s1 << std::endl
 	    << "  error = " << result_.s2 << std::endl;  
 
-  const Int_t maxpart = 1000;
+  const int maxpart = 1000;
 
-  Double_t xsect, errxsect;
-  Int_t npart, ndim;
-  Double_t eta[maxpart], phi[maxpart], rapidity[maxpart];
-  Double_t px[maxpart], py[maxpart], pz[maxpart], pt[maxpart];
-  Double_t E[maxpart], M[maxpart], charge[maxpart];
-  Int_t PID[maxpart], isstable[maxpart], status[maxpart], parentid[maxpart];
-  Double_t mx[2];
+  double xsect, errxsect;
+  int npart, ndim;
+  int role[maxpart];
+  double eta[maxpart], phi[maxpart], rapidity[maxpart];
+  double px[maxpart], py[maxpart], pz[maxpart], pt[maxpart];
+  double E[maxpart], M[maxpart], charge[maxpart];
+  int PID[maxpart], isstable[maxpart], status[maxpart], parentid[maxpart];
+  double mx[2];
   TLorentzVector *mom;
   TTree *t;
-  Float_t time_gen, time_tot;
+  float time_gen, time_tot;
 
   t = new TTree("h4444", "A TTree containing information from the events produced from LPAIR (CDF)");
   mom = new TLorentzVector();
@@ -101,6 +103,7 @@ int main() {
   t->Branch("parent", parentid, "parent[npart]/I");
   t->Branch("stable", isstable, "stable[npart]/I");
   t->Branch("status", status, "status[npart]/I");
+  t->Branch("role", role, "role[npart]/I");
   t->Branch("E", E, "E[npart]/D");
   t->Branch("m", M, "M[npart]/D");
   t->Branch("MX", mx, "MX[2]/D");
@@ -117,7 +120,7 @@ int main() {
     tmr.reset();    
     generate_(ev);
     if (event_.accepted) i++;
-    if (i%5000==0) std::cout << "Event " << i << " generated !" << std::endl;
+    if (i%5000==0) std::cout << "Event " << i << " generated!" << std::endl;
     time_gen = tmr.elapsed();
     fragmentation_();
     time_tot = tmr.elapsed();
@@ -134,6 +137,22 @@ int main() {
       isstable[npart] = lujets_.k[0][p]==1;
       status[npart] = lujets_.k[0][p];
       charge[npart] = luchge_(lujets_.k[1][p])/3.;
+      switch (p+1) {
+        case 1: role[npart] = 1; break;
+        case 2: role[npart] = 2; break;
+        case 3: role[npart] = 41; break;
+        case 4: role[npart] = 42; break;
+        case 5: role[npart] = 3; break;
+        case 6: role[npart] = 0; break; // dilepton system
+        case 7: role[npart] = 5; break;
+        case 8: role[npart] = 6; break;
+        case 9: role[npart] = 7; break;
+        /*case 10: role[npart] = 3; break;
+        case 11: role[npart] = 3; break;
+        case 12: role[npart] = 5; break;
+        case 13: role[npart] = 5; break;*/
+        default: role[npart] = -1; break; // FIXME need to figure out the origin of each remnant 
+      }
 
       px[npart] = lujets_.p[0][p];
       py[npart] = lujets_.p[1][p];
@@ -145,7 +164,7 @@ int main() {
       if (pt[npart]!=0.) {
 	eta[npart] = mom->PseudoRapidity();
       }
-      else eta[npart] = 9999.;
+      else eta[npart] = (pz[npart]/fabs(pz[npart]))*9999.;
       rapidity[npart] = mom->Rapidity();
       phi[npart] = mom->Phi();
 

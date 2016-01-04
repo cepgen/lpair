@@ -1,6 +1,6 @@
          0          IPAR(1)  ! event generation (0) or cross-section calc (1)
          0          IPAR(2)  ! PAW histograms/ntuple             yes(1)/no(0)
-         0          IPAR(3)  ! GNZ event output                  yes(1)/no(0)
+         1          IPAR(3)  ! GNZ event output                  yes(1)/no(0)
          0          IPAR(4)  ! read 'ineemm.data' for graph      yes(1)/no(0)
          9          IPAR(5)  ! VEGAS dimension     in-in(9),in-el(8),el-el(7)
     120000          IPAR(6)  ! VEGAS points per iteration
@@ -18,9 +18,9 @@
     0.9385          LPAR(1)  ! incoming particle mass (GeV)
   0.105659          LPAR(2)  ! outgoing particle mass (GeV)
     3500.0          LPAR(3)  ! beam energy (GeV)
-      0.10          LPAR(4)  ! maximum theta angle (fraction of PI)
-       4.0          LPAR(5)  ! maximum rapidity
+      1.00          LPAR(4)  ! maximum theta angle (fraction of PI)
+     999.9          LPAR(5)  ! maximum rapidity
        0.0          LPAR(6)  ! energy cut  (GeV)
-      15.0          LPAR(7)  ! minimum P_t (GeV)
+       5.0          LPAR(7)  ! minimum P_t (GeV)
        0.0          LPAR(8)  ! minimum invariant mass (GeV)
-     500.0          LPAR(9)  ! maximum invariant mass (GeV)
+    9999.9          LPAR(9)  ! maximum invariant mass (GeV)
