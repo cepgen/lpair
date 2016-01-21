@@ -11,6 +11,8 @@
       COMMON/LEVI/   GRAM,DD1,DD2,DD3,DD4,DD5,DELTA,G4,SA1,SA2
       COMMON/DOTP/   P12,P13,P14,P15,P23,P24,P25,P34,P35,P45,P2K1,P2K2
 
+      common /debug/ idbg
+
       DIMENSION Y(4)
 
       CALL PICKIN(S,V1,V2,V3,V4,V5,DJ,NOPT,Y)
@@ -71,10 +73,24 @@ C
       RR  = DSQRT(-GRAM/S)/(P*PP4)
       SP3 = RR/PP3
       SP5 =-RR/PP5
+
+      if (idbg.eq.1) then
+        print *, 'orient: e4,p4,pp4,m4,ct4=',e4,p4,pp4,dsqrt(w4),ct4
+        print *, 'orient: al4,be4=',al4,be4
+        print *, 'orient: e3,p3,pp3,m3,st3,ct3=',e3,p3,pp3,dsqrt(w3),
+     &            st3,ct3
+        print *, 'orient: e5,p5,pp5,m5,st5,ct5=',e5,p5,pp5,dsqrt(w5),
+     &            st5,ct5
+      endif
+
       IF(DABS(SP3).GT.1..OR.DABS(SP5).GT.1.)GO TO 10
       CP3 =-DSQRT(1.-SP3*SP3)
       CP5 =-DSQRT(1.-SP5*SP5)
       A1  = PP3*CP3-PP5*CP5
+      if (idbg.eq.1) then
+        print *,'orient: a1=',a1
+      endif
+
       IF(DABS(PP4+PP3*CP3+CP5*PP5).LT.DABS(DABS(A1)-PP4))GO TO 1
       IF(A1.LT.0)CP5 =-CP5
       IF(A1.GE.0)CP3 =-CP3

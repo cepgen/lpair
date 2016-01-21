@@ -10,6 +10,8 @@
       COMMON /LEVI/   GRAM,D1,D2,D3,D4,D5,DELTA,G4,A1,A2
       COMMON /PERIC/  U1,U2,V1,V2,T11,T12,T21,T22
 *
+      common /debug/  idbg
+*
       DATA RHO /.585D+00/,Cc1/0.86926/,Cc2/2.23422/,Dd1/0.12549/
       DATA Cp/0.96/,Bp/0.63/
 !     DATA RHO /1.05/,   Cc1/0.6303/, Cc2/2.2049/, Dd1/0.0468/
@@ -80,5 +82,11 @@ c      print *,'peripp','nup=',nup,'ndown=',ndown
       PERIPP = (((U1*V1*T11+U2*V1*T21+U1*V2*T12+U2*V2*T22)/(T1*T2*BB))
      &     / (T1*T2*BB))*.25
       
+      if (idbg.eq.1) then
+         print *,'peripp: u1,u2,v1,v2=', u1, u2, v1, v2
+         print *,'peripp: tau,bb=', tau, bb
+         print *,'peripp: t11,t12,t21,t22=', t11, t12, t21, t22
+         print *,'peripp: peripp=', peripp
+      endif
       RETURN
       END

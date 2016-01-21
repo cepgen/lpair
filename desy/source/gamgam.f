@@ -18,6 +18,8 @@
 
       DIMENSION X(7)
 
+      common /debug/  idbg
+
       DATA PI/3.14159265358979D+00/,CONST/2.1868465D+10/
 
       W6=V6*V6
@@ -135,5 +137,12 @@ C     WRITE(6,*) ' E3MP3=W3/(E3+P3) :',W3,E3,P3
       A6=-(QX*CP5+QY*SP5)*PP5*P2K1-(E2*Q0+P*QZ)*(CP3*CP5+SP3*SP5)
      &    *PP3*PP5+(DE3*QZ-Q0*(P-P3*CT3))*B3
 
+      if (idbg.eq.1) then
+        print *,'gamgam: amap,bmap,ymap,beta=', amap, bmap, ymap, beta
+        print *,'gamgam: ecm6,pcm6', ecm6, pcm6x, pcm6y, pcm6z
+        print *,'gamgam: h1,h2=', h1, h2
+        print *,'gamgam: qve=', qve(1), qve(2), qve(3), qve(4)
+        print *,'gamgam: a5,a6=', a5, a6
+      endif
       RETURN
       END

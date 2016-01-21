@@ -20,6 +20,8 @@
       COMMON/ACCURA/ ACC3,ACC4
       COMMON/PHOTONS/ T1MIN,T1MAX,T2MIN,T2MAX,D3
 
+      common /debug/  idbg
+
       DIMENSION Y(4)
 
       DATA PI/3.14159265358979D+00/
@@ -149,6 +151,9 @@ C
       IF(AP.GE.0)GO TO 20
 c      print *,nopt,ds2
       DJ=DS2*DT1*DT2*PI*PI/(8.*SL1*DSQRT(-AP))
+      if (idbg.eq.1) then
+        print *,'pickin: dj=',dj
+      endif
 c      print *,dj,ds2,dt1,dt2,sl1,-ap
 
       GRAM=(1.-YY4)*(1.+YY4)*DD/AP

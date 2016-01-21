@@ -58,6 +58,8 @@ C PARAMETER FOR PDFLIB <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
       REAL*8    MPI
       PARAMETER(MPI=0.1396D0)
 
+      common /debug/  idbg
+
       LOGICAL LCUT,LMU1,LMU2
 
       DIMENSION X(10)
@@ -105,7 +107,11 @@ C
          CALL MAPWX(WX,X(8),WXMIN,WXMAX,DWX)
          MX=DSQRT(WX)
          TMX=MX
-c         print *,'=====>',mx,x(8),mp,ssq,me,2*mu,mxmax2
+         if (idbg.eq.1) then
+           print *,'f: mx,dmx,x(8),mp,ssq,me=',mx,dwx,x(8),mp,ssq,me
+           print *,'f: mxmin,mxmax=',dsqrt(mxmin2),dsqrt(mxmax2)
+           print *,'f: mxmin2,mxmax2=',mxmin2,mxmax2
+         endif
 C
 C  COMPUTING MAT.EL. FOR P E -> X E MU MU   <=========================
          CALL GAMGAM(SSQ,MP,ME,MX,ME,MU,MU,0.D+00,SQ,DJ,0,X,1)
@@ -114,7 +120,9 @@ C
          WRITE(6,*) ' F(X) : WRONG PROTON MODE PMOD =',PMOD
          STOP
       ENDIF
-c      print *,dj
+      if (idbg.eq.1) then
+        print *,'f: dj=',dj
+      endif
       IF (DJ .EQ. 0D0) THEN
          F=0D0
          RETURN

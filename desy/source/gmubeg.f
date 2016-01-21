@@ -47,8 +47,12 @@ C----- MGVH  27 APR 96 -------
       DOUBLE PRECISION VAL(20)
 C-----------------------------
 
+      common /debug/  idbg
+
       EXTERNAL F
-      double precision x(10),test
+      double precision x(10),test(10)
+
+      DATA test/0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5/
 
       REAL ULMASS
 
@@ -175,7 +179,12 @@ c      print *,'Masses',MP,ME,' Interaction',INTGP,INTGE
 c      print *,'====================='
 c=====
 C-----
-      IF (IBEG .EQ. 1) THEN
+      IF (IBEG .EQ. 0) THEN
+         idbg = .true.
+         dres = F(test)
+         print *,dres
+         stop
+      ELSEIF (IBEG .EQ. 1) THEN
 c         PRINT *,'GMUBEG : ===> VEGAS  IS OPERATIVE... '
          CALL  VEGAS(F,BCC,NDIM,NCVG,ITMX,NPRN,IGRAPH)
 c         WRITE(6,*)
@@ -209,7 +218,7 @@ C-----
 c         WRITE(6,*)
 c     &        ' GMUBEG : PROGRAM STOPS WITHOUT EVENT GENERATION ,'//
 c     &        ' IEND < 3 '
-c         STOP
+         STOP
       ENDIF
 C-----
       RETURN
