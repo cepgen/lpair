@@ -54,12 +54,16 @@
       SL2 =SQRT(RL2)
 c      print *,'ss=',ss,'sp=',sp,'sl1=',sl1,'sl2=',sl2
       T1MAX=W1+W3-(SS*SP+SL1*SL2)/(2.*S)
+c      print *,w1,w3
+c      print *,ss,sp,sl1,sl2
       T1MIN=(D1*D3+(D3-D1)*(D3*W1-D1*W2)/S)/T1MAX
+c      write(6,*) ' pickin : t1min =',t1min,'  t1max =',t1max
+c     &     '  qp2max =',qp2max,'  qp2min =',qp2min,
+c     &     '  d1 = ',d1,'  d3 = ',d3,'  w1 = ',w1,'  w2 = ',w2,
+c     &     '  s = ',s
       IF (T1MAX.GT.QP2MIN .OR. T1MIN.LT.QP2MAX) GOTO 20
       IF (T1MAX .LT. QP2MAX) T1MAX=QP2MAX
       IF (T1MIN .GT. QP2MIN) T1MIN=QP2MIN
-*      write(6,*) ' pickin : t1max =',t1max,'  t1min =',t1min,
-*     &  '  qp2max =',qp2max,'  qp2min =',qp2min
       CALL MAPT1(T1,X1,T1MIN,T1MAX,DT1)
       D4  =W4-T1
       D8  =T1-W2
@@ -68,6 +72,7 @@ C
 C     WRITE(6,*) T1,D1,W1
 C
       SA1 =-(T1-D1)*(T1-D1)*0.25+W1*T1
+c      print *,t1,d1,w1
       IF(SA1.GE.0)GO TO 20
       SL3 =DSQRT(-SA1)
       IF(W1.EQ.0)GO TO 3
@@ -87,6 +92,7 @@ C
 3     S2MAX=(S*(T1*(S+D8-W3)-W2*W3)+W2*W3*(W2+W3-T1))/SS/T13
       SPLUS=SIG2
 4     S2X=S2MAX
+c      print *,splus,s2max
       IF(NOPT)5,6,7
 5     IF(SPLUS.GT.SIG2)SIG2=SPLUS
       IF(NOPT.LT.-1)CALL MAPS2(S2,X3,SIG2,S2MAX,DS2)
@@ -99,6 +105,7 @@ C
       SL4=DSQRT(RL4)
       T2MAX=W2+W5-(R1*R2+SL4)/(2.*S2X)
       T2MIN=(D2*D4+(D4-D2)*(D4*W2-D2*T1)/S2X)/T2MAX
+c      print *,d2,d4,w2,t1,s2x,t2max
       CALL MAPT2(T2,X2,T2MIN,T2MAX,DT2)
       D7=T1-T2
       R3=D4-T2
