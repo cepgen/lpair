@@ -29,6 +29,23 @@
       real p,v
       common /pyjets/ N, npad, K(4000,5), P(4000,5), V(4000,5)
 *
+* === Input parameters
+      integer      MODCUT
+      real*4       THMAX,THMIN,MXMN,MXMX,Q2MN,Q2MX
+      real*8       COTTH1,COTTH2,ECUT,PTCUTMIN,PTCUTMAX,MXMIN2,MXMAX2,
+     +             QP2MIN,QP2MAX
+      common/CUTS/    COTTH1,COTTH2,ECUT,PTCUTMIN,PTCUTMAX,
+     +                MXMIN2,MXMAX2,
+     +                THMAX,THMIN,QP2MIN,QP2MAX,MODCUT,MXMN,MXMX,
+     +                Q2MN,Q2MX
+      integer         NDIM,NCVG,ITMX,NPRN,IGRAPH,
+     +                NPOIN,NPRIN,NTREAT,IBEG,IEND,NGEN
+      common/VEGPAR/  NDIM,NCVG,ITMX,NPRN,IGRAPH,
+     +                NPOIN,NPRIN,NTREAT,IBEG,IEND,NGEN
+      integer         INTGE,INTGP,GPDF,SPDF,PMOD,EMOD,IPAIR,NQUARK
+      real*8          INPE,INPP
+      common/BEAM/    INPE,INPP,INTGE,INTGP,GPDF,SPDF,PMOD,EMOD,
+     +                IPAIR,NQUARK
 * === Configuration options
       integer lhe
       data lhe/10/

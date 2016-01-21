@@ -81,7 +81,7 @@ C...  Event loop.
       DO IEV=1,NEV
          call zduevt(ireturn)
 c         IF(MOD(IEV,Nprt).EQ.0) print *,' Event nr = ',IEV
-         call prtlhe(2)
+c         call prtlhe(2)
 *     
          ip=0
 *     

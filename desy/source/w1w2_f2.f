@@ -19,7 +19,7 @@ c
 
        x = Q2/(W3+Q2+am_p*am_p)
 
-       amu2 = Q2+Q02       ! scale is shifted                                                                                                                                                                      
+       amu2 = Q2+Q02       ! scale is shifted
 C       write(*,*) W3, x, amu2
 
        call grv95lo(x,amu2,xuv,xdv,xus,xds,xss,xg)

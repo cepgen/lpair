@@ -33,12 +33,12 @@ c      print *,'peripp','nup=',nup,'ndown=',ndown
          M1=DSQRT(W1)
          CALL PSF(T1,W3,DUMMY,PSFW1,PSFW2)
          U1=-PSFW1*2D0*M1/T1
-         U2=PSFW2/2D0/M1
+         U2= PSFW2/2D0/M1
       ELSEIF (NUP .EQ. 5) THEN
-         M1 = DSQRT(W1)
+         M1=DSQRT(W1)
          CALL W1W2F2(T1,W3,W1STRFUN,W2STRFUN)
-         U1 = -W1STRFUN*2.*M1/T1
-         U2 =  W2STRFUN/2./M1
+         U1=-W1STRFUN*2.*M1/T1
+         U2= W2STRFUN/2./M1
       ELSE
          X    = T1  / (T1-W3)
          EN   = W31 - T1

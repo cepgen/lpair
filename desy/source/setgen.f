@@ -87,6 +87,8 @@ c         print *,'av=',av,'av2=',av2
          IF(FMAX(J).NE.0)EFF=FMAX(J)/AV
          IF(NPRIN.GE.3)WRITE(NOUTP,100)J,AV,SIG,FMAX(J),EFF,
      +                                 (N(KJ),KJ=1,NDIM)
+c         IF(NPRIN.GE.3)WRITE(NSGOUT,100)J,AV,SIG,FMAX(J),EFF,
+c     +                                 (N(KJ),KJ=1,NDIM)
 1     CONTINUE
       SUM=SUM/MAX
       SUM2=SUM2/MAX

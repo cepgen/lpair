@@ -18,9 +18,9 @@ C----
 
 *KEEP,VEGPAR.
       INTEGER          NDIM,NCVG,ITMX,NPRN,IGRAPH,
-     &                 NPOIN,NPRIN,NTREAT,IBEG,IEND
+     &                 NPOIN,NPRIN,NTREAT,IBEG,IEND,NGEN
       COMMON /VEGPAR/  NDIM,NCVG,ITMX,NPRN,IGRAPH,
-     &                 NPOIN,NPRIN,NTREAT,IBEG,IEND
+     &                 NPOIN,NPRIN,NTREAT,IBEG,IEND,NGEN
 
 *KEEP,CUTS.
       INTEGER      MODCUT
@@ -145,6 +145,9 @@ C-----
 C COMPUTING OF COTAN FOR THETA CUTS <====================
       COTTH1= 1D0 / DTAN(DBLE(THMAX)*PI/180D0)
       COTTH2= 1D0 / DTAN(DBLE(THMIN)*PI/180D0)
+c      print *,'GMUBEG: ETA in range [',
+c     1     -dlog(dtan(THMAX*PI/180.d0/2.d0)),':',
+c     2     -dlog(dtan(THMIN*PI/180.d0/2.d0)),']'
 C SETTING OF THE PROTON STRUCTURE FUNCTION <====================
       IF (PMOD .GE. 100) THEN
 C----- MGVH  27 APR 96 -------

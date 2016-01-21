@@ -72,7 +72,7 @@ C
 C     WRITE(6,*) T1,D1,W1
 C
       SA1 =-(T1-D1)*(T1-D1)*0.25+W1*T1
-      print *,t1,d1,w1
+c      print *,t1,d1,w1
       IF(SA1.GE.0)GO TO 20
       SL3 =DSQRT(-SA1)
       IF(W1.EQ.0)GO TO 3
