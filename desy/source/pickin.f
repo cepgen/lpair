@@ -152,7 +152,9 @@ C
 c      print *,nopt,ds2
       DJ=DS2*DT1*DT2*PI*PI/(8.*SL1*DSQRT(-AP))
       if (idbg.eq.1) then
+        print *,'pickin: s2=',s2
         print *,'pickin: dj=',dj
+        print *,'pickin: r1/2/3/4=',r1,r2,r3,r4
       endif
 c      print *,dj,ds2,dt1,dt2,sl1,-ap
 

@@ -24,6 +24,9 @@
       P   = RE*SL1
       DE3 = RE*(S2-W3+W12)
       DE5 = RE*(S1-W5-W12)
+      if (idbg.eq.1) then
+        print *,'orient: re,w12=',re,w12
+      endif
       E3  = E1-DE3
       E4  = DE3+DE5
       E5  = E2-DE5

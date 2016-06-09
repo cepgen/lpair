@@ -42,6 +42,7 @@
       ECM6=(W4+W6-W7)/(2.*V4)
       PCM6=DSQRT(ECM6*ECM6-W6)
       DJ=DJ*DW*PCM6/(V4*CONST*S)
+      print *,'jacobian:',dj
 C     WRITE(6,*) ' E3MP3=W3/(E3+P3) :',W3,E3,P3
       E3MP3=W3/(E3+P3)
       E1MP1=W1/(E1+P)

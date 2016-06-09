@@ -197,7 +197,7 @@ C
 C CUT ON THE PROTON Q**2 (T1)
       IF (T1.LT.QP2MAX .OR. T1.GT.QP2MIN) LCUT=.FALSE.
 C
-      IF (LCUT) THEN
+CCCCCCC      IF (LCUT) THEN
          NQ2CUT=NQ2CUT+1
          IF (PMOD .GE. 100) THEN
 C
@@ -267,9 +267,9 @@ C   ONLY USE THE FORMFACTOR IN PRIPP AND DWX
             F = CONST * DJ * PERIPP(INTGP,INTGE) * DWX
          ENDIF
 C
-      ELSE
-         F=0D0
-      ENDIF
+CCCCC      ELSE
+CCCCC         F=0D0
+CCCCC      ENDIF
 C
 C   END CUT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 C
