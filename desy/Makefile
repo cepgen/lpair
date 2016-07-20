@@ -48,7 +48,7 @@ $(OBJ_DIR)/%.o: %.f
 	@echo "Building "$<
 	$(FC) -c $(FFLAGS) $< -o $@
 
-$(OBJ_DIR)/%.opp: %.cpp
+$(OBJ_DIR)/%.opp: %.cpp | $(OBJ_DIR)
 	@echo "Building "$<
 	$(CC) $(CFLAGS) -c $(RFLAGS) $< -o $@
 
