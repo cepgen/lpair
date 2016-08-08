@@ -56,14 +56,14 @@ int main() {
   fileini_();
 
   // Beam parameters
-  datapar_.ipar[4] = 9;
+  /*datapar_.ipar[4] = 9;
   datapar_.lpar[2] = 3500.;
 
   // Outgoing leptons kinematics
   datapar_.lpar[4] = 2.5; // eta cut
   //datapar_.lpar[4] = 3.1313; // eta cut
   datapar_.lpar[5] = 0.; // energy cut
-  datapar_.lpar[6] = 5.; // pt cut
+  datapar_.lpar[6] = 5.; // pt cut*/
 
   integrate_();
 
