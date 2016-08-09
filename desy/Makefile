@@ -9,10 +9,10 @@ VPATH = source/ external/
 
 ###############################################################################
 
-FC = @gfortran
+FC = gfortran
 FFLAGS = -g -w
-CC = @g++
-CFLAGS = -lgfortran -Wall -I$(RHEAD)
+CC = g++
+CFLAGS = -lgfortran -Wall -I$(RHEAD) -lrt
 RFLAGS = $(shell root-config --cflags)
 RLIBS = $(shell root-config --libs)
 RHEAD = $(shell root-config --incdir)
@@ -28,29 +28,29 @@ all: lpair
 #
 lpair: $(OBJ_DIR)/main.opp $(LIB_FILES) $(OBJ_FILES)
 	@echo "Linking..."
-	$(CC) $(CFLAGS) -o $@ $^ $(LIBRARY) $(RLIBS)
-	@echo "Done !"
+	@$(CC) $(CFLAGS) -o $@ $^ $(LIBRARY) $(RLIBS)
+	@echo "Done!"
 
 xsect: $(OBJ_DIR)/xsect.opp $(LIB_FILES) $(OBJ_FILES)
 	@echo "Linking $<..."
-	$(CC) $(CFLAGS) -o $@ $^ $(LIBRARY)
-	@echo "Done !"
+	@$(CC) $(CFLAGS) -o $@ $^ $(LIBRARY)
+	@echo "Done!"
 
 nice:
-	$(RM) $(RMFLAGS) *.o $(OBJ_DIR)
+	@$(RM) $(RMFLAGS) *.o $(OBJ_DIR)
 
 clean: nice
-	$(RM) $(RMFLAGS) lpair
+	@$(RM) $(RMFLAGS) lpair
 #
 # Make the objects
 #
 $(OBJ_DIR)/%.o: %.f
 	@echo "Building "$<
-	$(FC) -c $(FFLAGS) $< -o $@
+	@$(FC) -c $(FFLAGS) $< -o $@
 
-$(OBJ_DIR)/%.opp: %.cpp
+$(OBJ_DIR)/%.opp: %.cpp | $(OBJ_DIR)
 	@echo "Building "$<
-	$(CC) $(CFLAGS) -c $(RFLAGS) $< -o $@
+	@$(CC) $(CFLAGS) -c $(RFLAGS) $< -o $@
 
 $(OBJ_FILES): | $(OBJ_DIR)
 $(EXT_FILES): | $(OBJ_DIR)

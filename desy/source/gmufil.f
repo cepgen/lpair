@@ -128,8 +128,8 @@ C PARTICLE 9 = ELEKTRON OUT <===============
 c      print *,'electron :', p5*p5-e5*e5,gamma,betgam
 c      print *,PLAB(4,9)**2-PLAB(3,9)**2-PLAB(2,9)**2-PLAB(1,9)**2
 C PARTICLE 4 = GAMMA_E   <==================
-      PLAB(1,4)=-PLAB(1,9)
-      PLAB(2,4)=-PLAB(2,9)
+      PLAB(1,4)=PLAB(1,2)-PLAB(1,9)
+      PLAB(2,4)=PLAB(2,2)-PLAB(2,9)
       PLAB(3,4)=PLAB(3,2)-PLAB(3,9)
       PLAB(4,4)=PLAB(4,2)-PLAB(4,9)
 C PARTICLE 5 = QUARK OUT <==================
@@ -138,8 +138,8 @@ C PARTICLE 5 = QUARK OUT <==================
       PLAB(3,5)=GAMMA*CT3*P3 + BETGAM  *  E3
       PLAB(4,5)=GAMMA  *  E3 + BETGAM*CT3*P3
 C PARTICLE 3 = GAMMA_P   <==================
-      PLAB(1,3)=-PLAB(1,5)
-      PLAB(2,3)=-PLAB(2,5)
+      PLAB(1,3)=PLAB(1,1)-PLAB(1,5)
+      PLAB(2,3)=PLAB(2,1)-PLAB(2,5)
       PLAB(3,3)=PLAB(3,1)-PLAB(3,5)
       PLAB(4,3)=PLAB(4,1)-PLAB(4,5)
 C PARTICLE 6 = MUON1    <==================

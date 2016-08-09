@@ -3,7 +3,7 @@ EX_FILES = $(wildcard external/*.f)
 OBJ_DIR = obj
 LIBRARY = #-L/usr/lib64/cernlib/2006/lib -lpdflib804 -lmathlib -lpacklib -lkernlib
 OBJ_FILES = $(patsubst src/%.f,$(OBJ_DIR)/%.o,$(FF_FILES))
-EXT_FILES = $(patsubst external/%.f,$(OBJ_DIR)/%.o,$(EX_FILES))
+EXT_FILES = $(patsubst ../desy/external/%.f,$(OBJ_DIR)/%.o,$(EX_FILES))
 LIB_FILES = $(EXT_FILES) $(OBJ_FILES)
 VPATH = src/ external/
 
@@ -13,7 +13,7 @@ FC = @gfortran
 FFLAGS = -g -w -static -lc -lm
 
 CC = @g++
-CFLAGS = -lgfortran -Wall
+CFLAGS = -lgfortran -Wall -lrt
 
 RM = /bin/rm
 RMFLAGS = -rf
@@ -50,7 +50,7 @@ $(OBJ_DIR)/%.o: %.f
 	@echo "Building "$<
 	$(FC) -c $(FFLAGS) $< -o $@
 
-$(OBJ_DIR)/%.opp: %.cpp
+$(OBJ_DIR)/%.opp: %.cpp | $(OBJ_DIR)
 	@echo "Building "$<
 	$(CC) -c $(CFLAGS) $< -o $@
 

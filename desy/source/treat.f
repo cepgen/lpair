@@ -38,7 +38,6 @@ c         PRINT *,I,XX,J,JJ,Y
 c         print *,DD,z(i),y,w
          XIN(I)=X(I)
          W=W*DD
-c         PRINT NSGOUT,I,XX,J,JJ,Y
 4     CONTINUE
 c      PRINT *,W,F(Z)
 c      if (F(Z).lt.0) print *,F(Z)
