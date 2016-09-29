@@ -1,12 +1,12 @@
        SUBROUTINE generate(nevent)
        IMPLICIT DOUBLE PRECISION (a-h,o-z)
-       DOUBLE PRECISION me,mu,f
+       DOUBLE PRECISION me,mu,f,mxcut
        LOGICAL accepted
        COMMON/inpu/me,mu,ebeam,const,sq
        COMMON/tell/nn
        COMMON/ini/xxx,yyy
        COMMON/outp/nout
-       COMMON/cuts/angcut,encut,etacut
+       COMMON/cuts/angcut,encut,etacut,mxcut
        COMMON/event/accepted
 *
        INTEGER ndim,npoin,nprin,ntreat,nevent

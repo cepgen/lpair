@@ -52,6 +52,7 @@ C*  End of common
 *
 *..  Set default parameters:
         Call GMUINI
+        print*, 'passed gmuini'
 *
 *..  Let data cards over write the defaults:
         Call GMUCHA
@@ -63,6 +64,7 @@ C*  End of common
      +                  MXMN, MXMX
 *
 *..  Initialise cross sections:
+        print*, 'passed gmucha'
         WRITE(*,*) "Before GMUBEG"
         Call GMUBEG
         WRITE(*,*) "After GMUBEG"

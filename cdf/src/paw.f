@@ -4,7 +4,7 @@
 *
       implicit double precision (a-h,o-z)
 *
-      double precision me,mu
+      double precision me,mu,mxcut
       common/inpu/me,mu,ebeam,const,sq
       common/variab/e,e1,e2,e3,e4,e5,p,p3,p4,p5,ct3,st3,ct4,st4,ct5
      1                                         ,st5,cp3,sp3,cp5,sp5
@@ -17,7 +17,7 @@
       common/civita/epsi,g5,g6,a5,a6,bb
       common/dotps/q1dq,q1dq2,w6
       common/tell/nn
-      common/cuts/angcut,encut,etacut
+      common/cuts/angcut,encut,etacut,mxcut
 *
 * --- LPAIR data common block
 *
