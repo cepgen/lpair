@@ -9,7 +9,7 @@
       COMMON/DATAPAR/IPAR,LPAR
 *
       INTEGER LUN
-      CHARACTER(len=32) file
+      CHARACTER(len=32) afile
       LOGICAL fexst
 *
       REAL ulmass
@@ -20,17 +20,18 @@
 *
 * LF workaround to pass the input card as an argument
       IF (iargc().gt.0) then
-         CALL getarg(1,file)
+         CALL getarg(1,afile)
       ELSE
-         file='lpair.dat'
+         afile='lpair.dat'
       ENDIF
-      INQUIRE(file=file,exist=fexst) ! ensure the input card exists
+      INQUIRE(file=afile,exist=fexst) ! ensure the input card exists
       IF (fexst.eqv..false.) THEN
          PRINT *,'FILEINI: ERROR! Input card does not exist!'
          STOP
       ENDIF
 *
-      OPEN(LUN,file=file,status='old')
+      PRINT*,'Loading the input card:',afile
+      OPEN(LUN,file=afile,status='old')
 *
       READ(LUN,'(I10)') IPAR(1)  ! event or cross-section calculation
       READ(LUN,'(I10)') IPAR(2)  ! paw histograms/ntuple
@@ -83,9 +84,9 @@ c      READ(LUN,'(D10.4)') LPAR(2)  ! outgoing particle mass (GeV)
       PRINT*,'IPAR(16): reflection flag   ',IPAR(16)
       PRINT*,'IPAR(17): hepevt to ascii   ',IPAR(17)
       PRINT*,'IPAR(18): outgoing leptons  ',IPAR(18)
+      PRINT*,'            --> mass (GeV): ',ulmass(IPAR(18))
 *
       PRINT*,'LPAR(1):  incoming mass  ',LPAR(1)
-      PRINT*,'LPAR(2):  outgoing mass  ',ulmass(IPAR(18))
       PRINT*,'LPAR(3):  beam energy    ',LPAR(3)
       PRINT*,'LPAR(4):  max angle      ',LPAR(4)
       PRINT*,'LPAR(5):  max rapidity   ',LPAR(5)

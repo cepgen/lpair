@@ -27,7 +27,6 @@
 *     
 *     ---- particle masses (GeV)
        me = lpar(1)             ! incoming particle
-cLF       mu = lpar(2)             ! outgoing particle
        mu = ulmass(ipar(18))    ! outgoing particle
 *     
 *     ---- beam energy (GeV)
