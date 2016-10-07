@@ -20,9 +20,9 @@ c     LUND common
 
 c     Event common
       LOGICAL ACCEPTED
-      INTEGER NDIM
+      INTEGER NDIM,LEPPDG
       DOUBLE PRECISION x(10)
-      COMMON/event/accepted,ndim,x
+      COMMON/event/accepted,ndim,x,leppdg
 
       INTEGER I,J
 

@@ -7,9 +7,9 @@
       EXTERNAL f
       
       LOGICAL accepted
-      INTEGER endim
+      INTEGER endim,leppdg
       DOUBLE PRECISION x(10)
-      COMMON/event/accepted,endim,x
+      COMMON/event/accepted,endim,x,leppdg
 
       COMMON/maxi/mdum,mbin,ffmax,fmax(80000),nm(80000)
 

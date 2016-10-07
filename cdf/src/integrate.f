@@ -17,7 +17,8 @@
        DOUBLE PRECISION x(10)
 *     
 *     
-       EXTERNAL f
+       REAL ulmass ! from jetset/pythia
+       EXTERNAL f,ulmass
 *     
        pi = dacos(-1.d+00)
        nout=6
@@ -26,7 +27,8 @@
 *     
 *     ---- particle masses (GeV)
        me = lpar(1)             ! incoming particle
-       mu = lpar(2)             ! outgoing particle
+cLF       mu = lpar(2)             ! outgoing particle
+       mu = ulmass(ipar(18))    ! outgoing particle
 *     
 *     ---- beam energy (GeV)
        ebeam = lpar(3)

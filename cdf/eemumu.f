@@ -22,7 +22,8 @@
      &      VHEP(4,NMXHEP)
        REAL PHEP,VHEP
 *     
-       EXTERNAL f
+       REAL ulmass ! from jetset/pythia
+       EXTERNAL f,ulmass
 *     
        CALL fileini(IPAR,LPAR)  ! initialize variables
        CALL pawini              ! initialize histograms
@@ -45,7 +46,8 @@ c          OPEN(20,file='events.ascii',status='new')
 *     
 *     ---- particle masses (GeV)
        me = lpar(1)             ! incoming particle
-       mu = lpar(2)             ! outgoing particle
+cLF       mu = lpar(2)             ! outgoing particle
+       mu = ulmass(ipar(18))    ! outgoing particle
 *     
 *     ---- beam energy (GeV)
        ebeam = lpar(3)

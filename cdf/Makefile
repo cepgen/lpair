@@ -13,7 +13,7 @@ FC = @gfortran
 FFLAGS = -g -w -static -lc -lm
 
 CC = @g++
-CFLAGS = -lgfortran -Wall -lrt
+CFLAGS = -lgfortran -Wall -lrt -Wno-conversion
 
 RM = /bin/rm
 RMFLAGS = -rf

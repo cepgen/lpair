@@ -42,7 +42,7 @@ int main() {
 
   for (int i=0; i<50; i++) {
     //datapar_.lpar[6] = 0.+i*0.1;
-    datapar_.lpar[6] = 5.+i*0.5;
+    datapar_.lpar[6] = 30.+i*1;
     //datapar_.lpar[2] = (i+1)*(14000/50);
     integrate_();
 

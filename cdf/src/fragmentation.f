@@ -56,9 +56,9 @@ c     HEPEVT common
 
 c     Event common
       LOGICAL ACCEPTED
-      INTEGER NDIM
+      INTEGER NDIM,LEPPDG
       DOUBLE PRECISION x(10)
-      COMMON/event/accepted,ndim,x
+      COMMON/event/accepted,ndim,x,leppdg
 
       INTEGER I,J
       LOGICAL FRAGMENT(2)
@@ -321,14 +321,14 @@ C...  Set Lund code
          
 *  8 : muon 1 !!! need to check the charge
       I2STAT(8)=1
-      I2PART(8)=-13
+      I2PART(8)=-LEPPDG
       I2MO1(8)=6
       I2DA1(8)=0
       I2DA2(8)=0
 
 *  9 : muon 2 !!! need to check the charge
       I2STAT(9)=1
-      I2PART(9)=13
+      I2PART(9)=LEPPDG
       I2MO1(9)=6
       I2DA1(9)=0
       I2DA2(9)=0
