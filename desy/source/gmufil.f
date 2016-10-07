@@ -451,6 +451,7 @@ c      CALL LULIST(2)
 C EXECUTE LUND FRAGMENTATION PROGRAM  <==============================
 c      print *,'Before LUEXEC================================'
 c      call LULIST(2)
+      CALL LUEXEC
 c      print *,'After  LUEXEC================================'
 clf      CALL LUEXEC
 C Check wether the Hadronic system is inelastic  <===================
