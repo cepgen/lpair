@@ -11,7 +11,7 @@ c---------------------------------------------------------------------------
       INTEGER nout,ilhef
       COMMON/outp/nout,ilhef
 
-      OPEN(ilhef,file='events.out', status='unknown')
+      OPEN(ilhef,file='events.lhe', status='unknown')
       WRITE(ilhef,1000) '<LesHouchesEvents version="1.0">'
 
  1000 FORMAT((a))
