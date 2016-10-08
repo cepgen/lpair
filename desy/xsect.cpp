@@ -43,7 +43,7 @@ int main() {
   gmucha_();
 
   // Beam parameters
-  beam_.inpe = beam_.inpp = 3500.;
+  beam_.inpe = beam_.inpp = 6500.;
   beam_.pmod = 11;
   beam_.pmod = 2;
   beam_.emod = 2;
@@ -54,18 +54,18 @@ int main() {
 
   // Outgoing leptons kinematics
   cuts_.ecut = 0.;
-  cuts_.thmin = eta_to_theta(-5.);
-  cuts_.thmax = eta_to_theta( 5.);
+  /*cuts_.thmin = eta_to_theta(-5.);
+  cuts_.thmax = eta_to_theta( 5.);*/
+  cuts_.thmin = eta_to_theta(-2.5);
+  cuts_.thmax = eta_to_theta( 2.5);
   cuts_.q2mx = 1.e5;
-  //cuts_.mxmx = 1000.;
-  cuts_.ptcutmin = 3.;
+  cuts_.mxmx = 1000.;
+  //cuts_.ptcutmin = 3.;
   cout << "Theta in range [" << cuts_.thmin << ", " << cuts_.thmax << "]" << endl;
 
-  cout << "modcut = " << cuts_.modcut << endl;
-  
   ofstream cs("xsect_scan.dat");
 
-  for (int i=0; i<100; i++) {
+  for (int i=0; i<160; i++) {
     cuts_.ptcutmin = 0.+i*0.5;
     gmubeg_();
 

@@ -64,7 +64,6 @@ C*  End of common
      +                  MXMN, MXMX
 *
 *..  Initialise cross sections:
-        print*, 'passed gmucha'
         WRITE(*,*) "Before GMUBEG"
         Call GMUBEG
         WRITE(*,*) "After GMUBEG"

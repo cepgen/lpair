@@ -144,7 +144,7 @@ c      pt7 = p7*st7
 *
  100  continue
 *
-      IF(IPAR(2).EQ.0) RETURN
+      IF(IPAR(2).NE.1) RETURN
 *
       XTRA1(1)  = real(dsign(dlog((dsqrt(pt6**2+pz6**2)+
      &                              dabs(pz6))/pt6),pz6))

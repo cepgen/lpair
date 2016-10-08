@@ -47,13 +47,10 @@
 *
 C*  End of common
 *
-c      intrinsic iargc,getarg
-c      external iargc,getarg
-c      integer iargc
       integer numarguments
       external numarguments
       integer i,lun,maxln
-      character(len=32) file
+      character(len=32) afile
       character(len=6) key
       double precision value
       logical fexst
@@ -63,16 +60,14 @@ c      integer iargc
       lun=15
       maxln=20
 
-      print *,'==>',numarguments()
-      print *,'-->',iargc()
       if (iargc().gt.0) then
-         call getarg(1,file)
+         call getarg(1,afile)
       else
-         file='lpair.card'
+         afile='lpair.card'
       endif
 
 *---- Make sure the file exists
-      inquire(file=file,exist=fexst)
+      inquire(file=afile,exist=fexst)
       if (fexst.eqv..false.) then
          print *,'GMUCHA: ERROR! Input card does not exist!'
          stop
@@ -80,7 +75,7 @@ c      integer iargc
 
 *---- Read the parameter card using key/value pairs
 *
-      open(lun,file=file,status='old')
+      open(lun,file=afile,status='old')
       do i=1,maxln
          read(lun,1000,end=10) key,value
          if (trim(key).eq."IBEG") ibeg=value

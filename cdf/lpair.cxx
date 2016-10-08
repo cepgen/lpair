@@ -16,6 +16,7 @@ extern "C" {
   void integrate_();
   void generate_(int& nevents);
   void fragmentation_();
+  void terminate_();
   int luchge_(int&);
 
   extern struct {
@@ -173,6 +174,8 @@ int main(int argc, char* argv[]) {
   } while (i<nevent);
 
   t->SaveAs(filename.c_str());
+
+  terminate_();
 
   delete t;
   delete mom;

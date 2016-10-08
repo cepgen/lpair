@@ -66,8 +66,6 @@ int main(int argc, char* argv[]) {
 
   zduini_();
 
-cout << "zduini passed" << endl;
-
   if (vegpar_.iend<2) return 0;
 
   t = new TTree("h4444", "A TTree containing information from the events produced from LPAIR");

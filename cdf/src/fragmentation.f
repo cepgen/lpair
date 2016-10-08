@@ -440,8 +440,9 @@ clf         GO TO 1
 clf      ENDIF
       
 c      CALL LULIST(2)
-
-      CALL LHEFIL
+c      IF(IPAR(2).EQ.2) THEN
+        CALL LHEFIL
+c      ENDIF
       RETURN
 
  22   PRINT *,'ERROR! The number of dimensions is incorrect'

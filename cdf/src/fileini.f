@@ -8,6 +8,9 @@
       REAL*8  LPAR(20)
       COMMON/DATAPAR/IPAR,LPAR
 *
+      INTEGER nout,ilhef
+      COMMON/outp/nout,ilhef
+*
       INTEGER LUN
       CHARACTER(len=32) afile
       LOGICAL fexst
