@@ -1,27 +1,27 @@
-         0          IPAR(1)  ! event generation (0) or cross-section calc (1)
+         1          IPAR(1)  ! event generation (0) or cross-section calc (1)
          2          IPAR(2)  ! PAW histograms/ntuple             yes(1)/no(0)
          1          IPAR(3)  ! GNZ event output                  yes(1)/no(0)
          0          IPAR(4)  ! read 'ineemm.data' for graph      yes(1)/no(0)
-         8          IPAR(5)  ! VEGAS dimension     in-in(9),in-el(8),el-el(7)
+         7          IPAR(5)  ! VEGAS dimension     in-in(9),in-el(8),el-el(7)
     120000          IPAR(6)  ! VEGAS points per iteration
         15          IPAR(7)  ! VEGAS iterations
       2212          IPAR(8)  ! incoming particle type           (p 2212 e 11) 
          1          IPAR(9)  ! CUTS: vermaseren (0) / caron (1)
          0          IPAR(10) ! VERMASEREN FORM FACTOR:paper(0)/experimental(1)
     100000          IPAR(11) ! Maximum # of events to GNZ output
-    500000          IPAR(12) ! GENERA: # of events to generate
+    100000          IPAR(12) ! GENERA: # of events to generate
          1          IPAR(13) ! TREAT: non-smooth (0) / smooth (1) function F
        500          IPAR(14) ! SETGEN: # of points per bin
          3          IPAR(15) ! SETGEN nbin
          1          IPAR(16) ! vector rotation: yes (1) / no (0)
          1          IPAR(17) ! hepevt to ascii: yes (1) / no (0)
-        11          IPAR(18) ! outgoing particle PDG ID
+        13          IPAR(18) ! outgoing particle PDG ID
     0.9385          LPAR(1)  ! incoming particle mass (GeV)
     6500.0          LPAR(3)  ! beam energy (GeV)
-      1.00          LPAR(4)  ! maximum theta angle (fraction of PI)
+       1.0          LPAR(4)  ! maximum theta angle (fraction of PI)
        2.5          LPAR(5)  ! maximum rapidity
        0.0          LPAR(6)  ! energy cut  (GeV)
-      15.0          LPAR(7)  ! minimum P_t (GeV)
-       0.0          LPAR(8)  ! minimum invariant mass (GeV)
+      40.0          LPAR(7)  ! minimum P_t (GeV)
+      80.0          LPAR(8)  ! minimum invariant mass (GeV)
     9999.9          LPAR(9)  ! maximum invariant mass (GeV)
     1000.0          LPAR(10) ! maximum diffractive mass (GeV)

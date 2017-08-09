@@ -47,9 +47,6 @@ extern "C" {
 }
 
 int main(int argc, char* argv[]) {
-  // Number of events to generate
-  const int nevent = 1e5;
-  //const int nevent = 1e4;
   int ev = 1;
   int i;
 
@@ -57,6 +54,10 @@ int main(int argc, char* argv[]) {
 
   fileini_();
 
+  // Number of events to generate
+  const int nevent = datapar_.ipar[11];
+  //const int nevent = 1e4;
+  std::cout << ">> Will generate " << nevent << " event(s)" << std::endl;
   string filename = (argc>2) ? argv[2] : "events.root";
 
   // Beam parameters
@@ -89,7 +90,7 @@ int main(int argc, char* argv[]) {
   float time_gen, time_tot;
 
   t = new TTree("h4444", "A TTree containing information from the events produced from LPAIR (CDF)");
-  mom = new TLorentzVector();
+  mom = new TLorentzVector;
 
   t->Branch("xsect", &xsect, "xsect/D");
   t->Branch("errxsect", &errxsect, "errxsect/D");

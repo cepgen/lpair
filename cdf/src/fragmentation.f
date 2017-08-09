@@ -428,7 +428,7 @@ C     SET PULS, ENERGY AND MASS OFF THE PARTICLES <==============
       IF(FRAGMENT(1)) CALL LUJOIN(2,JLPSF1)
       IF(FRAGMENT(2)) CALL LUJOIN(2,JLPSF2)
       
-      CALL LUEXEC
+CCCCLF      CALL LUEXEC
 c     IF(K(16,2).EQ.91.AND.K(16,1).EQ.11) THEN
 c     WRITE(*,*) '-> System non-inelastic'
 c     GO TO 1
