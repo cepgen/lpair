@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "external/utils.h"
+#include "TFile.h"
 #include "TTree.h"
 #include "TLorentzVector.h"
 #include "lpair.h"
@@ -17,12 +18,13 @@ int main(int argc, char* argv[]) {
   //const int maxevts = 2.5e6;
   const int maxevts = 1.e5;
   //const int maxevts = 5;
+  TString filename = "events.root";
+  if ( argc>2 ) { filename = TString( argv[2] ); }
 
+  TFile f( filename, "recreate" );
   TTree *t;
 
   zduini_();
-
-cout << "zduini passed" << endl;
 
   if (vegpar_.iend<2) return 0;
 
@@ -32,29 +34,30 @@ cout << "zduini passed" << endl;
 
   ev.xsect = vgres_.s1;
   ev.errxsect = vgres_.s2;
-  for (int i=0; i<vegpar_.ngen; i++) {
+  for ( int i=0; i<vegpar_.ngen; i++ ) {
     tmr.reset();
 
     zduevt_(&one);
 
     ev.gen_time = tmr.elapsed();    
 
-    if (i%10000==0 and i>0) 
+    if ( i%10000==0 and i>0 ) 
       cout << "[" << 100.*i/maxevts << "%] Generating event #" << i << " / " << maxevts << endl;
     ev.np = 0;
-    for (int j=0; j<lujets_.n; j++) {
+    for ( int j=0; j<lujets_.n; j++ ) {
       ev.PID[ev.np] = lujets_.k[1][j];
       ev.parentid[ev.np] = lujets_.k[2][j];
       /*ev.daughterid1[ev.np] = lujets_.k[3][j];
         ev.daughterid2[ev.np] = lujets_.k[4][j];*/
       ev.status[ev.np] = lujets_.k[0][j];
-      TLorentzVector part( lujets_.p[0][j], lujets_.p[1][j], lujets_.p[2][j], lujets_.p[3][j] );
-      cout << "part mass=" << part.M() << endl;
-      ev.pt[ev.np] = part.Pt();
-      ev.eta[ev.np] = part.Eta();
-      ev.phi[ev.np] = part.Phi();
-      ev.E[ev.np] = part.E();
-      ev.M[ev.np] = part.M();
+      TLorentzVector part;
+      part.SetPxPyPzE( lujets_.p[0][j], lujets_.p[1][j], lujets_.p[2][j], lujets_.p[3][j] );
+      ev.pt[ev.np] = sqrt( pow( lujets_.p[0][j], 2 ) + pow( lujets_.p[1][j], 2 ) );
+      const double p = sqrt( ev.pt[ev.np]*ev.pt[ev.np] + lujets_.p[2][j]*lujets_.p[2][j] );
+      ev.eta[ev.np] = ( p != 0 ) ? atanh( lujets_.p[2][j]/p ) : 0;
+      ev.phi[ev.np] = ( lujets_.p[0][j] * lujets_.p[1][j] != 0. ) ? atan2( lujets_.p[1][j], lujets_.p[0][j] ) : 0.;
+      ev.E[ev.np] = lujets_.p[3][j];
+      ev.M[ev.np] = lujets_.p[4][j];
       ev.charge[ev.np] = luchge_(lujets_.k[1][j])/3.;
       switch (j+1) {
         case 1: ev.role[ev.np] = 1; break;
@@ -65,7 +68,7 @@ cout << "zduini passed" << endl;
         case 6: ev.role[ev.np] = 6; break;
         case 7: ev.role[ev.np] = 0; break;
         case 8: ev.role[ev.np] = 7; break;
-        //case 9: ev.role[ev.np] = 5; break;
+        case 9: ev.role[ev.np] = 5; break;
         default: ev.role[ev.np] = -1; break; // proton remnants
       }
 
@@ -74,11 +77,8 @@ cout << "zduini passed" << endl;
     t->Fill();
   }
 
-  TString filename = "events.root";
-  if (argc>2) { filename = TString(argv[2]); }
-  t->SaveAs(filename);
+  t->Write();
+  f.Close();
 
-  delete t;
-  
   return 0;
 }

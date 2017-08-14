@@ -12,7 +12,7 @@ VPATH = source/ external/
 FC = gfortran
 FFLAGS = -g -w
 CC = g++
-CFLAGS = -lgfortran -Wall -I$(RHEAD) -lrt
+CFLAGS = -lgfortran -Wall -I$(RHEAD) -lrt -std=c++11
 RFLAGS = $(shell root-config --cflags)
 RLIBS = $(shell root-config --libs)
 RHEAD = $(shell root-config --incdir)

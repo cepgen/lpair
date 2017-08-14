@@ -63,13 +63,13 @@ c      integer iargc
       lun=15
       maxln=20
 
-      print *,'==>',numarguments()
-      print *,'-->',iargc()
-      if (iargc().gt.0) then
-         call getarg(1,file)
-      else
+c      print *,'==>',numarguments()
+c      print *,'-->',iargc()
+c      if (iargc().gt.0) then
+c         call getarg(1,file)
+c      else
          file='lpair.card'
-      endif
+c      endif
 
 *---- Make sure the file exists
       inquire(file=file,exist=fexst)
