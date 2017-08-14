@@ -4,6 +4,7 @@
 #include "TTree.h"
 #include "TLorentzVector.h"
 #include "lpair.h"
+#include "../commons/TreeEvent.h"
 
 using namespace std;
 
@@ -16,13 +17,6 @@ int main(int argc, char* argv[]) {
   //const int maxevts = 2.5e6;
   const int maxevts = 1.e5;
   //const int maxevts = 5;
-  const int maxpart = 1000;
-
-  int npart;
-  double xsect, errxsect;
-  double px[maxpart], py[maxpart], pz[maxpart], E[maxpart], M[maxpart], charge[maxpart];
-  int PID[maxpart], parentid[maxpart], daughterid1[maxpart], daughterid2[maxpart], status[maxpart], role[maxpart];
-  float gen_time;
 
   TTree *t;
 
@@ -32,63 +26,50 @@ cout << "zduini passed" << endl;
 
   if (vegpar_.iend<2) return 0;
 
+  Lpair::TreeEvent ev;
   t = new TTree("h4444", "A TTree containing information from the events produced from LPAIR");
+  ev.create( t );
 
-  t->Branch("ip", &npart, "npart/I");
-  t->Branch("xsect", &xsect, "xsect/D");
-  t->Branch("errxsect", &errxsect, "errxsect/D");
-  t->Branch("total_time", &gen_time, "total_time/F");
-  t->Branch("px", px, "px[npart]/D");
-  t->Branch("py", py, "py[npart]/D");
-  t->Branch("pz", pz, "pz[npart]/D");
-  t->Branch("charge", charge, "charge[npart]/D");
-  t->Branch("icode", PID, "PID[npart]/I");
-  t->Branch("parent", parentid, "parent[npart]/I");
-  t->Branch("daughter1", daughterid1, "daughter1[npart]/I");
-  t->Branch("daughter2", daughterid2, "daughter2[npart]/I");
-  t->Branch("status", status, "status[npart]/I");
-  t->Branch("role", role, "role[npart]/I");
-  t->Branch("E", E, "E[npart]/D");
-  t->Branch("m", M, "M[npart]/D");
-
-  xsect = vgres_.s1;
-  errxsect = vgres_.s2;
+  ev.xsect = vgres_.s1;
+  ev.errxsect = vgres_.s2;
   for (int i=0; i<vegpar_.ngen; i++) {
     tmr.reset();
 
     zduevt_(&one);
 
-    gen_time = tmr.elapsed();    
+    ev.gen_time = tmr.elapsed();    
 
     if (i%10000==0 and i>0) 
       cout << "[" << 100.*i/maxevts << "%] Generating event #" << i << " / " << maxevts << endl;
-    npart = 0;
+    ev.np = 0;
     for (int j=0; j<lujets_.n; j++) {
-      PID[npart] = lujets_.k[1][j];
-      parentid[npart] = lujets_.k[2][j];
-      daughterid1[npart] = lujets_.k[3][j];
-      daughterid2[npart] = lujets_.k[4][j];
-      status[npart] = lujets_.k[0][j];
-      px[npart] = lujets_.p[0][j];
-      py[npart] = lujets_.p[1][j];
-      pz[npart] = lujets_.p[2][j];
-      E[npart] = lujets_.p[3][j];
-      M[npart] = lujets_.p[4][j];
-      charge[npart] = luchge_(lujets_.k[1][j])/3.;
+      ev.PID[ev.np] = lujets_.k[1][j];
+      ev.parentid[ev.np] = lujets_.k[2][j];
+      /*ev.daughterid1[ev.np] = lujets_.k[3][j];
+        ev.daughterid2[ev.np] = lujets_.k[4][j];*/
+      ev.status[ev.np] = lujets_.k[0][j];
+      TLorentzVector part( lujets_.p[0][j], lujets_.p[1][j], lujets_.p[2][j], lujets_.p[3][j] );
+      cout << "part mass=" << part.M() << endl;
+      ev.pt[ev.np] = part.Pt();
+      ev.eta[ev.np] = part.Eta();
+      ev.phi[ev.np] = part.Phi();
+      ev.E[ev.np] = part.E();
+      ev.M[ev.np] = part.M();
+      ev.charge[ev.np] = luchge_(lujets_.k[1][j])/3.;
       switch (j+1) {
-        case 1: role[npart] = 1; break;
-        case 2: role[npart] = 2; break;
-        case 3: role[npart] = 41; break;
-        case 4: role[npart] = 42; break;
-        case 5: role[npart] = 3; break;
-        case 6: role[npart] = 6; break;
-        case 7: role[npart] = 0; break;
-        case 8: role[npart] = 7; break;
-        //case 9: role[npart] = 5; break;
-        default: role[npart] = -1; break; // proton remnants
+        case 1: ev.role[ev.np] = 1; break;
+        case 2: ev.role[ev.np] = 2; break;
+        case 3: ev.role[ev.np] = 41; break;
+        case 4: ev.role[ev.np] = 42; break;
+        case 5: ev.role[ev.np] = 3; break;
+        case 6: ev.role[ev.np] = 6; break;
+        case 7: ev.role[ev.np] = 0; break;
+        case 8: ev.role[ev.np] = 7; break;
+        //case 9: ev.role[ev.np] = 5; break;
+        default: ev.role[ev.np] = -1; break; // proton remnants
       }
 
-      npart++;
+      ev.np++;
     }
     t->Fill();
   }
