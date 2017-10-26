@@ -26,12 +26,12 @@ all: lpair
 #
 # Make the executable
 #
-lpair: $(OBJ_DIR)/main.opp $(LIB_FILES) $(OBJ_FILES)
+lpair: $(OBJ_DIR)/main.opp $(LIB_FILES)
 	@echo "Linking..."
 	@$(CC) $(CFLAGS) -o $@ $^ $(LIBRARY) $(RLIBS)
 	@echo "Done!"
 
-xsect: $(OBJ_DIR)/xsect.opp $(LIB_FILES) $(OBJ_FILES)
+xsect: $(OBJ_DIR)/xsect.opp $(LIB_FILES)
 	@echo "Linking $<..."
 	@$(CC) $(CFLAGS) -o $@ $^ $(LIBRARY)
 	@echo "Done!"
