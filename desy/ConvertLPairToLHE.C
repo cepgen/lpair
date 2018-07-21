@@ -89,19 +89,19 @@ void ConvertLPairToLHE()
       else if ((partid[j]==1 || partid[j]==2 || partid[j]==2101 || partid[j]==2103 || partid[j]==2203) && (status[j]>=11 && status[j]<=13)) status[j] = 3; // quarks content
       else if (status[j]==11) status[j] = 2; // intermediate resonance
       
-      //output << partid[j] << " 1 1 2 0 0 " << px[j] << " " << py[j] << " " << pz[j] << " " << en[j] << " " << m[j] << " 0. " << iz[j] << endl; 	
-      output << partid[j] << " " 
-	     << status[j] << " " 
-	     << parent[j] << " 0 0 0 " 
-	     << px[j] << " " 
-	     << py[j] << " " 
-	     << pz[j] << " " 
-	     << en[j] << " " 
-	     << m[j] << " 0. " 
-	     << iz[j] << endl; 	
-      //	output << "P "<< i*N+j << " " << partid[j] << " " << px[j] << " " << py[j] << " " << pz[j] << " " << en[j] << " 1 0 0 0 0" << endl;      
+      //output << partid[j] << " 1 1 2 0 0 " << px[j] << " " << py[j] << " " << pz[j] << " " << en[j] << " " << m[j] << " 0. " << iz[j] << endl;        
+      output << fixed << setw(6) << partid[j] << setw(4)
+             << status[j] << setw(4)
+             << parent[j] << "   0   0   0" << setw(14)
+             << px[j] << setw(14)
+             << py[j] << setw(14)
+             << pz[j] << setw(14)
+             << en[j] << setw(10)
+             << m[j] << " 0. " << setw(9)
+             << iz[j] << endl;
+      //        output << "P "<< i*N+j << " " << partid[j] << " " << px[j] << " " << py[j] << " " << pz[j] << " " << en[j] << " 1 0 0 0 0" << endl;      
     }
-    
+ 
     
     output << "</event>" << endl;
   }

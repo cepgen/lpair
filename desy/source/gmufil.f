@@ -451,8 +451,9 @@ c      CALL LULIST(2)
 C EXECUTE LUND FRAGMENTATION PROGRAM  <==============================
 c      print *,'Before LUEXEC================================'
 c      call LULIST(2)
-c      print *,'After  LUEXEC================================'
       CALL LUEXEC
+c      print *,'After  LUEXEC================================'
+clf      CALL LUEXEC
 C Check wether the Hadronic system is inelastic  <===================
       IF (PMOD.GE.10 .AND. PMOD.LE.99) THEN
          NPOUT=0

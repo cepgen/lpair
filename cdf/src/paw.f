@@ -1,62 +1,10 @@
-      subroutine pawini
-*     
-* ---- define PAWC common and open histograms
-*
-      INTEGER ISTAT
-      CHARACTER*8 CHTAG1(23)
-      PARAMETER (NWPAWC=500000)
-      COMMON/PAWC/H(NWPAWC)
-*     
-* --- LPAIR data common block
-*
-      INTEGER IPAR(20)
-      REAL*8 LPAR(20)
-      COMMON/DATAPAR/IPAR,LPAR
-*
-      IF(IPAR(2).EQ.0) RETURN   ! PAW histograms/ntuple
-*
-      DATA CHTAG1 /'eta1    ','eta2    ','sqrtw4  ',
-     &             'px6     ','py6     ','pz6     ','p6st6   ',
-     &             'px7     ','py7     ','pz7     ','p7st7   ',
-     &             'p4st4   ','phi1    ','phi2    ','acopl   ',
-     &             'thet2d  ','thet3d  ','thetp3  ','thetp5  ',
-     &             'pt3     ','pz3     ','pt5     ','pz5     '/
-*
-      CALL HLIMIT(NWPAWC)
-*     
-      CALL HROPEN(31,'HISTO','histo.out','N',1024,ISTAT)
-      CALL HBOOKN(100,'lpair ntuple',23,'//HISTO',4000,CHTAG1)
-*     
-      IF(IPAR(4).EQ.0) RETURN   ! cross-section plots
-*     
-      CALL HBOOK1( 1,'log(-t1)      ',40,-0.50E+01,0.50E+01,0.)
-      CALL HBOOK1( 2,'log(-t2)      ',40,-0.50E+01,0.50E+01,0.)
-      CALL HBOOK1( 3,'mu-mu mass    ',40, 0.00E+00,0.30E+02,0.)
-      CALL HBOOK1( 4,'p-perp mu-    ',40, 0.00E+00,2.00E+01,0.)
-      CALL HBOOK1( 5,'p-perp mu+    ',40, 0.00E+00,2.00E+01,0.)
-      CALL HBOOK1( 6,'p-perp mu-pair',40, 0.00E+00,2.00E+01,0.)
-*     
-      CALL HBOOK1(11,'log(-t1)      ',40,-0.50E+01,0.50E+01,0.)
-      CALL HBOOK1(12,'log(-t2)      ',40,-0.50E+01,0.50E+01,0.)
-      CALL HBOOK1(13,'mu-mu mass    ',40, 0.00E+00,0.30E+02,0.)
-      CALL HBOOK1(14,'p-perp mu-    ',40, 0.00E+00,2.00E+01,0.)
-      CALL HBOOK1(15,'p-perp mu+    ',40, 0.00E+00,2.00E+01,0.)
-      CALL HBOOK1(16,'p-perp mu-pair',40, 0.00E+00,2.00E+01,0.)
-*     
-      return
-      end
-
-*     
-* ---------------------------------------------------------------
-*
-
       subroutine pawfil1
 *
 * ---- LPAIR common blocks
 *
       implicit double precision (a-h,o-z)
 *
-      double precision me,mu
+      double precision me,mu,mxcut
       common/inpu/me,mu,ebeam,const,sq
       common/variab/e,e1,e2,e3,e4,e5,p,p3,p4,p5,ct3,st3,ct4,st4,ct5
      1                                         ,st5,cp3,sp3,cp5,sp5
@@ -69,7 +17,7 @@
       common/civita/epsi,g5,g6,a5,a6,bb
       common/dotps/q1dq,q1dq2,w6
       common/tell/nn
-      common/cuts/angcut,encut,etacut
+      common/cuts/angcut,encut,etacut,mxcut
 *
 * --- LPAIR data common block
 *
@@ -276,59 +224,5 @@ c      pt7 = p7*st7
       XTRA1(22) = PT5
       XTRA1(23) = PZ5
 *
-      CALL HCDIR('//HISTO',' ')
-      CALL HFN(100,XTRA1)
-*
-      return
-      end
-
-*
-* ---------------------------------------------------------------
-*
-      
-      subroutine pawfil2(id,xmin,xmax,weight)
-*
-* --- LPAIR data common block
-*
-      INTEGER IPAR(20)
-      REAL*8 LPAR(20)
-      COMMON/DATAPAR/IPAR,LPAR
-*     
-      integer id
-      real xvalue,xmin,xmax,weight
-*     
-      IF(IPAR(2).EQ.0) RETURN
-*     
-      xvalue = (xmin+xmax)/2.
-*     
-      CALL HCDIR('//HISTO',' ')
-      CALL HFILL(ID,REAL(XVALUE),0.,REAL(WEIGHT))
-*     
-      return
-      end
-
-*
-* ---------------------------------------------------------------
-*
-
-      subroutine pawend
-*
-* --- LPAIR data common block
-*
-      INTEGER IPAR(20)
-      REAL*8 LPAR(20)
-      COMMON/DATAPAR/IPAR,LPAR
-*     
-      INTEGER ICYCLE
-*
-      IF(IPAR(2).EQ.0) RETURN
-*
-* ---- close histograms
-*
-      CALL HCDIR('//HISTO',' ')
-      CALL HROUT(0,ICYCLE,' ')
-      CALL HREND('HISTO')
-      CLOSE(UNIT=31)
-*     
       return
       end

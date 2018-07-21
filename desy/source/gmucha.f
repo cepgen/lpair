@@ -21,7 +21,7 @@
 *
 ************************************************************************
 *
-        Implicit NONE
+      implicit NONE
 *
 *KEEP,VEGPAR.
       INTEGER          NDIM,NCVG,ITMX,NPRN,IGRAPH,
@@ -47,6 +47,11 @@
 *
 C*  End of common
 *
+c      intrinsic iargc,getarg
+c      external iargc,getarg
+c      integer iargc
+      integer numarguments
+      external numarguments
       integer i,lun,maxln
       character(len=32) file
       character(len=6) key
@@ -55,59 +60,61 @@ C*  End of common
 *
 *--------  Read data cards and overwrite defaults:
 *
-        lun=15
-        maxln=20
+      lun=15
+      maxln=20
 
-        if (iargc().gt.0) then
-           call getarg(1,file)
-        else
-           file='lpair.card'
-        endif
+c      print *,'==>',numarguments()
+c      print *,'-->',iargc()
+c      if (iargc().gt.0) then
+c         call getarg(1,file)
+c      else
+         file='lpair.card'
+c      endif
 
-*---- Makes sure the file exists
-        inquire(file=file,exist=fexst)
-        if (fexst.eqv..false.) then
-           print *,'GMUCHA: ERROR! Input card does not exist!'
-           stop
-        endif
+*---- Make sure the file exists
+      inquire(file=file,exist=fexst)
+      if (fexst.eqv..false.) then
+         print *,'GMUCHA: ERROR! Input card does not exist!'
+         stop
+      endif
 
 *---- Read the parameter card using key/value pairs
 *
-        open(lun,file=file,status='old')
-        do i=1,maxln
-           read(lun,1000,end=10) key,value
-           if (trim(key).eq."IBEG") ibeg=value
-           if (trim(key).eq."IEND") iend=value
-           if (trim(key).eq."NTRT") ntreat=value
-           if (trim(key).eq."PRVG") nprin=value
-           if (trim(key).eq."NCVG") ncvg=value
-           if (trim(key).eq."ITVG") itmx=value
-           if (trim(key).eq."NCSG") npoin=value
-           if (trim(key).eq."INPP") inpp=value
-           if (trim(key).eq."PMOD") pmod=value
-           if (trim(key).eq."GPDF") gpdf=value
-           if (trim(key).eq."SPDF") spdf=value
-           if (trim(key).eq."INPE") inpe=value
-           if (trim(key).eq."EMOD") emod=value
-           if (trim(key).eq."PAIR") ipair=value
-           if (trim(key).eq."QPDF") nquark=value
-           if (trim(key).eq."MCUT") modcut=value
-           if (trim(key).eq."THMX") thmax=value
-           if (trim(key).eq."THMN") thmin=value
-           if (trim(key).eq."ECUT") ecut=value
-           if (trim(key).eq."PTCT") ptcutmin=value
-           if (trim(key).eq."PTMX") ptcutmax=value
-           if (trim(key).eq."Q2MN") q2mn=value
-           if (trim(key).eq."Q2MX") q2mx=value
-           if (trim(key).eq."MXMN") mxmn=value
-           if (trim(key).eq."MXMX") mxmx=value
-           if (trim(key).eq."NGEN") ngen=value
-        enddo
- 10     continue
-        close(lun)
+      open(lun,file=file,status='old')
+      do i=1,maxln
+         read(lun,1000,end=10) key,value
+         if (trim(key).eq."IBEG") ibeg=value
+         if (trim(key).eq."IEND") iend=value
+         if (trim(key).eq."NGEN") ngen=value
+         if (trim(key).eq."NTRT") ntreat=value
+         if (trim(key).eq."PRVG") nprin=value
+         if (trim(key).eq."NCVG") ncvg=value
+         if (trim(key).eq."ITVG") itmx=value
+         if (trim(key).eq."NCSG") npoin=value
+         if (trim(key).eq."INPP") inpp=value
+         if (trim(key).eq."PMOD") pmod=value
+         if (trim(key).eq."GPDF") gpdf=value
+         if (trim(key).eq."SPDF") spdf=value
+         if (trim(key).eq."INPE") inpe=value
+         if (trim(key).eq."EMOD") emod=value
+         if (trim(key).eq."PAIR") ipair=value
+         if (trim(key).eq."QPDF") nquark=value
+         if (trim(key).eq."MCUT") modcut=value
+         if (trim(key).eq."THMX") thmax=value
+         if (trim(key).eq."THMN") thmin=value
+         if (trim(key).eq."ECUT") ecut=value
+         if (trim(key).eq."PTCT") ptcutmin=value
+         if (trim(key).eq."PTMX") ptcutmax=value
+         if (trim(key).eq."Q2MN") q2mn=value
+         if (trim(key).eq."Q2MX") q2mx=value
+         if (trim(key).eq."MXMN") mxmn=value
+         if (trim(key).eq."MXMX") mxmx=value
+      enddo
+ 10   continue
+      close(lun)
 *
 *--------  Return
 *
- 1000   format(a4,d9.0)
-        return
-        end
+ 1000 format(a4,d9.0)
+      return
+      end

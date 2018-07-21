@@ -22,7 +22,7 @@
       DOUBLE PRECISION epsi,g5,g6,a5,a6,bb
       DOUBLE PRECISION q1dq,q1dq2,w6
       INTEGER nn
-      DOUBLE PRECISION angcut,encut,etacut
+      DOUBLE PRECISION angcut,encut,etacut,mxcut
 
       COMMON/inpu/me,mu,ebeam,const,sq
       COMMON/variab/e,e1,e2,e3,e4,e5,p,p3,p4,p5,ct3,st3,ct4,st4
@@ -35,7 +35,7 @@
       COMMON/civita/epsi,g5,g6,a5,a6,bb
       COMMON/dotps/q1dq,q1dq2,w6
       COMMON/tell/nn
-      COMMON/cuts/angcut,encut,etacut
+      COMMON/cuts/angcut,encut,etacut,mxcut
 *     
       INTEGER IPAR(20)
       REAL*8 LPAR(20)
@@ -69,12 +69,14 @@
             dw25 = w252*dlog(yy)/(me*me) ! Vermaseren (experimental)
          ENDIF
       ENDIF
-      
+     
       IF(ipar(5).EQ.9) THEN
 *     inelastic-inelastic
+         IF((w13.gt.mxcut).or.(w25.gt.mxcut)) GOTO 30
          CALL gamgam(ebeam,me,me,w13,w25,mu,mu,0.D+00,sq,dj,0,x,1)
       ELSEIF(ipar(5).EQ.8) THEN
 *     inelastic-elastic
+         IF(w13.gt.mxcut**2) GOTO 30
          CALL gamgam(ebeam,me,me,w13,me,mu,mu,0.D+00,sq,dj,0,x,1)
       ELSEIF(ipar(5).EQ.7) THEN
 *     elastic-elastic

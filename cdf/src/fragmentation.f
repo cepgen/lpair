@@ -188,6 +188,9 @@ CLF   PARTICLE 9 = LEPTON2
       PL(3,9)=PHEP(3,7)
       PL(4,9)=PHEP(4,7)
 
+c      DO 2000 I=1,7
+c         PRINT *,'PHEP:',I,':',(PHEP(J,I),J=1,4)
+c 2000 CONTINUE
 c      PRINT *,(PHEP(I,1)+PHEP(I,2),I=1,4)
 c      PRINT *,(PHEP(I,3)+PHEP(I,5)+PHEP(I,6)+PHEP(I,7),I=1,4)
 c      PRINT *,(PHEP(I,1)+PHEP(I,2)-
@@ -409,7 +412,7 @@ c     We added 2 'particles' in the event (quark and diquark)
          
          
 c      DO 2001 I=1,NPART
-c         PRINT *,I,':',(PL(J,I),J=1,4)
+c         PRINT *,'PL:',I,':',(PL(J,I),J=1,4)
 c 2001 CONTINUE
       
       CALL LUNSET(NPART)

@@ -78,6 +78,7 @@ c      PRINT *,p1,p2
             vhep(j,i)=0.
          enddo
       enddo
+
 *
 * ---- proton (incoming, 1)
       isthep(1)=1.
@@ -173,6 +174,9 @@ c      PRINT *,p1,p2
 *
 * ... increment counter of lepton pair events produced
 *
+c      DO 2000 I=1,7
+c         PRINT *,'PHEP:',I,':',(PHEP(J,I),J=1,4)
+c 2000 CONTINUE
       NEVHEP = NEVHEP + 1
 *
 * ... print some diagnostics

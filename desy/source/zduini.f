@@ -55,9 +55,9 @@ C*  End of common
 *
 *..  Let data cards over write the defaults:
         Call GMUCHA
-        Write (6, 9010) IBEG, IEND, NTreat, NPrin, NCVG, ITMX, NPoin,
-     +                  INPP, PMOD, GPDF, SPDF, INPE, EMOD, IPAIR,
-     +                  NQUARK,
+        Write (6, 9010) IBEG, IEND, NGEN, NTreat, NPrin, NCVG, ITMX,
+     +                  NPoin, INPP, PMOD, GPDF, SPDF, INPE, EMOD,
+     +                  IPAIR, NQUARK,
      +                  MODCUT, THMAX, THMIN, ECUT, PTCUTMIN, PTCUTMAX,
      +                  Q2MN, Q2MX,
      +                  MXMN, MXMX
@@ -92,6 +92,7 @@ C*  End of common
      +         ' ------------------------------'//
      + 8X, '  IBEG:', I8/
      + 8X, '  IEND:', I8/
+     + 8X, '  NGen:', I8/
      + 8X, 'NTreat:', I8/
      + 8X, ' NPrin:', I8/
      + 8X, '  NCVG:', I8/
