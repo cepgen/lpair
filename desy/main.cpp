@@ -5,61 +5,61 @@
 #include "TTree.h"
 #include "TLorentzVector.h"
 #include "lpair.h"
-#include "../commons/TreeEvent.h"
+#include "../commons/TreeInfo.h"
 
 using namespace std;
 
-int main(int argc, char* argv[]) {
+int main( int argc, char* argv[] )
+{
   int one = 1;
 
   Timer tmr;
 
-  //const int maxevts = 2.5e6;
-  //const int maxevts = 2.5e6;
-  const int maxevts = 1.e5;
-  //const int maxevts = 5;
-  TString filename = "events.root";
-  if ( argc>2 ) { filename = TString( argv[2] ); }
+  const char* filename = ( argc > 1 ) ? argv[1] : "events.root";
 
   TFile f( filename, "recreate" );
-  TTree *t;
 
   zduini_();
 
-  if (vegpar_.iend<2) return 0;
+  if ( vegpar_.iend < 2 )
+    return 0;
 
-  Lpair::TreeEvent ev;
-  t = new TTree("h4444", "A TTree containing information from the events produced from LPAIR");
-  ev.create( t );
+  lpair::TreeRun run;
+  run.create();
+  run.xsect = vgres_.s1;
+  run.errxsect = vgres_.s2;
+  run.sqrt_s = beam_.inpe+beam_.inpp;
+  run.fill();
 
-  ev.xsect = vgres_.s1;
-  ev.errxsect = vgres_.s2;
-  for ( int i=0; i<vegpar_.ngen; i++ ) {
+  lpair::TreeEvent ev;
+  std::unique_ptr<TTree> ev_tree( new TTree( "h4444", "A TTree containing information from the events produced from LPAIR" ) );
+  ev.create( ev_tree.get() );
+
+  for ( int i = 0; i < vegpar_.ngen; ++i ) {
     tmr.reset();
 
     zduevt_(&one);
 
     ev.gen_time = tmr.elapsed();
 
-    if ( i%10000==0 and i>0 )
-      cout << "[" << 100.*i/maxevts << "%] Generating event #" << i << " / " << maxevts << endl;
+    if ( i % 10000 == 0 && i > 0 )
+      cout << "[" << 100.*i/vegpar_.ngen << "%] Generating event #" << i << " / " << vegpar_.ngen << endl;
     ev.np = 0;
-    for ( int j=0; j<lujets_.n; j++ ) {
-      ev.PID[ev.np] = lujets_.k[1][j];
-      ev.parentid[ev.np] = lujets_.k[2][j];
-      /*ev.daughterid1[ev.np] = lujets_.k[3][j];
-        ev.daughterid2[ev.np] = lujets_.k[4][j];*/
+    ev.momentum.reserve( lujets_.n );
+    for ( int j = 0; j < lujets_.n; ++j ) {
+      ev.pdg_id[ev.np] = lujets_.k[1][j];
+      ev.parent1[ev.np] = lujets_.k[2][j];
+      ev.parent2[ev.np] = lujets_.k[3][j];
       ev.status[ev.np] = lujets_.k[0][j];
-      TLorentzVector part;
-      part.SetPxPyPzE( lujets_.p[0][j], lujets_.p[1][j], lujets_.p[2][j], lujets_.p[3][j] );
+      ev.momentum[ev.np].SetPxPyPzE( lujets_.p[0][j], lujets_.p[1][j], lujets_.p[2][j], lujets_.p[3][j] );
       ev.pt[ev.np] = sqrt( pow( lujets_.p[0][j], 2 ) + pow( lujets_.p[1][j], 2 ) );
-      const double p = sqrt( ev.pt[ev.np]*ev.pt[ev.np] + lujets_.p[2][j]*lujets_.p[2][j] );
+      const double p = hypot( ev.pt[ev.np], lujets_.p[2][j] );
       ev.eta[ev.np] = ( p != 0 ) ? atanh( lujets_.p[2][j]/p ) : 0;
       ev.phi[ev.np] = ( lujets_.p[0][j] * lujets_.p[1][j] != 0. ) ? atan2( lujets_.p[1][j], lujets_.p[0][j] ) : 0.;
       ev.E[ev.np] = lujets_.p[3][j];
-      ev.M[ev.np] = lujets_.p[4][j];
-      ev.charge[ev.np] = luchge_(lujets_.k[1][j])/3.;
-      switch (j+1) {
+      ev.m[ev.np] = lujets_.p[4][j];
+      ev.charge[ev.np] = luchge_( lujets_.k[1][j] )/3.;
+      switch ( j+1 ) {
         case 1: ev.role[ev.np] = 1; break;
         case 2: ev.role[ev.np] = 2; break;
         case 3: ev.role[ev.np] = 41; break;
@@ -74,10 +74,10 @@ int main(int argc, char* argv[]) {
 
       ev.np++;
     }
-    t->Fill();
+    ev.fill();
   }
 
-  t->Write();
+  f.Write();
   f.Close();
 
   return 0;
