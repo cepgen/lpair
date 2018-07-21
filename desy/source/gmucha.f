@@ -25,9 +25,9 @@
 *
 *KEEP,VEGPAR.
       INTEGER          NDIM,NCVG,ITMX,NPRN,IGRAPH,
-     &                 NPOIN,NPRIN,NTREAT,IBEG,IEND
+     &                 NPOIN,NPRIN,NTREAT,IBEG,IEND,NGEN
       COMMON /VEGPAR/  NDIM,NCVG,ITMX,NPRN,IGRAPH,
-     &                 NPOIN,NPRIN,NTREAT,IBEG,IEND
+     &                 NPOIN,NPRIN,NTREAT,IBEG,IEND,NGEN
 
 *KEEP,BEAM.
       INTEGER          INTGE,INTGP,GPDF,SPDF,PMOD,EMOD,IPAIR,NQUARK
@@ -101,6 +101,7 @@ C*  End of common
            if (trim(key).eq."Q2MX") q2mx=value
            if (trim(key).eq."MXMN") mxmn=value
            if (trim(key).eq."MXMX") mxmx=value
+           if (trim(key).eq."NGEN") ngen=value
         enddo
  10     continue
         close(lun)

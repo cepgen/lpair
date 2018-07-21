@@ -12,9 +12,9 @@ C ####################################################################
 
 *KEEP,VEGPAR.
       INTEGER          NDIM,NCVG,ITMX,NPRN,IGRAPH,
-     &                 NPOIN,NPRIN,NTREAT,IBEG,IEND
+     &                 NPOIN,NPRIN,NTREAT,IBEG,IEND,NGEN
       COMMON /VEGPAR/  NDIM,NCVG,ITMX,NPRN,IGRAPH,
-     &                 NPOIN,NPRIN,NTREAT,IBEG,IEND
+     &                 NPOIN,NPRIN,NTREAT,IBEG,IEND,NGEN
       save /vegpar/
 
 *KEEP,BEAM.
@@ -66,6 +66,7 @@ C ####################################################################
 *  VEGAS PRINT FLAG AND STRATEGY NUMBER
          NPRIN  = 1
          NTREAT = 1
+         NGEN = 10000
 *
 C MODCUT : MODE FOR CUT 0=NO; 1=VERMASEREN DET; 2=GIVEN PARAMETER <==
          MODCUT = 2

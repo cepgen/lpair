@@ -19,7 +19,7 @@ extern "C" {
   } beam_;
 
   extern struct {
-    int ndim,ncvg,itmx,nprn,igraph,npoin,nprin,ntreat,ibeg,iend;
+    int ndim,ncvg,itmx,nprn,igraph,npoin,nprin,ntreat,ibeg,iend,ngen;
   } vegpar_;
 
   extern struct {

@@ -31,7 +31,7 @@ extern "C" {
     float s1,s2,s3,s4;
   } vgres_;
   extern struct {
-    int ndim,ncvg,itmx,nprn,igraph,npoin,nprin,ntreat,ibeg,iend;
+    int ndim,ncvg,itmx,nprn,igraph,npoin,nprin,ntreat,ibeg,iend,ngen;
   } vegpar_;
   extern struct {
     double w,valtreat, x[nd], z[nd];
@@ -50,8 +50,6 @@ Int_t main() {
 
   Timer tmr;
 
-  const Int_t maxevts = 2.5e6;
-  //const Int_t maxevts = 5;
   const Int_t maxpart = 1000;
 
   Int_t npart;
@@ -106,7 +104,7 @@ Int_t main() {
 
   xsect = vgres_.s1;
   errxsect = vgres_.s2;
-  for (Int_t i=0; i<maxevts; i++) {
+  for (Int_t i=0; i<vegpar_.ngen; i++) {
     tmr.reset();
 
     zduevt_(&one);
