@@ -1,6 +1,11 @@
+#ifndef lpair_desy_lpair_h
+#define lpair_desy_lpair_h
+
 #define nd 10
 
+# ifdef __cplusplus
 extern "C" {
+#endif
 
   //----- LPAIR subroutines
   void gmuini_();
@@ -61,4 +66,10 @@ extern "C" {
     int n, k[5][4000];
     float p[5][4000], v[5][4000];
   } lujets_;
+
+#ifdef __cplusplus
 }
+#endif
+
+#endif
+

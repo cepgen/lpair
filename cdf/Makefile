@@ -1,5 +1,5 @@
 FF_FILES = $(wildcard src/*.f)
-EX_FILES = $(wildcard external/*.f)
+EX_FILES = $(wildcard ../commons/*.f)
 OBJ_DIR = obj
 LIBRARY = #-L/usr/lib64/cernlib/2006/lib -lpdflib804 -lmathlib -lpacklib -lkernlib
 OBJ_FILES = $(patsubst src/%.f,$(OBJ_DIR)/%.o,$(FF_FILES))

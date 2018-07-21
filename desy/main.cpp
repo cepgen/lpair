@@ -1,11 +1,12 @@
 #include <iostream>
 
-#include "external/utils.h"
 #include "TFile.h"
 #include "TTree.h"
-#include "TLorentzVector.h"
+
 #include "lpair.h"
+
 #include "../commons/TreeInfo.h"
+#include "../commons/Timer.h"
 
 using namespace std;
 
@@ -32,8 +33,7 @@ int main( int argc, char* argv[] )
   run.fill();
 
   lpair::TreeEvent ev;
-  std::unique_ptr<TTree> ev_tree( new TTree( "h4444", "A TTree containing information from the events produced from LPAIR" ) );
-  ev.create( ev_tree.get() );
+  ev.create( new TTree( "h4444", "A TTree containing information from the events produced from LPAIR" ) );
 
   for ( int i = 0; i < vegpar_.ngen; ++i ) {
     tmr.reset();
@@ -52,7 +52,7 @@ int main( int argc, char* argv[] )
       ev.parent2[ev.np] = lujets_.k[3][j];
       ev.status[ev.np] = lujets_.k[0][j];
       ev.momentum[ev.np].SetPxPyPzE( lujets_.p[0][j], lujets_.p[1][j], lujets_.p[2][j], lujets_.p[3][j] );
-      ev.pt[ev.np] = sqrt( pow( lujets_.p[0][j], 2 ) + pow( lujets_.p[1][j], 2 ) );
+      ev.pt[ev.np] = hypot( lujets_.p[0][j], lujets_.p[1][j] );
       const double p = hypot( ev.pt[ev.np], lujets_.p[2][j] );
       ev.eta[ev.np] = ( p != 0 ) ? atanh( lujets_.p[2][j]/p ) : 0;
       ev.phi[ev.np] = ( lujets_.p[0][j] * lujets_.p[1][j] != 0. ) ? atan2( lujets_.p[1][j], lujets_.p[0][j] ) : 0.;
