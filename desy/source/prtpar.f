@@ -10,9 +10,9 @@
      +                THMAX,THMIN,QP2MIN,QP2MAX,MODCUT,MXMN,MXMX,
      +                Q2MN,Q2MX
       integer         NDIM,NCVG,ITMX,NPRN,IGRAPH,
-     +                NPOIN,NPRIN,NTREAT,IBEG,IEND
+     +                NPOIN,NPRIN,NTREAT,IBEG,IEND,NGEN
       common/VEGPAR/  NDIM,NCVG,ITMX,NPRN,IGRAPH,
-     +                NPOIN,NPRIN,NTREAT,IBEG,IEND
+     +                NPOIN,NPRIN,NTREAT,IBEG,IEND,NGEN
       integer         INTGE,INTGP,GPDF,SPDF,PMOD,EMOD,IPAIR,NQUARK
       real*8          INPE,INPP
       common/BEAM/    INPE,INPP,INTGE,INTGP,GPDF,SPDF,PMOD,EMOD,
@@ -42,6 +42,7 @@
       write(file,1000) 'MCUT',modcut
       write(file,1001) 'ECUT',ecut
       write(file,1001) 'PTCT',ptcut
+      write(file,1001) 'NGEN',ngen
       write(file,1002)
 *
  1000 format((a),1x,i10)

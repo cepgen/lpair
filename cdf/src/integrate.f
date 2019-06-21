@@ -1,11 +1,11 @@
        SUBROUTINE integrate
        IMPLICIT DOUBLE PRECISION (a-h,o-z)
-       DOUBLE PRECISION me,mu,f
+       DOUBLE PRECISION me,mu,f,mxcut
        COMMON/inpu/me,mu,ebeam,const,sq
        COMMON/tell/nn
        COMMON/ini/xxx,yyy
        COMMON/outp/nout
-       COMMON/cuts/angcut,encut,etacut
+       COMMON/cuts/angcut,encut,etacut,mxcut
 *
        INTEGER ndim,npoin,nprin,ntreat,nevent
 *     
@@ -40,6 +40,8 @@
 *     
 *     ---- energy cuts
        encut = lpar(6)
+
+       mxcut = lpar(10)
 *     
 *     ---- constant (convert GeV**2 to picobarns)
        const = (19.732d+03)**2

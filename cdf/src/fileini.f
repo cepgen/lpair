@@ -47,15 +47,16 @@
       READ(LUN,'(I10)') IPAR(16) ! vector rotation flag
       READ(LUN,'(I10)') IPAR(17) ! hepevt common block to ascii output
 *
-      READ(LUN,'(D10.4)') LPAR(1) ! incoming particle mass (GeV)
-      READ(LUN,'(D10.4)') LPAR(2) ! outgoing particle mass (GeV)
-      READ(LUN,'(D10.4)') LPAR(3) ! beam energy (GeV)
-      READ(LUN,'(D10.4)') LPAR(4) ! maximum angle (rad)
-      READ(LUN,'(D10.4)') LPAR(5) ! maximum rapidity
-      READ(LUN,'(D10.4)') LPAR(6) ! energy cut (GeV)
-      READ(LUN,'(D10.4)') LPAR(7) ! minimum P_t
-      READ(LUN,'(D10.4)') LPAR(8) ! minimum invariant mass
-      READ(LUN,'(D10.4)') LPAR(9) ! maximum invariant mass
+      READ(LUN,'(D10.4)') LPAR(1)  ! incoming particle mass (GeV)
+      READ(LUN,'(D10.4)') LPAR(2)  ! outgoing particle mass (GeV)
+      READ(LUN,'(D10.4)') LPAR(3)  ! beam energy (GeV)
+      READ(LUN,'(D10.4)') LPAR(4)  ! maximum angle (rad)
+      READ(LUN,'(D10.4)') LPAR(5)  ! maximum rapidity
+      READ(LUN,'(D10.4)') LPAR(6)  ! energy cut (GeV)
+      READ(LUN,'(D10.4)') LPAR(7)  ! minimum P_t
+      READ(LUN,'(D10.4)') LPAR(8)  ! minimum invariant mass
+      READ(LUN,'(D10.4)') LPAR(9)  ! maximum invariant mass
+      READ(LUN,'(D10.4)') LPAR(10) ! maximum MX
 *
       close(LUN)
 *
@@ -87,6 +88,7 @@
       PRINT*,'LPAR(7):  min P_t        ',LPAR(7)
       PRINT*,'LPAR(8):  min invmass    ',LPAR(8)
       PRINT*,'LPAR(9):  max invmass    ',LPAR(9)
+      PRINT*,'LPAR(10): max dissoc.mass',LPAR(10)
 *
       RETURN
       END

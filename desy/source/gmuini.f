@@ -67,6 +67,7 @@ C ####################################################################
 *  VEGAS PRINT FLAG AND STRATEGY NUMBER
          NPRIN  = 1
          NTREAT = 1
+         NGEN = 10000
 *
 C MODCUT : MODE FOR CUT 0=NO; 1=VERMASEREN DET; 2=GIVEN PARAMETER <==
          MODCUT = 2

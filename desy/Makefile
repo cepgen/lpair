@@ -1,18 +1,18 @@
 FF_FILES = $(wildcard source/*.f)
-EX_FILES = $(wildcard external/*.f)
+EX_FILES = $(wildcard ../commons/*.f)
 OBJ_DIR = obj
 LIBRARY = -L/usr/lib64/cernlib/2006/lib #-lpdflib804
 OBJ_FILES = $(patsubst source/%.f,$(OBJ_DIR)/%.o,$(FF_FILES))
 EXT_FILES = $(patsubst external/%.f,$(OBJ_DIR)/%.o,$(EX_FILES))
 LIB_FILES = $(EXT_FILES) $(OBJ_FILES)
-VPATH = source/ external/
+VPATH = source/ ../commons/
 
 ###############################################################################
 
 FC = gfortran
 FFLAGS = -g -w
 CC = g++
-CFLAGS = -lgfortran -Wall -I$(RHEAD) -lrt
+CFLAGS = -lgfortran -Wall -I$(RHEAD) -lrt -std=c++11
 RFLAGS = $(shell root-config --cflags)
 RLIBS = $(shell root-config --libs)
 RHEAD = $(shell root-config --incdir)
@@ -26,12 +26,12 @@ all: lpair
 #
 # Make the executable
 #
-lpair: $(OBJ_DIR)/main.opp $(LIB_FILES) $(OBJ_FILES)
+lpair: $(OBJ_DIR)/main.opp $(LIB_FILES)
 	@echo "Linking..."
 	@$(CC) $(CFLAGS) -o $@ $^ $(LIBRARY) $(RLIBS)
 	@echo "Done!"
 
-xsect: $(OBJ_DIR)/xsect.opp $(LIB_FILES) $(OBJ_FILES)
+xsect: $(OBJ_DIR)/xsect.opp $(LIB_FILES)
 	@echo "Linking $<..."
 	@$(CC) $(CFLAGS) -o $@ $^ $(LIBRARY)
 	@echo "Done!"
