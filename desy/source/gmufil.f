@@ -86,6 +86,8 @@ C  INFORMATION FOR JETSET PACKAGE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
      &        I2MO1(13),I2DA1(13),I2DA2(13)
       COMMON /PARTIC/  I2LINE,I2STAT,I2PART,I2MO1,I2DA1,I2DA2
 *KEND.
+      integer idbg
+      common /debug/  idbg
 C
       real *8 pairm
       common /gmulpm/ pairm
@@ -158,6 +160,14 @@ C PARTICLE 8 = MUON2     <==================
       PLAB(3,8)=GAMMA*CT7*P7 + BETGAM  *  E7
       PLAB(4,8)=GAMMA  *  E7 + BETGAM*CT7*P7
 
+      if(idbg.eq.1) then
+        print *,'gmufil: vv unboosted particles vv'
+        print *,'gmufil: PX=',(plab(i,5),i=1,4)
+        print *,'gmufil: PX=',(plab(i,9),i=1,4)
+        print *,'gmufil: P(l1)=',(plab(i,6),i=1,4)
+        print *,'gmufil: P(l2)=',(plab(i,8),i=1,4)
+      endif
+
 c----> Lepton pair mass
       pairm=sqrt(
      &           ((PLAB(4,3)+PLAB(4,4))**2-(PLAB(3,3)+PLAB(3,4))**2)
@@ -202,7 +212,7 @@ C====> ROTATE, REFELECT AND TRANSFORM TO REAL*4 VALUES <=============
          PL(4,I) = SNGL(PLAB(4,I))
 c         print *,'Particle',I,'P=',(PL(j,I),j=1,4)
  100  CONTINUE
-      
+
 c      print *,'after rotation:'
 c      print *,PL(4,9)**2-PL(3,9)**2-PL(2,9)**2-PL(1,9)**2
 C===> RANDOM DISTRIBUTION OF LEPTON+ AND LEPTON- <===========

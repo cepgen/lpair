@@ -108,6 +108,7 @@ C
          MX=DSQRT(WX)
          TMX=MX
          if (idbg.eq.1) then
+           print *,'f: wxmin,wxmax,wx,dwx=',wxmin,wxmax,wx,dwx
            print *,'f: mx,dmx,x(8),mp,ssq,me=',mx,dwx,x(8),mp,ssq,me
            print *,'f: mxmin,mxmax=',dsqrt(mxmin2),dsqrt(mxmax2)
            print *,'f: mxmin2,mxmax2=',mxmin2,mxmax2
@@ -131,6 +132,9 @@ C
 C  PARAMETER FOR LORENTZ TRANSFORMATION <===========================
       GAMMA = ETOT / SSQ
       BETGAM = PTOT / SSQ
+      if(idbg.eq.1) then
+         print *,'f: gamma,betgam=',gamma,betgam
+      endif
 C
 C  COMPUTING SOME KIN. PARAMETER ONLY FOR THE CUTS     <=========
 C

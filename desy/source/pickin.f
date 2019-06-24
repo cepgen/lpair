@@ -143,9 +143,13 @@ C
       if(dd2.ge.0) then
       elseif(dd2.lt.0) then
       else ! NaN
+         print *,'picking: dd2 is NaN'
+      endif
+      if(idbg.eq.1) then
          print *,'pickin: dd2',dd2,t2,s2,s2p,s2,s2min
-         print *,'y',y
-         print *,'t2m',t2min,t2max
+         print *,'pickin: nopt,y',nopt,y
+         print *,'pickin: s2,ds2=',s2,ds2
+         print *,'pickin: t2m',t2min,t2max
       endif
       YY4=DCOS(PI*Y(4))
       DD=DD1*DD2
@@ -159,7 +163,8 @@ C
 c      print *,nopt,ds2
       DJ=DS2*DT1*DT2*PI*PI/(8.*SL1*DSQRT(-AP))
       if (idbg.eq.1) then
-        print *,'pickin: s2=',s2
+        print *,'pickin: dd1,dd2,dd=',dd1,dd2,dd
+        print *,'pickin: s2,s2p,s2min=',s2,s2p,s2min
         print *,'pickin: dj=',dj
         print *,'pickin: r1/2/3/4=',r1,r2,r3,r4
       endif

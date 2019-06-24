@@ -53,7 +53,7 @@ C-----------------------------
       double precision x(10),test(10)
 
 c      DATA test/0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5/
-      DATA test/0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3/
+      DATA test/10*0.3d0/
 
       REAL ULMASS
 
@@ -73,7 +73,7 @@ c      DATA test/0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5/
 c---- Lund common for the masses
       double precision kchg,pmas,parf,vckm
       COMMON/PYDAT2/KCHG(500,4),PMAS(500,4),PARF(2000),VCKM(4,4)
-      
+
 C-----
       QP2MIN=-DBLE(Q2MN)
       QP2MAX=-DBLE(Q2MX)
@@ -120,7 +120,7 @@ C-----
          I2DA1(I)=M2DA1(I)
          I2DA2(I)=M2DA2(I)
  100  CONTINUE
-C     
+C
 C-----
       IF (.NOT.(IPAIR.EQ.11 .OR. IPAIR.EQ.13 .OR. IPAIR.EQ.15)) THEN
          WRITE(6,*) 'WRONG CODE FOR LEPTON PAIR,  PAIR=',IPAIR,
@@ -184,6 +184,7 @@ C-----
          idbg = .true.
          dres = F(test)
          print *,dres
+         call gmufil
          stop
       ELSEIF (IBEG .EQ. 1) THEN
 c         PRINT *,'GMUBEG : ===> VEGAS  IS OPERATIVE... '
