@@ -1,11 +1,12 @@
 #ifndef Test_TreeInfo_h
 #define Test_TreeInfo_h
 
-#include <string>
+#include <Math/Vector3D.h>
+#include <Math/Vector4D.h>
+#include <TFile.h>
+#include <TTree.h>
 
-#include "Math/Vector3D.h"
-#include "Math/Vector4D.h"
-#include "TTree.h"
+#include <string>
 
 namespace lpair {
   struct TreeRun {

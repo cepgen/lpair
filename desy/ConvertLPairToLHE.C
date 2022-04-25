@@ -1,8 +1,6 @@
 #include <fstream>
 
 #include "../commons/TreeInfo.h"
-#include "TFile.h"
-#include "TTree.h"
 using namespace std;
 
 void ConvertLPairToLHE(const std::string& filename = "events.root",
